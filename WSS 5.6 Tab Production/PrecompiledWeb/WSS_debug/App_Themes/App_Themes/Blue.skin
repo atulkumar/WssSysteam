@@ -1,0 +1,9 @@
+<%@ Register Assembly="CustomControls.Web" Namespace="CustomControls.Web" TagPrefix="cc1" %>
+<asp:TreeView  runat="server" Target ="MainPage" Width="128px"  NodeIndent="0" ShowLines ="false"  ShowExpandCollapse ="true"  CollapseImageUrl="~/images/Menu.jpg" ExpandImageUrl="~/images/Menu.jpg" ExpandDepth=0  >
+<LeafNodeStyle  Font-Underline="false" HorizontalPadding="2px" NodeSpacing="0px" VerticalPadding="2px" Font-Bold ="false"  Font-Size="7.5pt" ForeColor ="Blue" Font-Names="verdana" ></LeafNodeStyle>
+  <ParentNodeStyle Font-Bold ="true" Font-Size ="7.5pt" ForeColor ="Red" Font-Names="verdana"></ParentNodeStyle>
+  
+  <RootNodeStyle Font-Bold ="true" Font-Size ="7.5pt" ForeColor ="Black" Font-Names="verdana"></RootNodeStyle>                            
+ </asp:TreeView>
+ 
+ 

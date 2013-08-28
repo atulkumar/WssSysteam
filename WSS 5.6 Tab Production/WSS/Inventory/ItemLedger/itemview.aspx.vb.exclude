@@ -1,0 +1,272 @@
+﻿Imports ION.Logging.EventLogging
+Imports ION.Data
+Imports System.Data.SqlClient
+Imports Microsoft.Web.UI.WebControls
+Imports System.Text
+Imports Microsoft.Win32
+Imports ION.Net
+Imports System.Web.Security
+Imports System.Security.Cryptography
+Imports System.Drawing
+Imports System.Data
+Imports System.Configuration
+Imports System.Data.Common
+Imports ION.Logging
+Imports System.IO
+
+Namespace IONWSS
+    Partial Class Inventory_ItemLedger_itemview
+        Inherits System.Web.UI.Page
+        Dim txthiddenImage As String
+
+        Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+            'Put user code to initialize the page here
+            If IsNothing(Request.Form("cpnlItemView:txtPageSize")) = False Then
+                mintPageSize = Val(Request.Form("cpnlItemView:txtPageSize"))
+            End If
+            If mintPageSize = 0 Or mintPageSize < 0 Then
+                mintPageSize = 25
+            End If
+            txtPageSize.Text = mintPageSize
+            If Not IsPostBack Then
+                CurrentPg.Text = _currentPageNumber.ToString()
+            Else
+
+                Dim txthiddenImage = Request.Form("txthiddenImage")
+                If txthiddenImage <> "" Then
+                    Select Case txthiddenImage
+                        Case "Edit"
+                            Response.Redirect("ItemMaster.aspx?Id=" & Val(Request.Form("TxtItemID")), False)
+                            Exit Sub
+                        Case "Logout"
+                            LogoutWSS()
+                            Exit Sub
+                        Case "Close"
+                            Response.Redirect("../../Home.aspx", False)
+                    End Select
+                End If
+            End If
+            DefineGridColumnData()
+            Bindgrid()
+            'FormatGrid()
+
+        End Sub
+
+        '*******************************************
+        'Name:       Bindgrid
+        'Purpose:  To Bind Grid
+        'Author:   Mandeep
+        'Date:        jan 11, 2008, 01:10PM
+        'Called by:  Any
+        'Calls:       None
+        'Inputs:     
+        'Output:    
+        '*******************************************
+        Private Sub Bindgrid()
+
+            Dim sqlQuery As String = "select a.IM_VC32_Item_Name as ItemName,b.IM_VC32_Item_Name as parnetName,a.IM_VC16_Item_Category as Category ,a.IM_VC8_Item_Type as Type ,c.CI_VC36_Name as responsibleperson,a.IM_VC200_Item_Decription as decription ,a.IM_VC32_Model_No as ModelNo,a.IM_VC32_Unit_Of_Measure as measure,a.IM_VC50_Manufactured_By  as ManfacturedBy ,(select count(*) as TotBal from T240012 where IL_NU9_Item_ID_FK=a.IM_NU9_Item_Master_ID_PK) as totalBal,(select count(*) as AvlBal from T240012 where IL_NU9_Item_ID_FK=a.IM_NU9_Item_Master_ID_PK and IL_VC16_Item_Status in('NEW','RETURNED'))as AvialBal ,a.IM_NU9_Item_Master_ID_PK as ID from T240011 a, T010011 c ,T240011 b where a.IM_NU9_Leaf_Node=1 and  a.IM_NU9_Responsible_Person_ID_FK=c.CI_NU8_Address_Number and b.IM_NU9_Item_Master_ID_PK=*a.IM_NU9_Parent_ID_FK order by a.IM_VC32_Item_Name "
+            Dim intRows As Integer
+
+            dsMain = New DataSet
+            SQL.DBConnection = SQL.GetConncetionString("ConnectionString")
+            GrdItemsView.PageSize = mintPageSize
+            If SQL.Search("ItemsView", "", "", sqlQuery, dsMain, "", "") = True Then
+
+
+                Dim strTemp As String = GetItemAccFilter()
+                If strTemp.Equals("") = False Then
+                    Dim dtTemp As New DataTable
+                    dtTemp = GetFilteredDataView(dsMain.Tables(0).DefaultView, strTemp).Table
+                    If (mintPageSize) * (GrdItemsView.CurrentPageIndex) >= dtTemp.Rows.Count Then
+                        GrdItemsView.CurrentPageIndex = 0
+                        CurrentPg.Text = 1
+                    End If
+                    GrdItemsView.DataSource = dtTemp.DefaultView
+                    GrdItemsView.DataBind()
+                    intRows = dtTemp.Rows.Count
+                Else
+                    If (mintPageSize) * (GrdItemsView.CurrentPageIndex) >= dsMain.Tables(0).Rows.Count Then
+                        GrdItemsView.CurrentPageIndex = 0
+                        CurrentPg.Text = 1
+                    End If
+                    GrdItemsView.DataSource = dsMain.Tables(0).DefaultView
+                    GrdItemsView.DataBind()
+                    intRows = dsMain.Tables(0).Rows.Count
+                End If
+
+
+            End If
+            Dim _totalPages As Double = 1
+            Dim _totalrecords As Int32
+            If Not Page.IsPostBack Then
+                _totalrecords = intRows
+                _totalPages = _totalrecords / mintPageSize
+                TotalPages.Text = (System.Math.Ceiling(_totalPages)).ToString()
+                TotalRecods.Text = _totalrecords
+
+            Else
+                _totalrecords = intRows
+                If CurrentPg.Text = 0 And _totalrecords > 0 Then
+                    CurrentPg.Text = 1
+                End If
+                If _totalrecords = 0 Then
+                    CurrentPg.Text = 0
+                End If
+                _totalPages = _totalrecords / mintPageSize
+                TotalPages.Text = (System.Math.Ceiling(_totalPages)).ToString()
+                _totalPages = Double.Parse(TotalPages.Text)
+                TotalRecods.Text = _totalrecords
+            End If
+
+        End Sub
+
+        Private Function GetItemAccFilter() As String
+            Try
+                Dim strFilter As String = ""
+                For intI As Integer = 0 To arrTextboxName.Count - 1
+                    Dim strTemp As String = Request.Form("cpnlItemView:GrdItemsView:_ctl2:" & arrTextboxName(intI))
+                    If Not IsNothing(strTemp) Then
+                        If strTemp.Trim.Equals("") = False Then
+                            Select Case dsMain.Tables(0).Columns(arrColumnName(intI)).DataType.FullName
+                                Case "System.String"
+                                    strFilter &= dsMain.Tables(0).Columns(arrColumnName(intI)).ColumnName & " like '" & strTemp & "' AND "
+                                Case Else
+                                    If IsNumeric(strTemp) = False Then
+                                        strTemp = "-9999999999"
+                                    End If
+                                    strFilter &= dsMain.Tables(0).Columns(arrColumnName(intI)).ColumnName & "=" & strTemp & " AND "
+                            End Select
+                        End If
+                    End If
+                Next
+                If strFilter.Equals("") = False Then
+                    strFilter = strFilter.Remove(strFilter.Length - 4, 4)
+                End If
+                strFilter = strFilter.Replace("*", "%")
+                Return strFilter
+            Catch ex As Exception
+                Return ""
+            End Try
+        End Function
+        Private Sub DefineGridColumnData()
+            'define width of columns
+            arrColWidth.Clear()
+
+            arrColWidth.Add(40)
+            arrColWidth.Add(40) '
+            arrColWidth.Add(80)
+            arrColWidth.Add(80) '
+            arrColWidth.Add(80)
+            arrColWidth.Add(80) '
+            arrColWidth.Add(80)
+            arrColWidth.Add(80) '
+            arrColWidth.Add(80)
+            arrColWidth.Add(80) '
+            arrColWidth.Add(150)
+
+            arrTextboxName.Clear()
+            arrTextboxName.Add("txtItemName_H")
+            arrTextboxName.Add("txtParentGroup_H")
+            arrTextboxName.Add("txtCategory_H")
+            arrTextboxName.Add("txtType_H")
+            arrTextboxName.Add("txtResponsiblePerson_H")
+            arrTextboxName.Add("txtdecription_H")
+            arrTextboxName.Add("txtModelNo_H")
+            arrTextboxName.Add("txtmeasure_H")
+            arrTextboxName.Add("txtManfacturedBy_H")
+            arrTextboxName.Add("txttotalBal_H")
+            arrTextboxName.Add("txtAvialBal_H")
+
+
+            arrColumnName.Clear()
+            arrColumnName.Add("ItemName")
+            arrColumnName.Add("parnetName")
+            arrColumnName.Add("Category")
+            arrColumnName.Add("Type")
+            arrColumnName.Add("responsibleperson")
+            arrColumnName.Add("decription")
+            arrColumnName.Add("ModelNo")
+            arrColumnName.Add("measure")
+            arrColumnName.Add("ManfacturedBy")
+            arrColumnName.Add("totalBal")
+            arrColumnName.Add("AvialBal")
+            arrColumnName.Add("ID")
+        End Sub
+
+        Private Sub GrdItemsView_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.DataGridItemEventArgs) Handles GrdItemsView.ItemDataBound
+            If e.Item.ItemType = ListItemType.Item Or e.Item.ItemType = ListItemType.AlternatingItem Or e.Item.ItemType = ListItemType.SelectedItem Then
+
+                For intI As Integer = 0 To e.Item.Cells.Count - 1
+                    e.Item.Cells(inti).Attributes.Add("onclick", "KeyCheck('" & e.Item.ItemIndex + 1 & "','" & GrdItemsView.DataKeys(e.Item.ItemIndex) & "')")
+                    e.Item.Cells(inti).Attributes.Add("ondblclick", "KeyCheck55('" & GrdItemsView.DataKeys(e.Item.ItemIndex) & "')")
+                    '        e.Item.Cells(intI).Attributes.Add("onclick", "javascript:setTimeout(""__doPostBack('cpnlItemView$grdItemsView$_ctl" & e.Item.ItemIndex + 3 & "$_ctl0','')"",200)")
+                    '        e.Item.Cells(intI).Attributes.Add("onmousedown", "KeyCheck('" & e.Item.ItemIndex + 1 & "', '" & GrdItemsView.DataKeys(e.Item.ItemIndex) & "','" & CType(e.Item.Cells(1).FindControl("lblIONCode"), Label).Text.Trim & "')")
+                Next
+
+                '    CType(e.Item.Cells(1).FindControl("lblIONCode"), Label).Attributes.Add("ondblclick", "OpenItemInfo('" & GrdItemsView.DataKeys(e.Item.ItemIndex) & "');")
+                '    CType(e.Item.Cells(1).FindControl("lblIONCode"), Label).ToolTip = CType(e.Item.Cells(1).FindControl("lblIONCode"), Label).Text.Trim
+            End If
+
+            If e.Item.ItemType = ListItemType.Header Then
+                For intI As Integer = 0 To arrTextboxName.Count - 1
+                    CType(e.Item.Cells(intI).FindControl(arrTextboxName(intI)), TextBox).Text = Request.Form("cpnlItemView:GrdItemsView:_ctl2:" & arrTextboxName(intI))
+                Next
+            End If
+        End Sub
+        Private Sub Firstbutton_Click(ByVal sender As System.Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles Firstbutton.Click
+            GrdItemsView.CurrentPageIndex = Convert.ToInt32("0")
+            _currentPageNumber = 1
+            CurrentPg.Text = _currentPageNumber
+            Call Bindgrid()
+
+            If GrdItemsView.Items.Count = 0 Then
+
+                CurrentPg.Text = 0
+            End If
+
+        End Sub
+
+        Private Sub Prevbutton_Click(ByVal sender As System.Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles Prevbutton.Click
+            If (GrdItemsView.CurrentPageIndex > 0) Then
+                GrdItemsView.CurrentPageIndex -= 1
+                _currentPageNumber = Int32.Parse(CurrentPg.Text) - 1
+                CurrentPg.Text = _currentPageNumber
+            End If
+            Call Bindgrid()
+            If GrdItemsView.Items.Count = 0 Then
+                CurrentPg.Text = 0
+            End If
+
+        End Sub
+
+        Private Sub Nextbutton_Click(ByVal sender As System.Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles Nextbutton.Click
+            If (GrdItemsView.CurrentPageIndex < (GrdItemsView.PageCount - 1)) Then
+                GrdItemsView.CurrentPageIndex += 1
+
+                If GrdItemsView.PageCount = Int32.Parse(CurrentPg.Text) Then
+                    CurrentPg.Text = GrdItemsView.PageCount
+                Else
+                    _currentPageNumber = Int32.Parse(CurrentPg.Text) + 1
+                    CurrentPg.Text = _currentPageNumber
+
+                End If
+            End If
+            Call Bindgrid()
+            If GrdItemsView.Items.Count = 0 Then
+                CurrentPg.Text = 0
+            End If
+
+        End Sub
+
+        Private Sub Lastbutton_Click(ByVal sender As System.Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles Lastbutton.Click
+            GrdItemsView.CurrentPageIndex = (GrdItemsView.PageCount - 1)
+            _currentPageNumber = Int32.Parse(TotalPages.Text)
+            CurrentPg.Text = _currentPageNumber
+            Call Bindgrid()
+            If GrdItemsView.Items.Count = 0 Then
+                CurrentPg.Text = 0
+            End If
+        End Sub
+    End Class
+End Namespace
+

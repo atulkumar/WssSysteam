@@ -1,0 +1,8 @@
+﻿
+Partial Class Inventory_item_group
+    Inherits System.Web.UI.Page
+
+    
+
+
+End Class

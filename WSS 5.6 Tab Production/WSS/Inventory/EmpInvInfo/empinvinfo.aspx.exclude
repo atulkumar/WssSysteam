@@ -1,0 +1,187 @@
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="empinvinfo.aspx.vb" Inherits="Inventory_EmpInvInfo_empinvinfo" %>
+
+<%@ Page Language="vb" AutoEventWireup="false" Inherits="IONWSS.EmpInvInfo" CodeFile="EmpInvInfo.aspx.vb" %>
+
+<%@ Register TagPrefix="cc1" Namespace="CustomControls.Web" Assembly="CustomControls.Web" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GetInventoryInfo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta content="Microsoft Visual Studio .NET 7.1" name="GENERATOR">
+    <meta content="Visual Basic .NET 7.1" name="CODE_LANGUAGE">
+    <meta content="JavaScript" name="vs_defaultClientScript">
+    <meta content="http://schemas.microsoft.com/intellisense/ie5" name="vs_targetSchema">
+    <link href="../../Images/Js/StyleSheet1.css" type="text/css" rel="stylesheet">
+
+    <script language="javascript" type="text/javascript">
+		function OK()
+		{
+			var CallNo;
+			CallNo=document.Form1.txtHIDCallNo.value;
+			if ( document.Form1.txtHIDCallNo.value=='' )
+			{
+				alert('Please select Call No');
+			}
+			self.opener.AddCallNo(CallNo);
+			window.close();
+			return false;
+		}		
+		function DClick(CallNo)
+		{
+			document.Form1.txtHIDCallNo.value=CallNo;
+			self.opener.AddCallNo(CallNo);
+			window.close();
+		}
+		function SClick(CallNo, RI)
+		{
+			document.Form1.txtHIDCallNo.value=CallNo;
+			
+			var tableID='cpnlCalls_grdCalls';
+			var table;
+			if (document.all) table=document.all[tableID];
+				if (document.getElementById) table=document.getElementById(tableID);
+				if (table)
+				{									
+					for ( var i = 1 ;  i < table.rows.length ;  i++)
+						{	
+							if(i % 2 == 0)
+								{
+									table.rows [ i ] . style . backgroundColor = "#f5f5f5";
+								}
+							else
+								{										
+									table.rows [ i ] . style . backgroundColor = "#ffffff";
+								}
+							}										
+					table.rows [ RI  ] . style . backgroundColor = "#d4d4d4";
+				}
+		}
+		
+    </script>
+
+</head>
+<body bottommargin="0" leftmargin="0" topmargin="0" rightmargin="0">
+    <form id="Form1" method="post" runat="server">
+    <table id="Table1" bordercolor="activeborder" height="28" cellspacing="0" cellpadding="0"
+        width="100%" background="../../images/top_nav_back.gif" border="0">
+        <tr>
+            <td align="left" width="202" height="16">
+                <asp:Button ID="btnSearch" runat="server" Width="0px" ></asp:Button>&nbsp;
+                <asp:Label ID="Label1" runat="server" Width="184px" BorderWidth="2px" BorderStyle="None"
+                    Font-Size="X-Small" ForeColor="Teal" Font-Names="Verdana" Height="8px" Font-Bold="True">Employee Inventory Info</asp:Label>
+            </td>
+            <td valign="middle" align="left">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+                <asp:ImageButton ID="imgSearch" AccessKey="K" runat="server" ImageUrl="../../Images/s1search02.gif">
+                </asp:ImageButton>&nbsp;
+                <asp:ImageButton ID="imgClose" AccessKey="L" runat="server" ImageUrl="../../Images/s2close01.gif">
+                </asp:ImageButton>&nbsp;
+            </td>
+            <td width="42" background="../../images/top_nav_back01.gif" height="67">
+                &nbsp;
+            </td>
+        </tr>
+    </table>
+    <cc1:CollapsiblePanel ID="cpnlError" runat="server" Width="100%" BorderWidth="0px"
+        BorderStyle="Solid" BorderColor="Indigo" Draggable="False" CollapseImage="../../Images/ToggleUp.gif"
+        ExpandImage="../../Images/ToggleDown.gif" Text="Message" TitleBackColor="Transparent"
+        TitleClickable="True" TitleForeColor="black" PanelCSS="panel" TitleCSS="test"
+        Visible="False" Height="30px">
+        <table id="Table2" bordercolor="lightgrey" cellspacing="0" cellpadding="0" width="272"
+            border="0">
+            <tr>
+                <td style="width: 32px" colspan="0" rowspan="0">
+                    <asp:Image ID="Image1" runat="server" Width="16px" Height="16px" ImageUrl="..\..\images\warning.gif">
+                    </asp:Image>
+                </td>
+                <td style="width: 246px" valign="top" colspan="0" rowspan="0">
+                    <asp:ListBox ID="lstError" runat="server" Width="504px" Height="48px" Font-Names="Verdana"
+                        ForeColor="Red" Font-Size="XX-Small" BorderStyle="Groove" BorderWidth="0"></asp:ListBox>
+                </td>
+            </tr>
+        </table>
+    </cc1:CollapsiblePanel>
+    <cc1:CollapsiblePanel ID="cpnlItemList" runat="server" Width="100%" BorderWidth="0px"
+        BorderStyle="Solid" BorderColor="Indigo" Draggable="False" CollapseImage="../../Images/ToggleUp.gif"
+        ExpandImage="../../Images/ToggleDown.gif" Text="Inventory List" TitleBackColor="Transparent"
+        TitleClickable="True" TitleForeColor="black" PanelCSS="panel" TitleCSS="test"
+        Visible="true" Height="30px">
+        <div style="overflow: auto; width: 100%; height: 435px">
+            <table id="Table32" bordercolor="lightgrey" cellspacing="0" cellpadding="0" align="left"
+                border="0">
+                <tr>
+                    <td>
+                        <asp:datagrid ID="grdItems" runat="server" Width="584px" Height="0px" Font-Names="Verdana" BorderStyle="None"
+									BorderWidth="1px" BorderColor="Silver" AutoGenerateColumns="False" CellPadding="0" CssClass="Grid" OnItemDataBound="grdItems_ItemDataBound">
+									<AlternatingItemStyle CssClass="GridAlternateItem"></AlternatingItemStyle>
+									<ItemStyle CssClass="GridItem"></ItemStyle>
+									<HeaderStyle CssClass="GridHeader"></HeaderStyle>
+									<Columns>
+										<asp:TemplateColumn>
+											<HeaderTemplate>
+												<asp:TextBox ID="txtItemID_H" Runat="server" Width="50px" CssClass="SearchTxtBox"></asp:TextBox>
+												ItemID
+											</HeaderTemplate>
+											<ItemTemplate>
+												<%#Container.DataItem("ItemID")%>
+											</ItemTemplate>
+										</asp:TemplateColumn>
+										<asp:TemplateColumn>
+											<HeaderTemplate>
+												<asp:TextBox ID="txtIONCode_H" Runat="server" Width="190px" CssClass="SearchTxtBox"></asp:TextBox>
+												IONCode
+											</HeaderTemplate>
+											<ItemTemplate>
+												<%#container.dataitem("IONCode")%>
+											</ItemTemplate>
+										</asp:TemplateColumn>
+										<asp:TemplateColumn>
+											<HeaderTemplate>
+												<asp:TextBox ID="txtItemName_H" Runat="server" Width="145px" CssClass="SearchTxtBox"></asp:TextBox>
+												ItemName
+											</HeaderTemplate>
+											<ItemTemplate>
+												<%#Container.DataItem("ItemName")%>
+											</ItemTemplate>
+										</asp:TemplateColumn>
+										<asp:TemplateColumn>
+											<HeaderTemplate>
+												<asp:TextBox ID="txtStatus_H" Runat="server" Width="65px" CssClass="SearchTxtBox"></asp:TextBox>
+												Status
+											</HeaderTemplate>
+											<ItemTemplate>
+												<%#container.dataitem("Status")%>
+											</ItemTemplate>
+										</asp:TemplateColumn>
+										<asp:TemplateColumn>
+											<HeaderTemplate>
+												<asp:TextBox ID="txtAssignedDate_H" Runat="server" Width="70px" CssClass="SearchTxtBox"></asp:TextBox>
+												AssignDate
+											</HeaderTemplate>
+											<ItemTemplate>
+												<%#container.dataitem("AssignedDate")%>
+											</ItemTemplate>
+										</asp:TemplateColumn>
+										<asp:TemplateColumn>
+											<HeaderTemplate>
+												<asp:TextBox ID="txtResType_H" Runat="server" Width="60px" CssClass="SearchTxtBox"></asp:TextBox>
+												Rsp Type
+											</HeaderTemplate>
+											<ItemTemplate>
+												<asp:Label id="lblResType" runat="server" Width="60px" Text='<%#container.dataitem("ResType")%>'>
+												</asp:Label>
+											</ItemTemplate>
+										</asp:TemplateColumn>
+									</Columns>
+								</asp:datagrid></TD>
+                       
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </cc1:CollapsiblePanel>
+    <input type="hidden" name="txtHIDCallNo">
+    </form>
+</body>
+</html>

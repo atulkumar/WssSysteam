@@ -1,0 +1,190 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+ION.Common.DAL
+</name>
+</assembly>
+<members>
+<member name="P:ION.Common.DAL.My.Resources.Resources.ResourceManager">
+	<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member><member name="P:ION.Common.DAL.My.Resources.Resources.Culture">
+	<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member><member name="T:ION.Common.DAL.My.Resources.Resources">
+	<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member><member name="M:ION.Common.DAL.clsData.Update(System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,System.Object})">
+	<summary>
+ Takes multiple queries and table name along with the values to be updated in the table
+ </summary>
+	<param name="UpdateQueryandTable">First value should be a unique table name and 
+ second value should be condition in the where clause</param>
+	<param name="ColumnandData">First value should be Column name and second value should be Column data.</param>
+	<returns>True is sucessful and false if not</returns>
+	<remarks></remarks>
+</member><member name="M:ION.Common.DAL.clsData.Update(System.String)">
+	<summary>
+	</summary>
+	<param name="UpdateSQL"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:ION.Common.DAL.clsData.Update(System.Data.DataTable,System.String)">
+	<summary>
+	</summary>
+	<param name="UpdateDatatable"></param>
+	<param name="SelectQuery"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:ION.Common.DAL.clsData.Update(System.String,System.String,System.Collections.ArrayList,System.Collections.ArrayList,System.String)">
+	<summary>
+	</summary>
+	<param name="DBTable"></param>
+	<param name="SQLSelect"></param>
+	<param name="ColumnName"></param>
+	<param name="RowData"></param>
+	<param name="LogID"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:ION.Common.DAL.clsData.SaveWithoutPrimary(System.Data.DataSet)">
+	<summary>
+ Pass the datatable to the function and it will save all the rows. Column name in the Datatable has to have the same name as it is in Database.
+ </summary>
+	<param name="DataTableInfo"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:ION.Common.DAL.clsData.Save(System.String,System.Boolean)">
+	<summary>
+	</summary>
+	<param name="InsertQuery"></param>
+	<param name="Serializable"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:ION.Common.DAL.clsData.Save(System.Data.DataTable,System.String,System.String)">
+	<summary>
+	</summary>
+	<param name="DataTableInfo"></param>
+	<param name="TableName"></param>
+	<param name="Query"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:ION.Common.DAL.clsData.Save(System.Collections.Generic.Dictionary{System.String,System.Object},System.String)">
+	<summary>
+ Save a single row into the table return true is saved
+ </summary>
+	<param name="ColumnandData">First value should be a column name and second value should be row data
+ </param>
+	<param name="TableName">Name of the table where row will be saved</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:ION.Common.DAL.clsData.Save(System.String,System.String,System.Data.IsolationLevel)">
+	<summary>
+ Executes the query in the database with transaction support
+ </summary>
+	<param name="InsertQuery">Insert query to be fired in the database</param>
+	<param name="TransactionLevel">Level of transaction to be applied</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:ION.Common.DAL.clsData.SaveMulti(System.String,System.Collections.ArrayList,System.Collections.ArrayList,System.String)">
+	<summary>
+	</summary>
+	<param name="DBTable"></param>
+	<param name="ColumnName"></param>
+	<param name="RowData"></param>
+	<param name="LogID"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:ION.Common.DAL.clsData.Delete(System.String,System.Data.IsolationLevel)">
+	<summary>
+ Delete(s) the records from the table with transaction support
+ </summary>
+	<param name="DeleteQuery"></param>
+	<param name="TransactionLevel"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:ION.Common.DAL.clsData.Search(System.String,System.String)">
+	<summary>
+ Executes the query, fills the table and return it
+ </summary>
+	<param name="SearchQuery">Select query to search the database</param>
+	<param name="TableName">Table name which will be used to return DataTable</param>
+	<returns>Datatable with the name specified in the parameter</returns>
+	<remarks></remarks>
+</member><member name="M:ION.Common.DAL.clsData.Search(System.Collections.Generic.Dictionary{System.String,System.String})">
+	<summary>
+ Takes multiple queries and table name and returns them in a dataset
+ </summary>
+	<param name="QueryandTableNames">First value should be a unique table name and 
+ second value should be query</param>
+	<returns>Dataset</returns>
+	<remarks></remarks>
+</member><member name="M:ION.Common.DAL.clsData.Search(System.String)">
+	<summary>
+ Executes the query and return a datareader. Close the connection seperately using 
+ CloseConnection method 
+ </summary>
+	<param name="SearchQuery">Select query to search the database</param>
+	<returns>Datareader</returns>
+	<remarks>Connection object will not be closed here as datareader needs open connection
+ close the connection seperately after finishing the work 
+ <example> Shows how to close the connection
+ <code>
+ If objDB.IsConnected = True Then
+ objDB.CloseConnection()
+ End If
+ </code>
+		</example>
+	</remarks>
+</member><member name="M:ION.Common.DAL.clsData.SearchSingleRow(System.String)">
+	<summary>
+ Executes the query and return the datareader with single row. Close the connection seperately using 
+ CloseConnection method 
+ </summary>
+	<param name="SearchQuery">Select query to search the database</param>
+	<returns>Datareader</returns>
+	<remarks>Connection object will not be closed here as datareader needs open connection
+ close the connection seperately after finishing the work 
+ <example> Shows how to close the connection
+ <code>
+ If objDB.IsConnected = True Then
+ objDB.CloseConnection()
+ End If
+ </code>
+		</example>
+	</remarks>
+</member><member name="M:ION.Common.DAL.clsData.SearchSingleValue(System.String)">
+	<summary>
+ Returns the first column of the query passed
+ </summary>
+	<param name="SearchQuery">Select query to search the database</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:ION.Common.DAL.clsData.CloseConnection">
+	<summary>
+ Closes the DBConnection object only for DBDataReader
+ </summary>
+	<remarks></remarks>
+</member><member name="M:ION.Common.DAL.clsData.IsConnected">
+	<summary>
+ Return the state of the DBConnection object only for DBDataReader
+ </summary>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:ION.Common.DAL.clsData.ExecuteSPwithTwoParameters(System.String,System.String,System.String)">
+	<summary>
+ This Function will be used to execute a SP with Two Parameter
+ </summary>
+</member><member name="M:ION.Common.DAL.clsData.Search(System.Data.SqlClient.SqlCommand)">
+	<summary>
+	</summary>
+	<param name="Cmd"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member>
+</members>
+</doc>

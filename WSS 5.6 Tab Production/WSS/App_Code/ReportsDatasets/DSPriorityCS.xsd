@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DSPriorityCS" targetNamespace="http://tempuri.org/DSPriorityCS.xsd" xmlns:mstns="http://tempuri.org/DSPriorityCS.xsd" xmlns="http://tempuri.org/DSPriorityCS.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+        </Connections>
+        <Tables>
+        </Tables>
+        <Sources>
+        </Sources>
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DSPriorityCS" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="element1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="estimatedHRS" type="xs:double" minOccurs="0" />
+              <xs:element name="callno" type="xs:integer" minOccurs="0" />
+              <xs:element name="CI_VC36_Name" type="xs:string" minOccurs="0" />
+              <xs:element name="UsedHrs" type="xs:double" minOccurs="0" />
+              <xs:element name="UM_VC50_UserID" type="xs:string" minOccurs="0" />
+              <xs:element name="CM_DT8_Request_Date" type="xs:string" minOccurs="0" />
+              <xs:element name="CM_Dt8_Call_Close_Date" type="xs:string" minOccurs="0" />
+              <xs:element name="PR_VC20_Name" type="xs:string" minOccurs="0" />
+              <xs:element name="CN_VC20_Call_Status" type="xs:string" minOccurs="0" />
+              <xs:element name="cm_vc200_work_priority" type="xs:string" minOccurs="0" />
+              <xs:element name="CM_NU9_Comp_ID_FK" type="xs:integer" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DSHours" targetNamespace="http://tempuri.org/DSHours.xsd" xmlns:mstns="http://tempuri.org/DSHours.xsd" xmlns="http://tempuri.org/DSHours.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+        </Connections>
+        <Tables>
+        </Tables>
+        <Sources>
+        </Sources>
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DSHours" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="TbHours">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="am_nu9_comp_id_fk" type="xs:integer" minOccurs="0" />
+              <xs:element name="Am_vc8_Supp_owner" type="xs:string" minOccurs="0" />
+              <xs:element name="company" type="xs:string" minOccurs="0" />
+              <xs:element name="um_vc50_userid" type="xs:string" minOccurs="0" />
+              <xs:element name="UsedHrs" type="xs:float" minOccurs="0" />
+              <xs:element name="BillHrs" type="xs:float" minOccurs="0" />
+              <xs:element name="AM_DT8_Action_Date" type="xs:date" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

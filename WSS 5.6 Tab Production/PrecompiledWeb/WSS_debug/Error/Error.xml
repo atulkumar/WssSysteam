@@ -1,0 +1,1695 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Logging>
+  <Application Type="Exception" IntLogid="1">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 3:59:48 PM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 1865</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="2">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 3:59:49 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2090</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="3">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 4:09:12 PM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 1865</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="4">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 4:09:13 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2068</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="5">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 4:09:13 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2068</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="6">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 4:09:13 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2068</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="7">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 4:11:12 PM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 1865</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="8">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 4:11:13 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2090</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="9">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 4:15:44 PM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 1865</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="10">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 4:15:45 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2068</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="11">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 4:15:45 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2068</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="12">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 4:15:45 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2068</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="13">
+    <ExceptionID>3</ExceptionID>
+    <DateofException>2/16/2010 4:25:05 PM</DateofException>
+    <SourceID>UpdateTask-217</SourceID>
+    <ApplicationID>WWSUpdate</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>24</UserId>
+    <UserName>nitin</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentException: String was not recognized as a valid DateTime.Couldn't store &lt;3&gt; in TM_DT8_Task_Date Column.  Expected type is DateTime. ---&gt; System.FormatException: String was not recognized as a valid DateTime.
+   at System.DateTimeParse.Parse(String s, DateTimeFormatInfo dtfi, DateTimeStyles styles)
+   at System.Convert.ToDateTime(String value, IFormatProvider provider)
+   at System.String.System.IConvertible.ToDateTime(IFormatProvider provider)
+   at System.Data.Common.DateTimeStorage.Set(Int32 record, Object value)
+   at System.Data.DataColumn.set_Item(Int32 record, Object value)
+   --- End of inner exception stack trace ---
+   at Microsoft.VisualBasic.CompilerServices.Symbols.Container.InvokeMethod(Method TargetProcedure, Object[] Arguments, Boolean[] CopyBack, BindingFlags Flags)
+   at Microsoft.VisualBasic.CompilerServices.NewLateBinding.LateSet(Object Instance, Type Type, String MemberName, Object[] Arguments, String[] ArgumentNames, Type[] TypeArguments, Boolean OptimisticSet, Boolean RValueBase, CallType CallType)
+   at Microsoft.VisualBasic.CompilerServices.NewLateBinding.LateSet(Object Instance, Type Type, String MemberName, Object[] Arguments, String[] ArgumentNames, Type[] TypeArguments)
+   at ION.Data.SQL.Update(String DBTable, String ApplicationID, String SourceID, String UpdateStatement, ArrayList Columns, ArrayList Rows, String ControlID)
+   at WSSUpdate.UpdateTask(Int32 CallNumber, Int32 TaskNumber, Int32 compID, ArrayList ColumnName, ArrayList RowData, Boolean StatusChanged) in D:\WSS Project\WSS 5.6 Tab Production\WSS\App_Code\BaseClasses\WSSUpdate.vb:line 265</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="14">
+    <ExceptionID>3</ExceptionID>
+    <DateofException>2/16/2010 4:25:45 PM</DateofException>
+    <SourceID>UpdateTask-217</SourceID>
+    <ApplicationID>WWSUpdate</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>24</UserId>
+    <UserName>nitin</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentException: String was not recognized as a valid DateTime.Couldn't store &lt;3&gt; in TM_DT8_Task_Date Column.  Expected type is DateTime. ---&gt; System.FormatException: String was not recognized as a valid DateTime.
+   at System.DateTimeParse.Parse(String s, DateTimeFormatInfo dtfi, DateTimeStyles styles)
+   at System.Convert.ToDateTime(String value, IFormatProvider provider)
+   at System.String.System.IConvertible.ToDateTime(IFormatProvider provider)
+   at System.Data.Common.DateTimeStorage.Set(Int32 record, Object value)
+   at System.Data.DataColumn.set_Item(Int32 record, Object value)
+   --- End of inner exception stack trace ---
+   at Microsoft.VisualBasic.CompilerServices.Symbols.Container.InvokeMethod(Method TargetProcedure, Object[] Arguments, Boolean[] CopyBack, BindingFlags Flags)
+   at Microsoft.VisualBasic.CompilerServices.NewLateBinding.LateSet(Object Instance, Type Type, String MemberName, Object[] Arguments, String[] ArgumentNames, Type[] TypeArguments, Boolean OptimisticSet, Boolean RValueBase, CallType CallType)
+   at Microsoft.VisualBasic.CompilerServices.NewLateBinding.LateSet(Object Instance, Type Type, String MemberName, Object[] Arguments, String[] ArgumentNames, Type[] TypeArguments)
+   at ION.Data.SQL.Update(String DBTable, String ApplicationID, String SourceID, String UpdateStatement, ArrayList Columns, ArrayList Rows, String ControlID)
+   at WSSUpdate.UpdateTask(Int32 CallNumber, Int32 TaskNumber, Int32 compID, ArrayList ColumnName, ArrayList RowData, Boolean StatusChanged) in D:\WSS Project\WSS 5.6 Tab Production\WSS\App_Code\BaseClasses\WSSUpdate.vb:line 265</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="15">
+    <ExceptionID>3</ExceptionID>
+    <DateofException>2/16/2010 4:27:39 PM</DateofException>
+    <SourceID>UpdateTask-217</SourceID>
+    <ApplicationID>WWSUpdate</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>24</UserId>
+    <UserName>nitin</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentException: String was not recognized as a valid DateTime.Couldn't store &lt;1&gt; in TM_DT8_Task_Date Column.  Expected type is DateTime. ---&gt; System.FormatException: String was not recognized as a valid DateTime.
+   at System.DateTimeParse.Parse(String s, DateTimeFormatInfo dtfi, DateTimeStyles styles)
+   at System.Convert.ToDateTime(String value, IFormatProvider provider)
+   at System.String.System.IConvertible.ToDateTime(IFormatProvider provider)
+   at System.Data.Common.DateTimeStorage.Set(Int32 record, Object value)
+   at System.Data.DataColumn.set_Item(Int32 record, Object value)
+   --- End of inner exception stack trace ---
+   at Microsoft.VisualBasic.CompilerServices.Symbols.Container.InvokeMethod(Method TargetProcedure, Object[] Arguments, Boolean[] CopyBack, BindingFlags Flags)
+   at Microsoft.VisualBasic.CompilerServices.NewLateBinding.LateSet(Object Instance, Type Type, String MemberName, Object[] Arguments, String[] ArgumentNames, Type[] TypeArguments, Boolean OptimisticSet, Boolean RValueBase, CallType CallType)
+   at Microsoft.VisualBasic.CompilerServices.NewLateBinding.LateSet(Object Instance, Type Type, String MemberName, Object[] Arguments, String[] ArgumentNames, Type[] TypeArguments)
+   at ION.Data.SQL.Update(String DBTable, String ApplicationID, String SourceID, String UpdateStatement, ArrayList Columns, ArrayList Rows, String ControlID)
+   at WSSUpdate.UpdateTask(Int32 CallNumber, Int32 TaskNumber, Int32 compID, ArrayList ColumnName, ArrayList RowData, Boolean StatusChanged) in D:\WSS Project\WSS 5.6 Tab Production\WSS\App_Code\BaseClasses\WSSUpdate.vb:line 265</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="16">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 4:30:27 PM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 1865</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="17">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 4:30:28 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2068</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="18">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 4:30:28 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2068</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="19">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 4:30:28 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2068</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="20">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 4:35:34 PM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 1865</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="21">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 4:35:35 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2068</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="22">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 4:35:35 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2068</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="23">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 4:35:35 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2068</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="24">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 5:25:49 PM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 1865</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="25">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 5:25:50 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2068</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="26">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 5:25:50 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2068</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="27">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 5:25:50 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2068</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="28">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 5:31:30 PM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 1865</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="29">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 5:31:31 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2068</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="30">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 6:03:52 PM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\CallView\Call_View.aspx.vb:line 1865</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="31">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 6:03:53 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\CallView\Call_View.aspx.vb:line 2090</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="32">
+    <ExceptionID>131</ExceptionID>
+    <DateofException>2/16/2010 6:05:25 PM</DateofException>
+    <SourceID>FillCache-494</SourceID>
+    <ApplicationID>clsSecurityCache.vb</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>
+    </UserId>
+    <UserName>
+    </UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.Data.SqlClient.SqlException: Incorrect syntax near the keyword 'order'.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj)
+   at System.Data.SqlClient.TdsParser.Run(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj)
+   at System.Data.SqlClient.SqlDataReader.ConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, DbAsyncResult result)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at System.Data.Common.DbCommand.System.Data.IDbCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.FillInternal(DataSet dataset, DataTable[] datatables, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at clsSecurityCache.FillCache() in D:\WSS Project\WSS 5.6 Tab Production\WSS\App_Code\Menu\clsSecurityCache.vb:line 656</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="33">
+    <ExceptionID>6278</ExceptionID>
+    <DateofException>2/16/2010 6:05:25 PM</DateofException>
+    <SourceID>Load-57</SourceID>
+    <ApplicationID>SideMenu</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>
+    </UserId>
+    <UserName>
+    </UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.Data.DataException: DataTable must be set prior to using DataView.
+   at System.Data.DataView..ctor(DataTable table, String RowFilter, String Sort, DataViewRowState RowState)
+   at clsSecurityCache.FilterCacheTable(String objType) in D:\WSS Project\WSS 5.6 Tab Production\WSS\App_Code\Menu\clsSecurityCache.vb:line 249
+   at clsSecurityCache.FillObjectData(Panel MenuPnl, String MenuName, String ScreenName) in D:\WSS Project\WSS 5.6 Tab Production\WSS\App_Code\Menu\clsSecurityCache.vb:line 45
+   at DashBoard.Page_Load(Object sender, EventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\DashBoard.aspx.vb:line 119</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="34">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 6:05:55 PM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 1865</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="35">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 6:05:56 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2090</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="36">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 6:23:01 PM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\CallView\Call_View.aspx.vb:line 1865</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="37">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 6:23:01 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\CallView\Call_View.aspx.vb:line 2090</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="38">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 6:33:55 PM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 1865</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="39">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 6:33:56 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2068</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="40">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 6:33:56 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2068</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="41">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/16/2010 6:33:56 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2068</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="42">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 9:46:32 AM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\CallView\Call_View.aspx.vb:line 1865</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="43">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 9:46:34 AM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\CallView\Call_View.aspx.vb:line 2090</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="44">
+    <ExceptionID>129</ExceptionID>
+    <DateofException>2/17/2010 10:24:44 AM</DateofException>
+    <SourceID>Page_Load-1086</SourceID>
+    <ApplicationID>Call_Detail</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.Threading.ThreadAbortException: Thread was being aborted.
+   at System.Threading.Thread.AbortInternal()
+   at System.Threading.Thread.Abort(Object stateInfo)
+   at System.Web.HttpResponse.End()
+   at System.Web.HttpResponse.Redirect(String url, Boolean endResponse)
+   at System.Web.HttpResponse.Redirect(String url)
+   at clsSecurityCache.ScreenAccess(Int32 intScrID) in D:\WSS Project\WSS 5.6 Tab Production\WSS\App_Code\Menu\clsSecurityCache.vb:line 238
+   at SupportCenter_CallView_Call_Detail.Page_Load(Object sender, EventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\CallView\Call_Detail.aspx.vb:line 590</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="45">
+    <ExceptionID>1</ExceptionID>
+    <DateofException>2/17/2010 10:43:53 AM</DateofException>
+    <SourceID>CreateTemplateColumnsTask-1998</SourceID>
+    <ApplicationID>Call-Detail</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at SupportCenter_CallView_Call_Detail.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\CallView\Call_Detail.aspx.vb:line 2006</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="46">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 10:53:12 AM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\CallView\Call_View.aspx.vb:line 1865</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="47">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 10:53:13 AM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\CallView\Call_View.aspx.vb:line 2090</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="48">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 10:57:03 AM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 1868</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="49">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 10:57:04 AM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2071</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="50">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 10:57:33 AM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 1868</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="51">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 10:57:33 AM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2071</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="52">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 11:04:39 AM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 1868</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="53">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 11:04:40 AM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2071</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="54">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 11:08:04 AM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 1868</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="55">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 11:08:04 AM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2071</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="56">
+    <ExceptionID>102</ExceptionID>
+    <DateofException>2/17/2010 11:08:04 AM</DateofException>
+    <SourceID>CallView.Load-462</SourceID>
+    <ApplicationID>as0002</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>Incorrect syntax near '='.</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="57">
+    <ExceptionID>131</ExceptionID>
+    <DateofException>2/17/2010 11:08:52 AM</DateofException>
+    <SourceID>FillCache-494</SourceID>
+    <ApplicationID>clsSecurityCache.vb</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>
+    </UserId>
+    <UserName>
+    </UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.Data.SqlClient.SqlException: Incorrect syntax near the keyword 'order'.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj)
+   at System.Data.SqlClient.TdsParser.Run(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj)
+   at System.Data.SqlClient.SqlDataReader.ConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, DbAsyncResult result)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at System.Data.Common.DbCommand.System.Data.IDbCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.FillInternal(DataSet dataset, DataTable[] datatables, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at clsSecurityCache.FillCache() in D:\WSS Project\WSS 5.6 Tab Production\WSS\App_Code\Menu\clsSecurityCache.vb:line 656</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="58">
+    <ExceptionID>6278</ExceptionID>
+    <DateofException>2/17/2010 11:08:52 AM</DateofException>
+    <SourceID>Load-57</SourceID>
+    <ApplicationID>SideMenu</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>
+    </UserId>
+    <UserName>
+    </UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.Data.DataException: DataTable must be set prior to using DataView.
+   at System.Data.DataView..ctor(DataTable table, String RowFilter, String Sort, DataViewRowState RowState)
+   at clsSecurityCache.FilterCacheTable(String objType) in D:\WSS Project\WSS 5.6 Tab Production\WSS\App_Code\Menu\clsSecurityCache.vb:line 249
+   at clsSecurityCache.FillObjectData(Panel MenuPnl, String MenuName, String ScreenName) in D:\WSS Project\WSS 5.6 Tab Production\WSS\App_Code\Menu\clsSecurityCache.vb:line 45
+   at DashBoard.Page_Load(Object sender, EventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\DashBoard.aspx.vb:line 119</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="59">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 11:19:58 AM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 1868</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="60">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 11:20:06 AM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2099</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="61">
+    <ExceptionID>147</ExceptionID>
+    <DateofException>2/17/2010 11:21:23 AM</DateofException>
+    <SourceID>Load-286</SourceID>
+    <ApplicationID>Call_View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>24</UserId>
+    <UserName>nitin</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.FormatException: String was not recognized as a valid DateTime.
+   at System.DateTimeParse.Parse(String s, DateTimeFormatInfo dtfi, DateTimeStyles styles)
+   at System.Convert.ToDateTime(String value)
+   at SupportCenter_CallView_Call_View.SaveTask(Int16&amp; Count) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2167
+   at SupportCenter_CallView_Call_View.Page_Load(Object sender, EventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 363</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="62">
+    <ExceptionID>147</ExceptionID>
+    <DateofException>2/17/2010 11:21:23 AM</DateofException>
+    <SourceID>fill color Load-207</SourceID>
+    <ApplicationID>Call_View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>24</UserId>
+    <UserName>nitin</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.FormatException: String was not recognized as a valid DateTime.
+   at System.DateTimeParse.Parse(String s, DateTimeFormatInfo dtfi, DateTimeStyles styles)
+   at System.Convert.ToDateTime(String value)
+   at SupportCenter_CallView_Call_View.SaveTask(Int16&amp; Count) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2167
+   at SupportCenter_CallView_Call_View.Page_Load(Object sender, EventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 415</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="63">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 11:30:34 AM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 1868</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="64">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 11:30:38 AM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2071</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="65">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 12:33:01 PM</DateofException>
+    <SourceID>CreateTemplateColumnsTask-1998</SourceID>
+    <ApplicationID>Call-Detail</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_Detail.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\CallView\Call_Detail.aspx.vb:line 2015</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="66">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 12:33:02 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-Detail</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_Detail.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\CallView\Call_Detail.aspx.vb:line 2271</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="67">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 12:33:02 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-Detail</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_Detail.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\CallView\Call_Detail.aspx.vb:line 2239</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="68">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 12:33:02 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-Detail</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_Detail.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\CallView\Call_Detail.aspx.vb:line 2239</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="69">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 12:33:02 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-Detail</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_Detail.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\CallView\Call_Detail.aspx.vb:line 2239</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="70">
+    <ExceptionID>
+    </ExceptionID>
+    <DateofException>2/17/2010 12:34:32 PM</DateofException>
+    <SourceID>CDDLSetBlank-CDDLActionOwner_F</SourceID>
+    <ApplicationID>CDDL</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>24</UserId>
+    <UserName>24</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at System.Web.UI.WebControls.ListItemCollection.get_Item(Int32 index)
+   at CustomDDL.CDDLSetBlank() in D:\WSS Project\WSS 5.6 Tab Production\WSS\BaseClasses\Controls\ComboControl\CustomDDL.ascx.vb:line 361</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="71">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 1:03:58 PM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\CallView\Call_View.aspx.vb:line 1868</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="72">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 1:03:59 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\CallView\Call_View.aspx.vb:line 2093</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="73">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 1:05:35 PM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 1868</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="74">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 1:05:36 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2071</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="75">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 1:05:36 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2071</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="76">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 1:05:36 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2071</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="77">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 1:06:23 PM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 1868</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="78">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 1:06:23 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2071</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="79">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 1:06:23 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2071</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="80">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 1:06:23 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2071</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="81">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 1:08:00 PM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 1868</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="82">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 1:08:01 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2071</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="83">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 1:08:01 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2071</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="84">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 1:08:27 PM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 1868</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="85">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 1:08:27 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2071</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="86">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 1:08:59 PM</DateofException>
+    <SourceID>CreateTemplateColumnTask-2408</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.ArrayList.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.createTemplateColumnsTask() in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 1868</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="87">
+    <ExceptionID>2502</ExceptionID>
+    <DateofException>2/17/2010 1:09:00 PM</DateofException>
+    <SourceID>ItmDataBound-1860</SourceID>
+    <ApplicationID>Call-View</ApplicationID>
+    <ControlID>dtgTask</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.ArgumentOutOfRangeException: Specified argument was out of the range of valid values.
+Parameter name: index
+   at System.Web.UI.ControlCollection.get_Item(Int32 index)
+   at System.Web.UI.WebControls.TableCellCollection.get_Item(Int32 index)
+   at SupportCenter_CallView_Call_View.dtgTask_ItemDataBound(Object sender, DataGridItemEventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_View.aspx.vb:line 2071</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="88">
+    <ExceptionID>102</ExceptionID>
+    <DateofException>2/17/2010 3:34:47 PM</DateofException>
+    <SourceID>CallView.Load-462</SourceID>
+    <ApplicationID>as0002</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>Incorrect syntax near '='.</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="89">
+    <ExceptionID>129</ExceptionID>
+    <DateofException>2/17/2010 3:34:49 PM</DateofException>
+    <SourceID>Page_Load-1086</SourceID>
+    <ApplicationID>Call_Detail</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.Threading.ThreadAbortException: Thread was being aborted.
+   at System.Threading.Thread.AbortInternal()
+   at System.Threading.Thread.Abort(Object stateInfo)
+   at System.Web.HttpResponse.End()
+   at System.Web.HttpResponse.Redirect(String url, Boolean endResponse)
+   at System.Web.HttpResponse.Redirect(String url)
+   at clsSecurityCache.ScreenAccess(Int32 intScrID) in D:\WSS Project\WSS 5.6 Tab Production\WSS\App_Code\Menu\clsSecurityCache.vb:line 238
+   at SupportCenter_CallView_Call_Detail.Page_Load(Object sender, EventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\callview\Call_Detail.aspx.vb:line 593</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="90">
+    <ExceptionID>129</ExceptionID>
+    <DateofException>2/19/2010 1:00:02 PM</DateofException>
+    <SourceID>Page_Load-1086</SourceID>
+    <ApplicationID>Call_Detail</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>NA</UserId>
+    <UserName>NA</UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.Threading.ThreadAbortException: Thread was being aborted.
+   at System.Threading.Thread.AbortInternal()
+   at System.Threading.Thread.Abort(Object stateInfo)
+   at System.Web.HttpResponse.End()
+   at System.Web.HttpResponse.Redirect(String url, Boolean endResponse)
+   at System.Web.HttpResponse.Redirect(String url)
+   at clsSecurityCache.ScreenAccess(Int32 intScrID) in D:\WSS Project\WSS 5.6 Tab Production\WSS\App_Code\Menu\clsSecurityCache.vb:line 238
+   at SupportCenter_CallView_Call_Detail.Page_Load(Object sender, EventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\SupportCenter\CallView\Call_Detail.aspx.vb:line 593</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="91">
+    <ExceptionID>
+    </ExceptionID>
+    <DateofException>2/19/2010 1:01:29 PM</DateofException>
+    <SourceID>HTMLEncodeDecode</SourceID>
+    <ApplicationID>mdlMain</ApplicationID>
+    <ControlID>
+    </ControlID>
+    <UserId>
+    </UserId>
+    <UserName>
+    </UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>Conversion from type 'DBNull' to type 'String' is not valid.</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="92">
+    <ExceptionID>
+    </ExceptionID>
+    <DateofException>2/19/2010 1:02:09 PM</DateofException>
+    <SourceID>HTMLEncodeDecode</SourceID>
+    <ApplicationID>mdlMain</ApplicationID>
+    <ControlID>
+    </ControlID>
+    <UserId>
+    </UserId>
+    <UserName>
+    </UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>Conversion from type 'DBNull' to type 'String' is not valid.</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="93">
+    <ExceptionID>
+    </ExceptionID>
+    <DateofException>2/19/2010 1:03:10 PM</DateofException>
+    <SourceID>HTMLEncodeDecode</SourceID>
+    <ApplicationID>mdlMain</ApplicationID>
+    <ControlID>
+    </ControlID>
+    <UserId>
+    </UserId>
+    <UserName>
+    </UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>Conversion from type 'DBNull' to type 'String' is not valid.</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="94">
+    <ExceptionID>
+    </ExceptionID>
+    <DateofException>2/19/2010 1:03:21 PM</DateofException>
+    <SourceID>HTMLEncodeDecode</SourceID>
+    <ApplicationID>mdlMain</ApplicationID>
+    <ControlID>
+    </ControlID>
+    <UserId>
+    </UserId>
+    <UserName>
+    </UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>Conversion from type 'DBNull' to type 'String' is not valid.</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="95">
+    <ExceptionID>
+    </ExceptionID>
+    <DateofException>2/19/2010 1:12:00 PM</DateofException>
+    <SourceID>HTMLEncodeDecode</SourceID>
+    <ApplicationID>mdlMain</ApplicationID>
+    <ControlID>
+    </ControlID>
+    <UserId>
+    </UserId>
+    <UserName>
+    </UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>Conversion from type 'DBNull' to type 'String' is not valid.</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="96">
+    <ExceptionID>
+    </ExceptionID>
+    <DateofException>2/19/2010 1:12:05 PM</DateofException>
+    <SourceID>HTMLEncodeDecode</SourceID>
+    <ApplicationID>mdlMain</ApplicationID>
+    <ControlID>
+    </ControlID>
+    <UserId>
+    </UserId>
+    <UserName>
+    </UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>Conversion from type 'DBNull' to type 'String' is not valid.</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="97">
+    <ExceptionID>
+    </ExceptionID>
+    <DateofException>2/19/2010 1:12:09 PM</DateofException>
+    <SourceID>HTMLEncodeDecode</SourceID>
+    <ApplicationID>mdlMain</ApplicationID>
+    <ControlID>
+    </ControlID>
+    <UserId>
+    </UserId>
+    <UserName>
+    </UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>Conversion from type 'DBNull' to type 'String' is not valid.</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="98">
+    <ExceptionID>
+    </ExceptionID>
+    <DateofException>2/19/2010 1:12:10 PM</DateofException>
+    <SourceID>HTMLEncodeDecode</SourceID>
+    <ApplicationID>mdlMain</ApplicationID>
+    <ControlID>
+    </ControlID>
+    <UserId>
+    </UserId>
+    <UserName>
+    </UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>Conversion from type 'DBNull' to type 'String' is not valid.</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="99">
+    <ExceptionID>
+    </ExceptionID>
+    <DateofException>2/19/2010 1:12:11 PM</DateofException>
+    <SourceID>HTMLEncodeDecode</SourceID>
+    <ApplicationID>mdlMain</ApplicationID>
+    <ControlID>
+    </ControlID>
+    <UserId>
+    </UserId>
+    <UserName>
+    </UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>Conversion from type 'DBNull' to type 'String' is not valid.</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="100">
+    <ExceptionID>
+    </ExceptionID>
+    <DateofException>2/19/2010 1:12:12 PM</DateofException>
+    <SourceID>HTMLEncodeDecode</SourceID>
+    <ApplicationID>mdlMain</ApplicationID>
+    <ControlID>
+    </ControlID>
+    <UserId>
+    </UserId>
+    <UserName>
+    </UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>Conversion from type 'DBNull' to type 'String' is not valid.</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="101">
+    <ExceptionID>
+    </ExceptionID>
+    <DateofException>2/19/2010 1:12:13 PM</DateofException>
+    <SourceID>HTMLEncodeDecode</SourceID>
+    <ApplicationID>mdlMain</ApplicationID>
+    <ControlID>
+    </ControlID>
+    <UserId>
+    </UserId>
+    <UserName>
+    </UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>Conversion from type 'DBNull' to type 'String' is not valid.</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="102">
+    <ExceptionID>131</ExceptionID>
+    <DateofException>2/19/2010 3:24:44 PM</DateofException>
+    <SourceID>FillCache-494</SourceID>
+    <ApplicationID>clsSecurityCache.vb</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>
+    </UserId>
+    <UserName>
+    </UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.Data.SqlClient.SqlException: Incorrect syntax near the keyword 'order'.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj)
+   at System.Data.SqlClient.TdsParser.Run(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj)
+   at System.Data.SqlClient.SqlDataReader.ConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, DbAsyncResult result)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at System.Data.Common.DbCommand.System.Data.IDbCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.FillInternal(DataSet dataset, DataTable[] datatables, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at clsSecurityCache.FillCache() in D:\WSS Project\WSS 5.6 Tab Production\WSS\App_Code\Menu\clsSecurityCache.vb:line 656</ExceptionDescription>
+  </Application>
+  <Application Type="Exception" IntLogid="103">
+    <ExceptionID>6278</ExceptionID>
+    <DateofException>2/19/2010 3:24:44 PM</DateofException>
+    <SourceID>Load-57</SourceID>
+    <ApplicationID>SideMenu</ApplicationID>
+    <ControlID>NA</ControlID>
+    <UserId>
+    </UserId>
+    <UserName>
+    </UserName>
+    <IPAdress>10.10.10.106</IPAdress>
+    <ComputerName>ION-PC</ComputerName>
+    <ExceptionDescription>System.Data.DataException: DataTable must be set prior to using DataView.
+   at System.Data.DataView..ctor(DataTable table, String RowFilter, String Sort, DataViewRowState RowState)
+   at clsSecurityCache.FilterCacheTable(String objType) in D:\WSS Project\WSS 5.6 Tab Production\WSS\App_Code\Menu\clsSecurityCache.vb:line 249
+   at clsSecurityCache.FillObjectData(Panel MenuPnl, String MenuName, String ScreenName) in D:\WSS Project\WSS 5.6 Tab Production\WSS\App_Code\Menu\clsSecurityCache.vb:line 45
+   at DashBoard.Page_Load(Object sender, EventArgs e) in D:\WSS Project\WSS 5.6 Tab Production\WSS\DashBoard.aspx.vb:line 119</ExceptionDescription>
+  </Application>
+</Logging>

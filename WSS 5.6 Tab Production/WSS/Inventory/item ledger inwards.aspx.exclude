@@ -1,0 +1,374 @@
+﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="item ledger inwards.aspx.vb" Inherits="Inventory_item_ledger_inwards" %>
+<%@ Register TagPrefix="uc1" TagName="DateSelector" Src="../SupportCenter/calendar/DateSelector.ascx" %>
+<%@ Register TagPrefix="iewc" Namespace="Microsoft.Web.UI.WebControls" Assembly="Microsoft.Web.UI.WebControls" %>
+<%@ Register TagPrefix="cc1" Namespace="CustomControls.Web" Assembly="CustomControls.Web" %>
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Item_Ledger_Inwards</title>
+		<meta name="GENERATOR" content="Microsoft Visual Studio .NET 7.1">
+		<meta name="CODE_LANGUAGE" content="Visual Basic .NET 7.1">
+		<meta name="vs_defaultClientScript" content="JavaScript">
+		<meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5">
+		<LINK rel="stylesheet" type="text/css" href="http://localhost/WSSBergesen/Images/Js/StyleSheet1.css"
+</head>
+<body>
+    <form id="Form1" method="post" runat="server">
+			<table height="100%" cellSpacing="0" cellPadding="0" width="100%" border="0">
+				<tr>
+					<td vAlign="top">
+						<table cellSpacing="0" cellPadding="0" width="100%" border="0">
+							<tr>
+								<td>
+									<div align="right"><IMG height="2" src="../Images/top_right_line.gif" width="96"></div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<table cellSpacing="0" cellPadding="0" width="100%" border="0">
+										<tr>
+											<td background="../Images/top_left_back.gif">&nbsp;</td>
+											<td width="50"><IMG height="20" src="../Images/top_right.gif" width="50"></td>
+											<td width="21"><A href="#"><IMG height="20" src="../Images/bt_min.gif" width="21" border="0"></A></td>
+											<td width="21"><A href="#"><IMG height="20" src="../Images/bt_max.gif" width="21" border="0"></A></td>
+											<td width="19"><A href="#"><IMG onclick="CloseWSS();" height="20" src="../Images/bt_clo.gif" width="19" border="0"></A></td>
+											<td width="6"><IMG height="20" src="../Images/bt_space.gif" width="6"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<table cellSpacing="0" cellPadding="0" width="100%" border="0">
+										<tr width="100%">
+											<td background="../Images/top_nav_back.gif" height="67">
+												<table cellSpacing="0" cellPadding="0" width="100%" align="center" border="0">
+													<TR>
+														<TD><asp:button id="BtnGrdSearch" runat="server" Height="0" Width="0px"></asp:button><asp:imagebutton id="imgbtnSearch" tabIndex="1" runat="server" Height="1px" Width="1px" AlternateText="."
+																CommandName="submit" ImageUrl="white.GIF"></asp:imagebutton><IMG class="PlusImageCSS" onclick="HideContents();" alt="Hide" src="../Images/left005.gif"
+																name="imgHide"> <IMG class="PlusImageCSS" onclick="ShowContents();" alt="Show" src="../Images/Right005.gif"
+																name="ingShow">
+															<asp:label id="lblTitleLabelUserSearch" runat="server" Height="12px" Width="111px" CssClass="TitleLabel"
+																BorderWidth="2px" BorderStyle="None">ITEM Master</asp:label></TD>
+														<TD vAlign="middle" align="center" background="../Images/top_nav_back.gif" bgColor="lightgrey"
+															height="67"><IMG title="Seperator" alt="R" src="../Images/00Seperator.gif" border="0">&nbsp;
+															<asp:imagebutton id="imgAdd" accessKey="A" runat="server" ImageUrl="../Images/s2Add01.gif" ToolTip="Add"></asp:imagebutton>&nbsp;&nbsp;
+															<asp:imagebutton id="imgEdit" accessKey="E" runat="server" ImageUrl="../Images/S2edit01.gif" ToolTip="Edit"></asp:imagebutton>&nbsp;
+															<asp:imagebutton id="imgSearch" accessKey="H" runat="server" ImageUrl="../Images/s1search02.gif"
+																ToolTip="Search"></asp:imagebutton>&nbsp;&nbsp;
+															<asp:imagebutton id="imgReset" accessKey="R" runat="server" ImageUrl="../Images/reset_20.gif" ToolTip="Reset"></asp:imagebutton>&nbsp;
+															<asp:imagebutton id="imgDelete" accessKey="D" runat="server" ImageUrl="../Images/s2delete01.gif"
+																ToolTip="Delete"></asp:imagebutton>&nbsp;
+															<asp:imagebutton id="imgShowAll" accessKey="A" runat="server" ImageUrl="../Images/Disabled.gif" ToolTip="Show All"></asp:imagebutton>&nbsp;
+															<IMG title="Seperator" alt="R" src="../Images/00Seperator.gif" border="0">&nbsp;
+														</TD>
+														<TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+															</STRONG></FONT></TD>
+														<td>&nbsp;
+														</td>
+													</TR>
+												</table>
+											</td>
+											<td align="right" width="152" background="../Images/top_nav_back01.gif" height="67"><IMG class="PlusImageCSS" id="Help" title="Help" onclick="ShowHelp('970','../');" alt="E"
+													src="../Images/s1question02.gif" border="0" name="tbrbtnEdit">&nbsp;&nbsp;<IMG class="PlusImageCSS" id="Logout" title="Logout" onclick="LogoutWSS();" alt="E" src="../icons/logoff.gif"
+													border="0" name="tbrbtnEdit">&nbsp;&nbsp;&nbsp;</td>
+										</tr>
+									</table>
+							<tr>
+								<td height="10">
+									<table cellSpacing="0" cellPadding="0" width="100%" border="0">
+										<tr>
+											<td background="../Images/main_line.gif" height="10"><IMG height="10" src="../Images/main_line.gif" width="6"></td>
+											<td width="7" height="10"><IMG height="10" src="../Images/main_line01.gif" width="7"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td height="2">
+									<table cellSpacing="0" cellPadding="0" width="100%" border="0">
+										<tr>
+											<td background="../Images/main_line02.gif" height="2"><IMG height="2" src="../Images/main_line02.gif" width="2"></td>
+											<td width="12" height="2"><IMG height="2" src="../Images/main_line03.gif" width="12"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<DIV style="OVERFLOW: auto; WIDTH: 100%; HEIGHT: 581px">
+										<TABLE id="Table16" borderColor="activeborder" cellSpacing="0" cellPadding="0" width="100%"
+											border="0">
+											<TR>
+												<TD vAlign="top" colSpan="1">
+													<!--  **********************************************************************-->
+													<DIV style="OVERFLOW: auto; WIDTH: 100%; HEIGHT: 581px">
+														<table cellSpacing="0" cellPadding="0" width="100%" border="0">
+															<tr>
+																<td colSpan="2"><cc1:collapsiblepanel id="cpnlErrorPanel" runat="server" Height="47px" Width="100%" BorderWidth="0px"
+																		BorderStyle="Solid" Draggable="False" CollapseImage="../Images/ToggleUp.gif" ExpandImage="../Images/ToggleDown.gif"
+																		Text="Error Message" TitleBackColor="Transparent" TitleClickable="True" TitleForeColor="black" PanelCSS="panel"
+																		TitleCSS="test" Visible="False" BorderColor="Indigo">
+																		<TABLE id="Table2" borderColor="lightgrey" cellSpacing="0" cellPadding="0" border="0">
+																			<TR>
+																				<TD colSpan="0" rowSpan="0">
+																					<asp:Image id="Image1" runat="server" Width="16px" Height="16px" ImageUrl="../Images/warning.gif"></asp:Image></TD>
+																				<TD colSpan="0" rowSpan="0">&nbsp;
+																					<asp:Label id="lblError" runat="server" Font-Size="XX-Small" Font-Names="Verdana" ForeColor="Red"></asp:Label>
+																					<asp:ListBox id="lstError" runat="server" Width="752px" BorderStyle="Groove" BorderWidth="0"
+																						Font-Size="XX-Small" Font-Names="Verdana" ForeColor="Red"></asp:ListBox></TD>
+																			</TR>
+																		</TABLE>
+																	</cc1:collapsiblepanel></td>
+															</tr>
+															<TR>
+																<td>
+																	<DIV style="OVERFLOW: auto; WIDTH: 100%; HEIGHT: 400pt">
+																		<TABLE id="Table1261" borderColor="activeborder" cellSpacing="0" cellPadding="0" width="100%"
+																			align="left" border="0">
+																			<tr>
+																				<td><asp:panel id="Panel1" runat="server"></asp:panel></td>
+																			</tr>
+																			<TR>
+																				<TD vAlign="top" align="left">
+																					<!--  **********************************************************************--><cc1:collapsiblepanel id="cpnlItemGroup" runat="server" Width="100%" BorderWidth="0px" BorderStyle="Solid"
+																						Draggable="False" CollapseImage="../Images/ToggleUp.gif" ExpandImage="../Images/ToggleDown.gif" Text="Item Group" TitleBackColor="Transparent" TitleClickable="True" TitleForeColor="black"
+																						PanelCSS="panel" TitleCSS="test" Visible="true" BorderColor="Indigo">
+																						<DIV style="OVERFLOW: auto; WIDTH: 100%; HEIGHT: 450px">
+																							<TABLE style="BORDER-COLLAPSE: collapse" height="31" width="100%" border="1">
+																								<TR>
+																									<TD width="6" height="31">&nbsp;</TD>
+																									<TD width="222" height="31">
+																										<asp:Label id="Label15" runat="server" Width="97px" Height="19px" CssClass="FieldLabel">Item No</asp:Label><BR>
+																										<asp:TextBox id="txtItemNo" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus"
+																											ReadOnly="True" MaxLength="100"></asp:TextBox></TD>
+																									<TD width="222" height="31">
+																										<asp:Label id="Label7" runat="server" Width="97px" Height="19px" CssClass="FieldLabel" Font-Bold="True">Item Name</asp:Label><BR>
+																										<asp:TextBox id="txtItemName" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus"
+																											ReadOnly="True" MaxLength="100"></asp:TextBox></TD>
+																									<TD width="222" height="31">
+																										<asp:Label id="Label2" runat="server" Width="97px" Height="19px" CssClass="FieldLabel">Item Code</asp:Label><BR>
+																										<asp:TextBox id="txtItemCode" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus"
+																											ReadOnly="True" MaxLength="100"></asp:TextBox></TD>
+																									<TD width="222" height="31">
+																										<asp:Label id="lblCategory" runat="server" Width="97px" Height="19px" CssClass="FieldLabel">Category</asp:Label><BR>
+																										<asp:DropDownList id="ddlCategory" runat="server" Width="121px"></asp:DropDownList></TD>
+																								</TR>
+																								<TR>
+																									<TD width="6" height="31">&nbsp;</TD>
+																									<TD width="222" height="31">
+																										<asp:Label id="Label4" runat="server" Width="97px" Height="19px" CssClass="FieldLabel">Description</asp:Label><BR>
+																										<asp:TextBox id="txtDescription" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus"
+																											ReadOnly="True" MaxLength="100"></asp:TextBox></TD>
+																									<TD width="222" height="31">
+																										<asp:Label id="Label1" runat="server" Width="97px" Height="19px" CssClass="FieldLabel">Part No</asp:Label><BR>
+																										<asp:TextBox id="txtPartNo" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus"
+																											ReadOnly="True" MaxLength="100"></asp:TextBox></TD>
+																									<TD width="222" height="31">
+																										<asp:Label id="Label34" runat="server" Width="97px" Height="19px" CssClass="FieldLabel">Serial No</asp:Label><BR>
+																										<asp:TextBox id="txtSerialNo" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus"
+																											ReadOnly="True" MaxLength="100"></asp:TextBox></TD>
+																									<TD width="222" height="31">
+																										<asp:Label id="Label16" runat="server" Width="137px" Height="19px" CssClass="FieldLabel">Location</asp:Label><BR>
+																										<asp:DropDownList id="ddlLocation" runat="server" Width="121px"></asp:DropDownList></TD>
+																								</TR>
+																								<TR>
+																									<TD width="6" height="31">&nbsp;</TD>
+																									<TD width="222" height="31">
+																										<asp:Label id="Label9" runat="server" Width="97px" Height="19px" CssClass="FieldLabel">Parnet Group</asp:Label><BR>
+																										<asp:TextBox id="txtParnetGroup" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus"
+																											ReadOnly="True" MaxLength="100"></asp:TextBox></TD>
+																									<TD width="222" height="31">
+																										<asp:Label id="Label10" runat="server" Width="97px" Height="19px" CssClass="FieldLabel">Parnet Item No</asp:Label><BR>
+																										<asp:TextBox id="txtParentItemNo" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus"
+																											ReadOnly="True" MaxLength="100"></asp:TextBox></TD>
+																									<TD width="222" height="31">
+																										<asp:Label id="Label11" runat="server" Width="97px" Height="19px" CssClass="FieldLabel">Type</asp:Label><BR>
+																										<asp:DropDownList id="ddlType" runat="server" Width="121px"></asp:DropDownList></TD>
+																									<TD width="222" height="31">
+																										<asp:Label id="Label12" runat="server" Width="137px" Height="19px" CssClass="FieldLabel">Opening Balance</asp:Label><BR>
+																										<asp:TextBox id="txtOpeningbal" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus"
+																											ReadOnly="True" MaxLength="100"></asp:TextBox></TD>
+																								</TR>
+																								<TR>
+																									<TD style="HEIGHT: 46px" width="6" height="46">&nbsp;</TD>
+																									<TD style="HEIGHT: 46px" width="222" height="46">
+																										<asp:Label id="Label13" runat="server" Width="97px" Height="19px" CssClass="FieldLabel">RecoderLevel</asp:Label><BR>
+																										<asp:TextBox id="txtRecordLevel" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus"
+																											ReadOnly="True" MaxLength="100"></asp:TextBox></TD>
+																									<TD style="HEIGHT: 46px" width="222" height="46">
+																										<asp:Label id="Label14" runat="server" Width="97px" Height="19px" CssClass="FieldLabel">BalanceQty</asp:Label><BR>
+																										<asp:TextBox id="txtBalanceQty" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus"
+																											ReadOnly="True" MaxLength="100"></asp:TextBox></TD>
+																									<TD style="HEIGHT: 46px" width="222" height="46">
+																										<asp:Label id="Label35" runat="server" Width="97px" Height="19px" CssClass="FieldLabel">Unit of Measure</asp:Label><BR>
+																										<asp:TextBox id="txtUnitMeasure" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus"
+																											ReadOnly="True" MaxLength="100"></asp:TextBox></TD>
+																									<TD style="HEIGHT: 46px" width="222" height="46">
+																										<asp:Label id="Label17" runat="server" Width="120px" Height="19px" CssClass="FieldLabel">Date Of Purchase</asp:Label><BR>
+																										<UC1:DATESELECTOR id="dtDateOfPurchase" runat="server" width="86px"></UC1:DATESELECTOR></TD>
+																								</TR>
+																								<TR>
+																									<TD style="HEIGHT: 36px" width="6" height="36">&nbsp;</TD>
+																									<TD style="HEIGHT: 36px" width="222" height="36">
+																										<asp:Label id="Label18" runat="server" Width="112px" Height="19px" CssClass="FieldLabel">Manfacturing Date</asp:Label><BR>
+																										<UC1:DATESELECTOR id="dtManfacturingDate" runat="server" width="86px"></UC1:DATESELECTOR></TD>
+																									<TD style="HEIGHT: 36px" width="222" height="36">
+																										<asp:Label id="Label19" runat="server" Width="97px" Height="19px" CssClass="FieldLabel">Manufactured By</asp:Label><BR>
+																										<asp:TextBox id="txtManfacturedBy" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus"
+																											ReadOnly="True" MaxLength="100"></asp:TextBox></TD>
+																									<TD style="HEIGHT: 36px" width="222" height="36">
+																										<asp:Label id="Label20" runat="server" Width="137px" Height="19px" CssClass="FieldLabel">Model No</asp:Label><BR>
+																										<asp:TextBox id="txtModelNo" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus"
+																											ReadOnly="True" MaxLength="100"></asp:TextBox></TD>
+																									<TD style="HEIGHT: 36px" width="222" height="36">
+																										<asp:Label id="Label21" runat="server" Width="120px" Height="19px" CssClass="FieldLabel">Warranty Period</asp:Label><BR>
+																										<asp:TextBox id="txtWarrantyPeriod" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus"
+																											ReadOnly="True" MaxLength="100"></asp:TextBox></TD>
+																								</TR>
+																								<TR>
+																									<TD style="HEIGHT: 38px" width="6" height="38">&nbsp;</TD>
+																									<TD style="HEIGHT: 38px" width="222" height="38">
+																										<asp:Label id="Label22" runat="server" Width="112px" Height="19px" CssClass="FieldLabel">Warranty In</asp:Label><BR>
+																										<asp:TextBox id="txtWarrantyIn" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus"
+																											ReadOnly="True" MaxLength="100"></asp:TextBox></TD>
+																									<TD style="HEIGHT: 38px" width="222" height="38">
+																										<asp:Label id="Label23" runat="server" Width="97px" Height="19px" CssClass="FieldLabel">AMC Vendor</asp:Label><BR>
+																										<asp:TextBox id="txtACMVendor" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus"
+																											ReadOnly="True" MaxLength="100"></asp:TextBox></TD>
+																									<TD style="HEIGHT: 38px" width="222" height="38">
+																										<asp:Label id="Label24" runat="server" Width="137px" Height="19px" CssClass="FieldLabel">AMC Expires On</asp:Label><BR>
+																										<asp:TextBox id="txtAMCExpiresOn" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus"
+																											ReadOnly="True" MaxLength="100"></asp:TextBox></TD>
+																									<TD style="HEIGHT: 38px" width="222" height="38">
+																										<asp:Label id="Label25" runat="server" Width="120px" Height="19px" CssClass="FieldLabel">AMC Comments</asp:Label><BR>
+																										<asp:TextBox id="txtAMCComments" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus"
+																											ReadOnly="True" MaxLength="100"></asp:TextBox></TD>
+																								</TR>
+																								<TR>
+																									<TD width="6" height="31">&nbsp;</TD>
+																									<TD width="222" height="31">
+																										<asp:Label id="Label26" runat="server" Width="112px" Height="19px" CssClass="FieldLabel">AMCAlertsDaysInAdvance</asp:Label><BR>
+																										<asp:TextBox id="txtAMCAlerts" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus"
+																											ReadOnly="True" MaxLength="100"></asp:TextBox></TD>
+																									<TD width="222" height="31">
+																										<asp:Label id="Label27" runat="server" Width="97px" Height="19px" CssClass="FieldLabel">Alert</asp:Label><BR>
+																										<asp:TextBox id="txtAlert" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus" ReadOnly="True"
+																											MaxLength="100"></asp:TextBox></TD>
+																									<TD width="222" height="31">
+																										<asp:Label id="Label28" runat="server" Width="137px" Height="19px" CssClass="FieldLabel">Status</asp:Label><BR>
+																										<asp:TextBox id="txtStatus" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus"
+																											ReadOnly="True" MaxLength="100"></asp:TextBox></TD>
+																									<TD width="222" height="31">
+																										<asp:Label id="Label29" runat="server" Width="120px" Height="19px" CssClass="FieldLabel">Price</asp:Label><BR>
+																										<asp:TextBox id="txtPrice" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus" ReadOnly="True"
+																											MaxLength="100"></asp:TextBox></TD>
+																								</TR>
+																								<TR>
+																									<TD width="6" height="31">&nbsp;</TD>
+																									<TD width="222" height="31">
+																										<asp:Label id="Label30" runat="server" Width="112px" Height="19px" CssClass="FieldLabel">Currency</asp:Label><BR>
+																										<asp:TextBox id="txtCurrency" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus"
+																											ReadOnly="True" MaxLength="100"></asp:TextBox></TD>
+																									<TD width="222" height="31">
+																										<asp:Label id="Label31" runat="server" Width="97px" Height="19px" CssClass="FieldLabel">Depreciation</asp:Label><BR>
+																										<asp:TextBox id="txtDepreciation" runat="server" Width="139px" Height="18px" CssClass="txtNoFocus"
+																											ReadOnly="True" MaxLength="100"></asp:TextBox></TD>
+																									<TD width="222" height="31"><BR>
+																									</TD>
+																									<TD width="222" height="31"><BR>
+																									</TD>
+																								</TR>
+																							</TABLE>
+																						</DIV>
+																					</cc1:collapsiblepanel>
+																					<!-- Panel for displaying Task Info --> <!-- Panel for displaying Action Info-->  <!-- ***********************************************************************--></TD>
+																			</TR>
+																		</TABLE>
+																	</DIV>
+																	<asp:panel id="Panel6" runat="server">
+																		<asp:panel id="Panel7" runat="server">
+																			<TABLE height="25">
+																				<TR>
+																					<TD>
+																						<asp:Label id="pg" Width="40px" Height="12pt" Font-Size="8pt" Font-Names="Verdana" ForeColor="#0000C0"
+																							Font-Bold="True" Runat="server">Page</asp:Label></TD>
+																					<TD>
+																						<asp:Label id="CurrentPg" runat="server" Width="10px" Height="12px" Font-Size="X-Small" ForeColor="Crimson"
+																							Font-Bold="True"></asp:Label></TD>
+																					<TD>
+																						<asp:Label id="of" Font-Size="8pt" Font-Names="Verdana" ForeColor="#0000C0" Font-Bold="True"
+																							Runat="server">of</asp:Label></TD>
+																					<TD>
+																						<asp:label id="TotalPages" runat="server" Width="10px" Height="12px" Font-Size="X-Small" ForeColor="Crimson"
+																							Font-Bold="True"></asp:label></TD>
+																					<TD>
+																						<asp:imagebutton id="Firstbutton" runat="server" ImageUrl="../Images/next9.jpg" AlternateText="First"
+																							ToolTip="First"></asp:imagebutton></TD>
+																					<TD width="14">
+																						<asp:imagebutton id="Prevbutton" runat="server" ImageUrl="../Images/next99.jpg" ToolTip="Previous"></asp:imagebutton></TD>
+																					<TD>
+																						<asp:imagebutton id="Nextbutton" runat="server" ImageUrl="../Images/next9999.jpg" ToolTip="Next"></asp:imagebutton></TD>
+																					<TD>
+																						<asp:imagebutton id="Lastbutton" runat="server" ImageUrl="../Images/next999.jpg" ToolTip="Last"></asp:imagebutton></TD>
+																					<TD>
+																						<asp:textbox id="txtPageSize" runat="server" Width="24px" Height="14px" Font-Size="7pt" MaxLength="3"></asp:textbox></TD>
+																					<TD>
+																						<asp:Button id="Button3" runat="server" Width="16px" Height="12pt" BorderStyle="None" ToolTip="Change Paging Size"
+																							Text=">" Font-Size="7pt" ForeColor="Navy" Font-Bold="True"></asp:Button></TD>
+																					<TD></TD>
+																					<TD>
+																						<asp:Label id="lblrecords" runat="server" Height="12pt" Font-Size="8pt" Font-Names="Verdana"
+																							ForeColor="MediumBlue" Font-Bold="True">Total Records</asp:Label></TD>
+																					<TD>
+																						<asp:Label id="TotalRecods" runat="server" Height="12pt" Font-Size="8pt" Font-Names="Verdana"
+																							ForeColor="Crimson" Font-Bold="True"></asp:Label></TD>
+																					<TD></TD>
+																					<TD></TD>
+																				</TR>
+																			</TABLE>
+																		</asp:panel>
+																	</asp:panel></td>
+															</TR>
+														</table>
+													</DIV>
+												</TD>
+												<td vAlign="top" width="12" background="../Images/main_line04.gif"><IMG height="1" src="../Images/main_line04.gif" width="12"></td>
+											</TR>
+										</TABLE>
+									</DIV>
+								</td>
+							</tr>
+							<tr>
+								<td height="2">
+									<table cellSpacing="0" cellPadding="0" width="100%" border="0">
+										<tr>
+											<td background="../Images/main_line06.gif" height="2"><IMG height="2" src="../Images/main_line06.gif" width="2"></td>
+											<td width="12" height="2"><IMG height="2" src="../Images/main_line05.gif" width="12"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<table cellSpacing="0" cellPadding="0" width="100%" border="0">
+										<tr>
+											<td background="../Images/bottom_back.gif">&nbsp;</td>
+											<td width="66"><IMG height="31" src="../Images/bottom_right.gif" width="66"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			</TD></TR></TABLE>
+			<DIV></DIV>
+			<INPUT type="hidden" name="txthidden"> <INPUT type="hidden" name="txthiddenImage">
+		</form>
+</body>
+</html>

@@ -1,0 +1,5 @@
+﻿
+Partial Class Inventory_item_ledger_inwards
+    Inherits System.Web.UI.Page
+    
+End Class

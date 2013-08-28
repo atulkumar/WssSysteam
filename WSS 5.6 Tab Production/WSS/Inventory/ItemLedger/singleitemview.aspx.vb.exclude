@@ -1,0 +1,161 @@
+﻿Imports ION.Logging.EventLogging
+Imports ION.Data
+Imports System.Data.SqlClient
+Imports Microsoft.Web.UI.WebControls
+Imports System.Text
+Imports Microsoft.Win32
+Imports ION.Net
+Imports System.Web.Security
+Imports System.Security.Cryptography
+Imports System.Drawing
+Imports System.Data
+Imports System.Configuration
+Imports System.Data.Common
+Imports ION.Logging
+Imports System.IO
+
+Namespace IONWSS
+
+    Partial Class Inventory_ItemLedger_singleitemview
+        Inherits System.Web.UI.Page
+
+        Public ItemID As Integer
+        Private Shared arrColWidth As New ArrayList
+        Private Shared arrColumnName As New ArrayList
+        Private Shared arrTextboxName As New ArrayList
+        Dim IONCode As String
+
+        Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+            'Put user code to initialize the page here
+            imgClose.Attributes.Add("Onclick", "return SaveEdit('Close');")
+            ItemID = Val(Request.QueryString("ID"))
+            GetItemDetail(ItemID)
+            DefineGridColumnData()
+            Bindgrid(ItemID)
+            FormatGrid()
+            cpnlItemView.Text = "Item View [" & IONCode & "]"
+            Dim strhiddenImage As String = Request.Form("txthiddenImage")
+            If strhiddenImage <> "" Then
+                Select Case strhiddenImage
+                    Case "Close"
+                        'Response.Write("<script>self.opener.callrefresh();</script>")
+                        Response.Write("<script>window.close();</script>")
+                End Select
+            End If
+        End Sub
+
+        Private Function GetItemDetail(ByVal ItemID As Integer)
+
+            Dim blnStatus As Boolean
+            Dim sqRDR As SqlClient.SqlDataReader
+            Try
+                sqRDR = SQL.Search("DBMonitorEdit", "Monitoredit", "select IL_VC50_Item_ION_Code ,IL_VC16_Item_Status,IL_DT8_Purchasing_Date,IL_NU9_Item_ID_FK,IL_VC50_Item_Part_No,IL_VC50_Item_Serial_No,IL_FL8_Item_Price,IM_VC32_Item_Name,IM_VC200_Item_Decription,IL_NU9_Warranty_Period,IL_VC32_Warranty_IN,IL_NU9_Vendor_ID_FK,IL_NU9_AMCVendor_ID_FK,IL_VC20_Purchase_Order_No,IL_DT8_AMCExpire_ON,IL_VC200_AMCComments,IL_NU9_AMCAdvance_Alert_Days,IM_VC255_Image_URL,IM_NU9_Responsible_Person_ID_FK,a.CI_VC36_Name as RespPerson, b.CI_VC36_Name as Vendor,c.CI_VC36_Name as AMCWith,IM_VC50_Manufactured_By  From T240012,T240011,T010011 a,T010011 b,T010011 c where IL_NU9_Item_Ledger_ID_PK=" & ItemID & " and IM_NU9_Item_Master_ID_PK=IL_NU9_Item_ID_FK and a.CI_NU8_Address_Number=IM_NU9_Responsible_Person_ID_FK and b.CI_NU8_Address_Number=IL_NU9_Vendor_ID_FK and c.CI_NU8_Address_Number=IL_NU9_AMCVendor_ID_FK ", SQL.CommandBehaviour.SingleRow, blnStatus, "")
+                'if blnStatus True 
+                If blnStatus = True Then
+
+
+                    'sqRDR reader read data from t240011 and fill Textboxes
+                    While sqRDR.Read
+                        Dim LocationId As Integer = SQL.Search("ItemMaster", "mobjTreeMenu_SelectedIndexChange", "select ITL_NU9_Location_ID_FK from  T240015 where ITL_NU9_Item_Transaction_Log_PK=(select max(ITL_NU9_Item_Transaction_Log_PK) from T240015 where ITL_NU9_Item_Ledger_ID_FK=" & ItemID & " ) and ITL_NU9_Item_Ledger_ID_FK=1 ", "")
+
+                        If LocationId = 0 Then
+                            txtLocation.Text = "In Store"
+                        Else
+                            txtLocation.Text = SQL.Search("ItemMaster", "mobjTreeMenu_SelectedIndexChange", "select  LM_VC32_Location_Name from  t240031  where  LM_NU9_Location_ID_PK=" & LocationId, "")
+                        End If
+
+                        IONCode = IIf(IsDBNull(sqRDR("IL_VC50_Item_ION_Code")), "", sqRDR("IL_VC50_Item_ION_Code"))
+                        txtIONcode.Text = IIf(IsDBNull(sqRDR("IL_VC20_Purchase_Order_No")), "", sqRDR("IL_VC20_Purchase_Order_No")) 'OrderNo
+                        txtStatus.Text = IIf(IsDBNull(sqRDR("IL_VC16_Item_Status")), "", sqRDR("IL_VC16_Item_Status"))
+                        txtManufacturingdate.Text = IIf(IsDBNull(sqRDR("IL_DT8_Purchasing_Date")), "", sqRDR("IL_DT8_Purchasing_Date"))
+                        txtPartNo.Text = IIf(IsDBNull(sqRDR("IL_VC50_Item_Part_No")), "", sqRDR("IL_VC50_Item_Part_No"))
+                        txtSerialNo.Text = IIf(IsDBNull(sqRDR("IL_VC50_Item_Serial_No")), "", sqRDR("IL_VC50_Item_Serial_No"))
+                        txtItemPrice.Text = IIf(IsDBNull(sqRDR("IL_FL8_Item_Price")), "", sqRDR("IL_FL8_Item_Price"))
+
+                        txtItemName.Text = IIf(IsDBNull(sqRDR("IM_VC32_Item_Name")), "", sqRDR("IM_VC32_Item_Name"))
+                        txtDescription.Text = IIf(IsDBNull(sqRDR("IM_VC200_Item_Decription")), "", sqRDR("IM_VC200_Item_Decription"))
+
+                        txtWarrenty.Text = IIf(IsDBNull(sqRDR("IL_NU9_Warranty_Period")), "", sqRDR("IL_NU9_Warranty_Period"))
+                        txtWarrantyIn.Text = IIf(IsDBNull(sqRDR("IL_VC32_Warranty_IN")), "", sqRDR("IL_VC32_Warranty_IN"))
+                        txtAmcexpireon.Text = IIf(IsDBNull(sqRDR("IL_DT8_AMCExpire_ON")), "", sqRDR("IL_DT8_AMCExpire_ON"))
+                        txtAMCComments.Text = IIf(IsDBNull(sqRDR("IL_VC200_AMCComments")), "", sqRDR("IL_VC200_AMCComments"))
+
+                        txtAMCalertDays.Text = IIf(IsDBNull(sqRDR("IL_NU9_AMCAdvance_Alert_Days")), "", sqRDR("IL_NU9_AMCAdvance_Alert_Days"))
+                        txtResponsiblePerson.Text = IIf(IsDBNull(sqRDR("RespPerson")), "", sqRDR("RespPerson"))
+                        txtvendor.Text = IIf(IsDBNull(sqRDR("Vendor")), "", sqRDR("Vendor"))
+                        txtAmcWith.Text = IIf(IsDBNull(sqRDR("AMCWith")), "", sqRDR("AMCWith"))
+                        txtmangBy.Text = IIf(IsDBNull(sqRDR("IM_VC50_Manufactured_By")), "", sqRDR("IM_VC50_Manufactured_By"))
+
+                        txtpath.Text = IIf(IsDBNull(sqRDR("IM_VC255_Image_URL")), "", sqRDR("IM_VC255_Image_URL"))
+                        If Not txtpath.Text.Trim = "" Then
+                            imgDesign.ImageUrl = txtpath.Text.Trim
+                        End If
+                    End While
+                End If
+                'Close
+                sqRDR.Close()
+            Catch ex As Exception
+                CreateLog("ItemMaster", "GetNodeDetails-1025", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString)
+            End Try
+
+        End Function
+        Private Sub Bindgrid(ByVal ItemId As Integer)
+            Dim dsMain As New DataSet
+            Dim sqlQuery As String = "select convert(varchar,convert(datetime,ITL_DT8_Transaction_Date,101),101)as ITL_DT8_Transaction_Date,ITL_VC16_Transaction_Type,CI_VC36_Name as IssueTo,LM_VC32_Location_Name,ITL_VC16_Item_Status,ITL_VC1024_Return_Comments,ITL_NU9_Item_Transaction_Log_PK from T240015,T240031,T010011 where ITL_NU9_Item_Ledger_ID_FK=" & ItemId & " and ITL_NU9_Location_ID_FK*=LM_NU9_Location_ID_PK  and ITL_NU9_Issue_To_ID*=CI_NU8_Address_Number"
+
+            If SQL.Search("T240015", "", "", sqlQuery, dsMain, "", "") = True Then
+                dGrdItemtransaction.DataSource = dsMain
+                dGrdItemtransaction.DataBind()
+            Else
+                dGrdItemtransaction.DataSource = dsMain
+                dGrdItemtransaction.DataBind()
+            End If
+        End Sub
+        Private Sub DefineGridColumnData()
+            'define width of columns
+            arrColWidth.Clear()
+
+
+            arrColWidth.Add(120) '
+            arrColWidth.Add(120)
+            arrColWidth.Add(100)
+            arrColWidth.Add(100)
+            arrColWidth.Add(80)
+            arrColWidth.Add(250)
+
+            arrTextboxName.Clear()
+            arrTextboxName.Add("txtTransactionDate_H")
+            arrTextboxName.Add("txtType_H")
+            arrTextboxName.Add("txtIssueTo_H")
+            arrTextboxName.Add("txtLocationName_H")
+            arrTextboxName.Add("txtItemStatus_H")
+            arrTextboxName.Add("txtComments")
+
+
+            arrColumnName.Clear()
+            arrColumnName.Add("ITL_DT8_Transaction_Date")
+            arrColumnName.Add("ITL_VC16_Transaction_Type")
+            arrColumnName.Add("IssueTo")
+            arrColumnName.Add("LM_VC32_Location_Name")
+            arrColumnName.Add("ITL_VC16_Item_Status")
+            arrColumnName.Add("ITL_VC1024_Return_Comments")
+            arrColumnName.Add("ITL_NU9_Item_Transaction_Log_PK")
+
+
+        End Sub
+        Private Sub FormatGrid()
+            Try
+
+                For inti As Integer = 0 To arrColWidth.Count - 1
+                    dGrdItemtransaction.Columns(inti).HeaderStyle.Width = Unit.Pixel(arrColWidth(inti))
+                    dGrdItemtransaction.Columns(inti).ItemStyle.Width = Unit.Pixel(arrColWidth(inti))
+                    dGrdItemtransaction.Columns(inti).ItemStyle.Wrap = True
+                Next
+            Catch ex As Exception
+                CreateLog("BasicMonitoring", "FormatGrid-331", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString)
+            End Try
+
+        End Sub
+    End Class
+End Namespace
+

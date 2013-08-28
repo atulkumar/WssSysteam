@@ -1,0 +1,506 @@
+﻿#Region "Refered Assemblies"
+Imports ION.Logging.EventLogging
+Imports ION.Data
+Imports System.Data.SqlClient
+Imports Microsoft.Web.UI.WebControls
+Imports System.Text
+Imports Microsoft.Win32
+Imports ION.Net
+Imports System.Web.Security
+Imports System.Security.Cryptography
+Imports System.Drawing
+Imports System.Data
+Imports System.Configuration
+Imports System.Data.Common
+#End Region
+Namespace IONWSS
+    Partial Class Inventory_ItemLedger_itemdetailsview
+        Inherits System.Web.UI.Page
+        Private arrTextBox As New ArrayList
+        Private arrColumns As New ArrayList
+        Private dsItemView As New DataSet
+
+        Private arrTextBoxAcc As New ArrayList
+        Private arrColumnsACC As New ArrayList
+        Private dsItemAcc As New DataSet
+
+        Protected _currentPageNumber As Int32 = 1
+        Public mintPageSize As Integer
+
+        Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+            Try
+
+                Response.Write("<meta http-equiv=""refresh"" content=""" & Str(Val(HttpContext.Current.Session.Timeout) * 60) & ";Login.aspx"" />")
+                Response.CacheControl = "no-cache"
+                Response.AddHeader("Pragma", "no-cache")
+                Response.Expires = -1
+
+                txtCSS(Me.Page)
+
+                cpnlErrorPanel.Visible = False
+
+                If Not IsPostBack Then
+                    ViewState("ShowAll") = 1
+                    imgShowAll.ToolTip = "Show All Transactions"
+                End If
+
+                ImgClose.Attributes.Add("onclick", "return SaveEdit('Close')")
+                imgReset.Attributes.Add("onclick", "return SaveEdit('Reset')")
+                imgShowAll.Attributes.Add("onclick", "return SaveEdit('ShowAll')")
+                imgDelete.Attributes.Add("onclick", "return SaveEdit('Delete')")
+
+                Call GetColumnInfo()
+
+                Dim strhiddenImage As String
+                strhiddenImage = Request.Form("txthiddenImage")
+
+                If strhiddenImage <> "" Then
+
+                    Select Case strhiddenImage
+
+                        Case "Delete"
+                            If DeleteAccessory(Val(Request.Form("HIDAccID"))) = True Then
+                                lstError.Items.Clear()
+                                lstError.Items.Add("Record Deleted Successfully...")
+                                ShowMsgPenel(cpnlErrorPanel, lstError, ImgError, mdlMain.MSG.msgOK)
+                            Else
+                                lstError.Items.Clear()
+                                lstError.Items.Add("Record Not Deleted. Please try Later...")
+                                ShowMsgPenel(cpnlErrorPanel, lstError, ImgError, mdlMain.MSG.msgError)
+                            End If
+                        Case "ShowAll"
+                            If Val(ViewState("ShowAll")) = 0 Then
+                                ViewState("ShowAll") = 1
+                                imgShowAll.ToolTip = "Show All Transactions"
+                            Else
+                                ViewState("ShowAll") = 0
+                                imgShowAll.ToolTip = "Hide Accessory Transactions"
+                            End If
+
+                        Case "Logout"
+                            LogoutWSS()
+                        Case "Close"
+                            Response.Redirect("../../Home.aspx", False)
+                            Exit Sub
+                    End Select
+
+                End If
+
+                If IsNothing(Request.Form("HIDILID")) = False Then
+                    If Val(Request.Form("HIDILID")) > 0 Then
+                        ViewState("PropItemLID") = Val(Request.Form("HIDILID"))
+                    End If
+                End If
+
+                If IsNothing(Request.Form("HIDIONCode")) = False Then
+                    If Request.Form("HIDIONCode") <> "" Then
+                        ViewState("PropIONCode") = Request.Form("HIDIONCode")
+                    End If
+                End If
+
+                If IsNothing(Request.Form("cpnlItemView:txtPageSize")) = False Then
+                    mintPageSize = Val(Request.Form("cpnlItemView:txtPageSize"))
+                End If
+                If mintPageSize = 0 Or mintPageSize < 0 Then
+                    mintPageSize = 12
+                End If
+                txtPageSize.Text = mintPageSize
+
+
+                If Not IsPostBack Then
+                    ViewState("PropIONCode") = Nothing
+                    ViewState("PropItemLID") = Nothing
+                    FillNonUDCDropDown(ddlItems, "Select IM_NU9_Item_Master_ID_PK ItemID,IM_VC32_Item_Name ItemName From T240011  where IM_NU9_Leaf_Node=1  Order By ItemName")
+
+                    cpnlItemView.State = CustomControls.Web.PanelState.Collapsed
+                    cpnlItemView.TitleCSS = "test2"
+                    cpnlItemView.Enabled = False
+
+                    cpnlAccessoryView.State = CustomControls.Web.PanelState.Collapsed
+                    cpnlAccessoryView.TitleCSS = "test2"
+                    cpnlAccessoryView.Enabled = False
+
+                    CurrentPg.Text = _currentPageNumber.ToString()
+
+                End If
+
+                Call FillItemView()
+                Call FillAccessoryView()
+
+
+                If Not IsPostBack Then
+                    Dim intScrID As Integer = 972
+                    Dim obj As New clsSecurityCache
+                    If obj.ScreenAccess(intScrID) = False Then
+                        Response.Redirect("../../frm_NoAccess.aspx")
+                    End If
+                    obj.ControlSecurity(Me.Page, intScrID)
+                End If
+
+            Catch ex As Exception
+
+            End Try
+        End Sub
+
+        Private Function DeleteAccessory(ByVal AccID As Integer) As Boolean
+            Try
+                Dim strSQL As String
+                strSQL = "Delete from T240013 where IA_NU9_Accessory_ID_PK=" & AccID
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString")
+                If SQL.Delete("", "", strSQL, SQL.Transaction.Serializable) = True Then
+                    Return True
+                Else
+                    Return False
+                End If
+            Catch ex As Exception
+            End Try
+        End Function
+
+        Private Function FillItemView() As Boolean
+            Try
+
+                Dim strSQL As String
+                Dim strShowAll As String
+                If Val(ViewState("ShowAll")) = 0 Then
+                    strShowAll = ""
+                Else
+                    strShowAll = "  and (IL_VC16_Transaction_Type NOT IN ('ACCESSORY')  or IL_VC16_Transaction_Type is null)"
+                End If
+
+                strSQL = "select IL_VC16_Transaction_Type TxnType, IL_NU9_Item_Ledger_ID_PK ItemLID,T240012.IL_VC50_Item_ION_Code IONCode,T240011.IM_VC32_Item_Name ItemName, IL_VC8_Assign_Type AssignType,(case isnull(IL_NU9_Location_ID_FK,-1) when  -1 then '' when 0 then 'In Store' else T240031.LM_VC32_Location_Name end) Location,isnull(UM_VC50_UserID,'') Employee,IL_VC16_Item_Status Status,IL_VC50_Item_Part_No PartNo,IL_VC50_Item_Serial_No SerialNo,IL_FL8_Item_Price ItemPrice,IL_VC16_Price_Currency PriceCurrency,convert(varchar,IL_DT8_Purchasing_Date,101) ManufacturingDate , IL_NU9_Location_ID_FK, IL_NU9_Issue_To_ID From T240012,T240011,T240031,T060011  where T240012.IL_NU9_Item_ID_FK=T240011.IM_NU9_Item_Master_ID_PK and IL_NU9_Issue_To_ID *= UM_IN4_Address_No_FK and  T240012.IL_NU9_Location_ID_FK *= T240031.LM_NU9_Location_ID_PK " & strShowAll & " ORDER BY ItemLID DESC"
+
+                Dim intRows As Integer
+
+                dsItemView = New DataSet
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString")
+                GrdItemsView.PageSize = mintPageSize
+                If SQL.Search("ItemsView", "", "", strSQL, dsItemView, "", "") = True Then
+
+
+                    Dim strTemp As String = GetItemViewFilter()
+                    If strTemp.Equals("") = False Then
+                        Dim dtTemp As New DataTable
+                        dtTemp = GetFilteredDataView(dsItemView.Tables(0).DefaultView, strTemp).Table
+                        If (mintPageSize) * (GrdItemsView.CurrentPageIndex) >= dtTemp.Rows.Count Then
+                            GrdItemsView.CurrentPageIndex = 0
+                            CurrentPg.Text = 1
+                        End If
+                        GrdItemsView.DataSource = dtTemp.DefaultView
+                        GrdItemsView.DataBind()
+                        intRows = dtTemp.Rows.Count
+                    Else
+                        If (mintPageSize) * (GrdItemsView.CurrentPageIndex) >= dsItemView.Tables(0).Rows.Count Then
+                            GrdItemsView.CurrentPageIndex = 0
+                            CurrentPg.Text = 1
+                        End If
+                        GrdItemsView.DataSource = dsItemView.Tables(0).DefaultView
+                        GrdItemsView.DataBind()
+                        intRows = dsItemView.Tables(0).Rows.Count
+                    End If
+
+                    cpnlItemView.State = CustomControls.Web.PanelState.Expanded
+                    cpnlItemView.TitleCSS = "test"
+                    cpnlItemView.Enabled = True
+                Else
+                    cpnlItemView.State = CustomControls.Web.PanelState.Collapsed
+                    cpnlItemView.TitleCSS = "test2"
+                    cpnlItemView.Enabled = False
+                    lstError.Items.Clear()
+                    lstError.Items.Add("No Item exists in the Inventory...")
+                    ShowMsgPenel(cpnlErrorPanel, lstError, ImgError, mdlMain.MSG.msgInfo)
+                End If
+
+
+
+                Dim _totalPages As Double = 1
+                Dim _totalrecords As Int32
+                If Not Page.IsPostBack Then
+                    _totalrecords = intRows
+                    _totalPages = _totalrecords / mintPageSize
+                    TotalPages.Text = (System.Math.Ceiling(_totalPages)).ToString()
+                    TotalRecods.Text = _totalrecords
+
+                Else
+                    _totalrecords = intRows
+                    If CurrentPg.Text = 0 And _totalrecords > 0 Then
+                        CurrentPg.Text = 1
+                    End If
+                    If _totalrecords = 0 Then
+                        CurrentPg.Text = 0
+                    End If
+                    _totalPages = _totalrecords / mintPageSize
+                    TotalPages.Text = (System.Math.Ceiling(_totalPages)).ToString()
+                    _totalPages = Double.Parse(TotalPages.Text)
+                    TotalRecods.Text = _totalrecords
+                End If
+
+            Catch ex As Exception
+            End Try
+        End Function
+        Private Function FillItemDDL() As Boolean
+
+            Try
+                Dim strSQL As String = "Select IM_NU9_Item_Master_ID_PK ItemID,IM_VC32_Item_Name ItemName From T240011  where IM_NU9_Leaf_Node=1  Order By ItemName"
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString")
+                Dim dsItemsView As New DataSet
+                If SQL.Search("ItemsView", "", "", strSQL, dsItemsView, "", "") = True Then
+                    ddlItems.DataSource = dsItemsView.Tables("ItemsView")
+                    ddlItems.DataValueField = "ItemID"
+                    ddlItems.DataTextField = "ItemName"
+                    ddlItems.DataBind()
+                End If
+            Catch ex As Exception
+            End Try
+        End Function
+
+
+        Private Function FillAccessoryView() As Boolean
+
+            Try
+
+                Dim strSQL As String = "select IA_NU9_Accessory_ID_PK AccID, IM_VC32_Item_Name AccName, IM_VC200_Item_Decription AccDesc,  convert(varchar,IA_DT8_Manufacturing_Date,101) AccMfgDate from T240013,T240012 ,T240011 where IL_NU9_Item_Ledger_ID_PK=IA_NU9_Item_Ledger_ID_FK and  IM_NU9_Item_Master_ID_PK=IA_NU9_Item_Master_ID_FK and IA_NU9_Item_Ledger_ID_FK=" & Val(ViewState("PropItemLID"))
+
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString")
+
+                If SQL.Search("ItemsView", "", "", strSQL, dsItemAcc, "", "") = True Then
+
+                    Dim strTemp As String = GetItemAccFilter()
+                    If strTemp.Equals("") = False Then
+                        Dim dtTemp As New DataTable
+                        dtTemp = GetFilteredDataView(dsItemAcc.Tables(0).DefaultView, strTemp).Table
+                        GrdItemAccessory.DataSource = dtTemp.DefaultView
+                        GrdItemAccessory.DataBind()
+                    Else
+                        GrdItemAccessory.DataSource = dsItemAcc.Tables(0).DefaultView
+                        GrdItemAccessory.DataBind()
+                    End If
+                Else
+                    GrdItemAccessory.DataSource = dsItemAcc.Tables(0).DefaultView
+                    GrdItemAccessory.DataBind()
+                End If
+                If Val(ViewState("PropItemLID")) > 0 Then
+                    cpnlAccessoryView.State = CustomControls.Web.PanelState.Expanded
+                    cpnlAccessoryView.Text = "Accessory View [ION Code: " & ViewState("PropIONCode") & "]"
+                    cpnlAccessoryView.TitleCSS = "test"
+                    cpnlAccessoryView.Enabled = True
+                Else
+                    cpnlAccessoryView.State = CustomControls.Web.PanelState.Collapsed
+                    cpnlAccessoryView.Text = "Accessory View"
+                    cpnlAccessoryView.TitleCSS = "test2"
+                    cpnlAccessoryView.Enabled = False
+                End If
+
+            Catch ex As Exception
+            End Try
+
+        End Function
+
+        Private Function GetItemViewFilter() As String
+            Try
+                Dim strFilter As String = ""
+                For intI As Integer = 0 To arrTextBox.Count - 1
+                    Dim strTemp As String = Request.Form("cpnlItemView:GrdItemsView:_ctl2:" & arrTextBox(intI))
+                    If Not IsNothing(strTemp) Then
+                        If strTemp.Trim.Equals("") = False Then
+                            Select Case dsItemView.Tables(0).Columns(arrColumns(intI)).DataType.FullName
+                                Case "System.String"
+                                    strFilter &= dsItemView.Tables(0).Columns(arrColumns(intI)).ColumnName & " like '" & strTemp & "' AND "
+                                Case Else
+                                    If IsNumeric(strTemp) = False Then
+                                        strTemp = "-9999999999"
+                                    End If
+                                    strFilter &= dsItemView.Tables(0).Columns(arrColumns(intI)).ColumnName & "=" & strTemp & " AND "
+                            End Select
+                        End If
+                    End If
+                Next
+                If strFilter.Equals("") = False Then
+                    strFilter = strFilter.Remove(strFilter.Length - 4, 4)
+                End If
+                strFilter = strFilter.Replace("*", "%")
+                Return strFilter
+            Catch ex As Exception
+                Return ""
+            End Try
+        End Function
+
+        Private Function GetItemAccFilter() As String
+            Try
+                Dim strFilter As String = ""
+                For intI As Integer = 0 To arrTextBoxAcc.Count - 1
+                    Dim strTemp As String = Request.Form("cpnlAccessoryView:GrdItemAccessory:_ctl1:" & arrTextBoxAcc(intI))
+                    If Not IsNothing(strTemp) Then
+                        If strTemp.Trim.Equals("") = False Then
+                            Select Case dsItemAcc.Tables(0).Columns(arrColumnsACC(intI)).DataType.FullName
+                                Case "System.String"
+                                    strFilter &= dsItemAcc.Tables(0).Columns(arrColumnsACC(intI)).ColumnName & " like '" & strTemp & "' AND "
+                                Case Else
+                                    If IsNumeric(strTemp) = False Then
+                                        strTemp = "-9999999999"
+                                    End If
+                                    strFilter &= dsItemAcc.Tables(0).Columns(arrColumnsACC(intI)).ColumnName & "=" & strTemp & " AND "
+                            End Select
+                        End If
+                    End If
+                Next
+                If strFilter.Equals("") = False Then
+                    strFilter = strFilter.Remove(strFilter.Length - 4, 4)
+                End If
+                strFilter = strFilter.Replace("*", "%")
+                Return strFilter
+            Catch ex As Exception
+                Return ""
+            End Try
+        End Function
+
+        Private Function GetColumnInfo() As Boolean
+
+            arrTextBox.Clear()
+            arrTextBox.Add("txtIONCode_H")
+            arrTextBox.Add("txtItemName_H")
+            arrTextBox.Add("txtAssignType_H")
+            arrTextBox.Add("txtEmployee_H")
+            arrTextBox.Add("txtLocation_H")
+            arrTextBox.Add("txtStatus_H")
+            arrTextBox.Add("txtTxnType_H")
+            arrTextBox.Add("txtPartNo_H")
+            arrTextBox.Add("txtSerialNo_H")
+            arrTextBox.Add("txtItemPrice_H")
+            arrTextBox.Add("txtPriceCurrency_H")
+            arrTextBox.Add("txtManufacturingDate_H")
+
+            arrColumns.Clear()
+            arrColumns.Add("IONCode")
+            arrColumns.Add("ItemName")
+            arrColumns.Add("AssignType")
+            arrColumns.Add("Employee")
+            arrColumns.Add("Location")
+            arrColumns.Add("Status")
+            arrColumns.Add("TxnType")
+            arrColumns.Add("PartNo")
+            arrColumns.Add("SerialNo")
+            arrColumns.Add("ItemPrice")
+            arrColumns.Add("PriceCurrency")
+            arrColumns.Add("ManufacturingDate")
+
+            arrTextBoxAcc.Clear()
+            arrTextBoxAcc.Add("txtAccessory_H")
+            arrTextBoxAcc.Add("txtAccName_H")
+            arrTextBoxAcc.Add("txtAccDesc_H")
+            arrTextBoxAcc.Add("txtAccManufacturingDate_H")
+
+            arrColumnsACC.Clear()
+            arrColumnsACC.Add("AccID")
+            arrColumnsACC.Add("AccName")
+            arrColumnsACC.Add("AccDesc")
+            arrColumnsACC.Add("AccMfgDate")
+
+        End Function
+
+        Private Sub GrdItemsView_ItemDataBound(ByVal sender As System.Object, ByVal e As System.Web.UI.WebControls.DataGridItemEventArgs) Handles GrdItemsView.ItemDataBound
+            If e.Item.ItemType = ListItemType.Item Or e.Item.ItemType = ListItemType.AlternatingItem Or e.Item.ItemType = ListItemType.SelectedItem Then
+
+                For intI As Integer = 2 To e.Item.Cells.Count - 1
+                    e.Item.Cells(intI).Attributes.Add("onclick", "javascript:setTimeout(""__doPostBack('cpnlItemView$grdItemsView$_ctl" & e.Item.ItemIndex + 3 & "$_ctl0','')"",200)")
+                    e.Item.Cells(intI).Attributes.Add("onmousedown", "KeyCheck('" & e.Item.ItemIndex + 1 & "', '" & GrdItemsView.DataKeys(e.Item.ItemIndex) & "','" & CType(e.Item.Cells(1).FindControl("lblIONCode"), Label).Text.Trim & "')")
+                Next
+
+                CType(e.Item.Cells(1).FindControl("lblIONCode"), Label).Attributes.Add("ondblclick", "OpenItemInfo('" & GrdItemsView.DataKeys(e.Item.ItemIndex) & "');")
+                CType(e.Item.Cells(1).FindControl("lblIONCode"), Label).ToolTip = CType(e.Item.Cells(1).FindControl("lblIONCode"), Label).Text.Trim
+            End If
+            If e.Item.ItemType = ListItemType.Header Then
+                For intI As Integer = 0 To arrTextBox.Count - 1
+                    CType(e.Item.Cells(intI).FindControl(arrTextBox(intI)), TextBox).Text = Request.Form("cpnlItemView:GrdItemsView:_ctl2:" & arrTextBox(intI))
+                Next
+            End If
+        End Sub
+
+        Private Sub imgAdd_Click(ByVal sender As System.Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles imgAdd.Click
+            Response.Redirect("../../Inventory/ItemLedger/ItemTransaction.aspx", False)
+        End Sub
+
+        Private Sub imgAssign_Click(ByVal sender As System.Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles imgAssign.Click
+            Response.Redirect("../../Inventory/ItemLedger/ItemIssue.aspx", False)
+        End Sub
+
+        Private Sub ddlItems_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlItems.SelectedIndexChanged
+
+            GrdItemsView.SelectedIndex = -1
+
+            cpnlAccessoryView.State = CustomControls.Web.PanelState.Collapsed
+            cpnlAccessoryView.TitleCSS = "test2"
+            cpnlAccessoryView.Enabled = False
+        End Sub
+
+        Private Sub GrdItemAccessory_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.DataGridItemEventArgs) Handles GrdItemAccessory.ItemDataBound
+            If e.Item.ItemType = ListItemType.Header Then
+                For intI As Integer = 0 To arrTextBoxAcc.Count - 1
+                    CType(e.Item.Cells(intI).FindControl(arrTextBoxAcc(intI)), TextBox).Text = Request.Form("cpnlAccessoryView:GrdItemAccessory:_ctl1:" & arrTextBoxAcc(intI))
+                Next
+            End If
+
+            If e.Item.ItemType = ListItemType.AlternatingItem Or e.Item.ItemType = ListItemType.Item Or e.Item.ItemType = ListItemType.SelectedItem Then
+                e.Item.Attributes.Add("onclick", "KeyCheckAcc(" & e.Item.ItemIndex + 1 & " ," & GrdItemAccessory.DataKeys(e.Item.ItemIndex) & " )")
+            End If
+
+        End Sub
+
+        Private Sub Firstbutton_Click(ByVal sender As System.Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles Firstbutton.Click
+            GrdItemsView.CurrentPageIndex = Convert.ToInt32("0")
+            _currentPageNumber = 1
+            CurrentPg.Text = _currentPageNumber
+            Call FillItemView()
+
+            If GrdItemsView.Items.Count = 0 Then
+
+                CurrentPg.Text = 0
+            End If
+
+        End Sub
+
+        Private Sub Prevbutton_Click(ByVal sender As System.Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles Prevbutton.Click
+            If (GrdItemsView.CurrentPageIndex > 0) Then
+                GrdItemsView.CurrentPageIndex -= 1
+                _currentPageNumber = Int32.Parse(CurrentPg.Text) - 1
+                CurrentPg.Text = _currentPageNumber
+            End If
+            Call FillItemView()
+            If GrdItemsView.Items.Count = 0 Then
+                CurrentPg.Text = 0
+            End If
+
+        End Sub
+
+        Private Sub Nextbutton_Click(ByVal sender As System.Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles Nextbutton.Click
+            If (GrdItemsView.CurrentPageIndex < (GrdItemsView.PageCount - 1)) Then
+                GrdItemsView.CurrentPageIndex += 1
+
+                If GrdItemsView.PageCount = Int32.Parse(CurrentPg.Text) Then
+                    CurrentPg.Text = GrdItemsView.PageCount
+                Else
+                    _currentPageNumber = Int32.Parse(CurrentPg.Text) + 1
+                    CurrentPg.Text = _currentPageNumber
+
+                End If
+            End If
+            Call FillItemView()
+            If GrdItemsView.Items.Count = 0 Then
+                CurrentPg.Text = 0
+            End If
+
+        End Sub
+
+        Private Sub Lastbutton_Click(ByVal sender As System.Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles Lastbutton.Click
+            GrdItemsView.CurrentPageIndex = (GrdItemsView.PageCount - 1)
+            _currentPageNumber = Int32.Parse(TotalPages.Text)
+            CurrentPg.Text = _currentPageNumber
+            Call FillItemView()
+            If GrdItemsView.Items.Count = 0 Then
+                CurrentPg.Text = 0
+            End If
+        End Sub
+
+
+    End Class
+End Namespace
+

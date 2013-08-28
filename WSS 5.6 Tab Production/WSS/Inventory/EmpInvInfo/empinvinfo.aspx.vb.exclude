@@ -1,0 +1,321 @@
+﻿Imports ION.Logging.EventLogging
+Imports ION.Data
+Imports System.Data.SqlClient
+Imports Microsoft.Web.UI.WebControls
+Imports System.Text
+Imports Microsoft.Win32
+Imports ION.Net
+Imports System.Web.Security
+Imports System.Security.Cryptography
+Imports System.Drawing
+Imports System.Data
+Imports System.Configuration
+Imports System.Data.Common
+
+Namespace IONWSS
+    Partial Class Inventory_EmpInvInfo_empinvinfo
+        Inherits System.Web.UI.Page
+
+        Private mdvtable As New DataView
+        Private arrTextBox As New ArrayList
+        Private arrColumns As New ArrayList
+        Private dsMain As New DataSet
+        Private intEmpId As Integer
+        Private strOwnLocationIDList As String
+
+        Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+            Try
+
+                'Put user code to initialize the page here
+                imgClose.Attributes.Add(" OnClick", "javascript:window.close();")
+                intEmpId = Val(Request.QueryString("EmpID"))
+
+                GetTextboxs()
+                Dim strChildUserLoactionList As String
+                Dim strChildResponsibleUserList As String
+
+                If Not IsPostBack Then
+
+                    strChildUserLoactionList = GetUserLoactionID()
+                    If strChildUserLoactionList.Length > 0 Then
+                        strChildUserLoactionList = strChildUserLoactionList.Substring(0, strChildUserLoactionList.Length - 1) 'remove last ","
+                        ViewState("strChildUserLoactionList") = "(" & strChildUserLoactionList & ")"
+                    End If
+
+                    If strOwnLocationIDList.Length > 0 Then
+                        strOwnLocationIDList = strOwnLocationIDList.Substring(0, strOwnLocationIDList.Length - 1) 'remove last ","
+                        ViewState("strOwnLocationIDList") = "(" & strOwnLocationIDList & ")"
+                    End If
+
+
+                    If Not ViewState("strChildUserLoactionList") = Nothing Then
+                        strChildResponsibleUserList = GetResponsibleUserList(ViewState("strChildUserLoactionList"))
+                        If strChildResponsibleUserList.Length > 0 Then
+                            strChildResponsibleUserList = strChildResponsibleUserList.Substring(0, strChildResponsibleUserList.Length - 1)
+                            ViewState("strChildResponsibleUserList") = "(" & strChildResponsibleUserList & ")"
+                        End If
+                    End If
+
+                    Bindgrid()
+
+                End If
+
+            Catch ex As Exception
+            End Try
+        End Sub
+
+        Private Sub Bindgrid()
+            Try
+
+                Dim tempDS As New DataSet
+                Dim sqlQuery As String
+
+                'Dim sqlQuery As String = "select IL_NU9_Item_Ledger_ID_PK as ItemID,IL_VC50_Item_ION_Code as IONCode, IL_VC16_Item_Status as Status,convert(varchar,IL_DT8_Transaction_Date,101) as AssignedDate,IM_NU9_Responsible_Person_ID_FK as ResponsibleID,UM_VC50_UserID as Responsible,IM_VC32_Item_Name as ItemName ,'Direct' as ResType  from  T240011,T240012 IDetail,T060011  where IM_NU9_Item_Master_ID_PK=IDetail.IL_NU9_Item_ID_FK and   IM_NU9_Company_ID=IDetail.IL_NU9_Company_ID_FK and IM_NU9_Responsible_Person_ID_FK=T060011.UM_IN4_Address_No_FK and  IL_NU9_Issue_To_ID in (" & Val(Request.QueryString("EmpID")) & ") order by itemid  "
+
+
+                If ViewState("strChildUserLoactionList") = "()" Or ViewState("strChildUserLoactionList") = Nothing Then
+
+                    If ViewState("strOwnLocationIDList") = "()" Or ViewState("strOwnLocationIDList") = Nothing Then
+
+                        sqlQuery = "select IL_NU9_Item_Ledger_ID_PK as ItemID,IL_VC50_Item_ION_Code as IONCode, IL_VC16_Item_Status as Status,convert(varchar,IL_DT8_Transaction_Date,101) as AssignedDate,IM_NU9_Responsible_Person_ID_FK as ResponsibleID,UM_VC50_UserID as Responsible,IM_VC32_Item_Name as ItemName ,'Direct' as ResType  from  T240011,T240012 IDetail,T060011  where IM_NU9_Item_Master_ID_PK=IDetail.IL_NU9_Item_ID_FK and   IM_NU9_Company_ID=IDetail.IL_NU9_Company_ID_FK and IM_NU9_Responsible_Person_ID_FK=T060011.UM_IN4_Address_No_FK and ( IL_NU9_Issue_To_ID = " & Val(Request.QueryString("EmpID")) & ") order by itemid  "
+
+                    Else
+                        sqlQuery = "select IL_NU9_Item_Ledger_ID_PK as ItemID,IL_VC50_Item_ION_Code as IONCode, IL_VC16_Item_Status as Status,convert(varchar,IL_DT8_Transaction_Date,101) as AssignedDate,IM_NU9_Responsible_Person_ID_FK as ResponsibleID,UM_VC50_UserID as Responsible,IM_VC32_Item_Name as ItemName ,'Direct' as ResType  from  T240011,T240012 IDetail,T060011  where IM_NU9_Item_Master_ID_PK=IDetail.IL_NU9_Item_ID_FK and   IM_NU9_Company_ID=IDetail.IL_NU9_Company_ID_FK and IM_NU9_Responsible_Person_ID_FK=T060011.UM_IN4_Address_No_FK and ( IL_NU9_Location_ID_FK in " & ViewState("strOwnLocationIDList") & " or IL_NU9_Issue_To_ID = " & Val(Request.QueryString("EmpID")) & ") order by itemid  "
+                    End If
+                Else
+
+                    sqlQuery = "(select IL_NU9_Item_Ledger_ID_PK as ItemID,IL_VC50_Item_ION_Code as IONCode, IL_VC16_Item_Status as Status,convert(varchar,IL_DT8_Transaction_Date,101) as AssignedDate,IM_NU9_Responsible_Person_ID_FK as ResponsibleID,UM_VC50_UserID as Responsible,IM_VC32_Item_Name as ItemName ,'Direct' as ResType  from  T240011,T240012 IDetail,T060011  where IM_NU9_Item_Master_ID_PK=IDetail.IL_NU9_Item_ID_FK and   IM_NU9_Company_ID=IDetail.IL_NU9_Company_ID_FK and IM_NU9_Responsible_Person_ID_FK=T060011.UM_IN4_Address_No_FK and ( IL_NU9_Location_ID_FK in " & ViewState("strOwnLocationIDList") & " or IL_NU9_Issue_To_ID =" & Val(Request.QueryString("EmpID")) & "))  union (select IL_NU9_Item_Ledger_ID_PK as ItemID, IL_VC50_Item_ION_Code as IONCode, IL_VC16_Item_Status as Status,convert(varchar,IL_DT8_Transaction_Date,101) as AssignedDate,IM_NU9_Responsible_Person_ID_FK as ResponsibleID,UM_VC50_UserID as Responsible,IM_VC32_Item_Name as ItemName ,'Indirect'  as ResType from  T240011,T240012 IDetail,T060011  where IM_NU9_Item_Master_ID_PK=IDetail.IL_NU9_Item_ID_FK and   IM_NU9_Company_ID=IDetail.IL_NU9_Company_ID_FK and IM_NU9_Responsible_Person_ID_FK=T060011.UM_IN4_Address_No_FK and ( IL_NU9_Location_ID_FK in " & ViewState("strChildUserLoactionList") & " or IL_NU9_Issue_To_ID in " & ViewState("strChildResponsibleUserList") & ") and ( IL_NU9_Issue_To_ID  <> " & Val(Request.QueryString("EmpID")) & " or IL_NU9_Issue_To_ID is null or IL_NU9_Location_ID_FK not in " & ViewState("strOwnLocationIDList") & " ))  order by itemid   "
+
+                End If
+
+
+                If SQL.Search("T240012", "", "", sqlQuery, tempDS, "", "") = True Then
+                    dsMain = tempDS
+                    Dim strTemp As String = GetFilter()
+                    Dim htDateCols As New Hashtable
+                    htDateCols.Add("AssignedDate", 2)
+
+                    If strTemp.Equals("") = False Then
+                        Dim dtTemp As New DataTable
+                        dtTemp = GetFilteredDataView(dsMain.Tables(0).DefaultView, strTemp).Table
+                        SetDataTableDateFormat(dtTemp, htDateCols)
+                        grdItems.DataSource = dtTemp.DefaultView
+                        grdItems.DataBind()
+                    Else
+                        SetDataTableDateFormat(dsMain.Tables(0), htDateCols)
+                        grdItems.DataSource = dsMain.Tables(0).DefaultView
+                        grdItems.DataBind()
+                    End If
+                Else
+                    Dim ds As New DataSet
+                    Dim dtRow As DataRow
+                    ds.Tables.Add("Dummy")
+                    ds.Tables("Dummy").Columns.Add("MachName")
+                    dtRow = ds.Tables("Dummy").NewRow
+                    dtRow.Item(0) = ""
+                    mdvtable.Table = ds.Tables("Dummy")
+                    grdItems.DataSource = mdvtable.Table
+                    grdItems.DataBind()
+                End If
+
+            Catch ex As Exception
+                CreateLog("LocationMaster", "Bindgrid-452", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+            End Try
+
+        End Sub
+
+        Private Function GetFilter() As String
+            Try
+                Dim strFilter As String = ""
+                For intI As Integer = 0 To arrTextBox.Count - 1
+                    Dim strTemp As String = Request.Form("cpnlItemList:grdItems:_ctl1:" & arrTextBox(intI))
+                    If Not IsNothing(strTemp) Then
+                        If strTemp.Trim.Equals("") = False Then
+                            Select Case dsMain.Tables(0).Columns(arrColumns(intI)).DataType.FullName
+                                Case "System.String"
+                                    strFilter &= dsMain.Tables(0).Columns(arrColumns(intI)).ColumnName & " like '" & strTemp & "' AND "
+                                Case Else
+                                    If IsNumeric(strTemp) = False Then
+                                        strTemp = "-9999999999"
+                                    End If
+                                    strFilter &= dsMain.Tables(0).Columns(arrColumns(intI)).ColumnName & "=" & strTemp & " AND "
+                            End Select
+                        End If
+                    End If
+                Next
+                If strFilter.Equals("") = False Then
+                    strFilter = strFilter.Remove(strFilter.Length - 4, 4)
+                End If
+                strFilter = strFilter.Replace("*", "%")
+                Return strFilter
+            Catch ex As Exception
+                Return ""
+                CreateLog("LocationMaster", "GetFilter-794", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+            End Try
+        End Function
+
+        Private Sub GetTextboxs()
+
+            Try
+
+                arrTextBox.Clear()
+                arrTextBox.Add("txtItemID_H")
+                arrTextBox.Add("txtIONCode_H")
+                arrTextBox.Add("txtItemName_H")
+                arrTextBox.Add("txtStatus_H")
+                arrTextBox.Add("txtAssignedDate_H")
+                arrTextBox.Add("txtResponsible_H")
+                arrTextBox.Add("txtResType_H")
+
+                arrColumns.Clear()
+                arrColumns.Add("ItemID")
+                arrColumns.Add("IONCode")
+                arrColumns.Add("ItemName")
+                arrColumns.Add("Status")
+                arrColumns.Add("AssignedDate")
+                arrColumns.Add("Responsible")
+                arrColumns.Add("ResType")
+
+            Catch ex As Exception
+                CreateLog("LocationMaster", "GetTextboxs-687", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+            End Try
+
+        End Sub
+
+        Private Sub grdItems_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.DataGridItemEventArgs) Handles grdItems.ItemDataBound
+            Try
+
+                If e.Item.ItemType = ListItemType.Header Then
+                    For intI As Integer = 0 To arrTextBox.Count - 1
+                        CType(e.Item.Cells(intI).FindControl(arrTextBox(intI)), TextBox).Text = Request.Form("cpnlItemList:grdItems:_ctl1:" & arrTextBox(intI))
+                    Next
+                End If
+
+                If e.Item.ItemType = ListItemType.Item Or e.Item.ItemType = ListItemType.AlternatingItem Then
+                    If CType(e.Item.Cells(5).FindControl("lblResType"), Label).Text = "Direct" Then
+                        For intI As Integer = 0 To e.Item.Cells.Count - 1
+                            e.Item.Cells(intI).ForeColor = System.Drawing.Color.Red
+                        Next
+                    ElseIf CType(e.Item.Cells(5).FindControl("lblResType"), Label).Text = "InStore" Then
+                        For intI As Integer = 0 To e.Item.Cells.Count - 1
+                            e.Item.Cells(intI).ForeColor = System.Drawing.Color.Silver
+                        Next
+                    End If
+                End If
+
+
+            Catch ex As Exception
+            End Try
+        End Sub
+        Private Sub btnSearch_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSearch.Click
+            Bindgrid()
+        End Sub
+
+        Private strUserLoactionList As String
+
+        Private Function GetUserLoactionID() As String
+
+            Try
+
+                Dim strSqlQuery As String
+                Dim ds As New DataSet
+                Dim sqRDR As SqlClient.SqlDataReader
+                Dim blnStatus As Boolean
+                Dim strChildLocationList As String = Nothing
+
+                strSqlQuery = "select LM_NU9_Location_ID_PK  from T240031 where LM_NU9_Responsible_Person_ID_FK =" & intEmpId
+                sqRDR = SQL.Search("T240031", "GetUserLoactionID", strSqlQuery, SQL.CommandBehaviour.Default, blnStatus, "")
+
+                If blnStatus = True Then
+                    While sqRDR.Read
+                        strOwnLocationIDList &= sqRDR.Item("LM_NU9_Location_ID_PK") & ","
+                        strChildLocationList &= GetChildLoactionId(sqRDR.Item("LM_NU9_Location_ID_PK"))
+                    End While
+                End If
+
+                sqRDR.Close()
+                sqRDR = Nothing
+
+                Return strChildLocationList
+
+            Catch ex As Exception
+                Return Nothing
+            End Try
+
+        End Function
+
+        Private Function GetChildLoactionId(ByVal intUserLoactionList As Integer) As String
+
+            Try
+
+                Dim strSqlQuery As String
+                Dim ds As New DataSet
+                Dim sqRDR As SqlClient.SqlDataReader
+                Dim blnStatus As Boolean
+
+                Dim strChildLocationList As String = Nothing
+                'Dim strCondition As String
+
+                'If Condition.Length > 0 Then
+                '    strCondition = Condition.Substring(0, strUserLoactionList.Length - 1) ' remove root parent id for the query
+                '    strCondition = "(" & strCondition & ")"
+
+                '    strSqlQuery = "select LM_NU9_Location_ID_PK  from T240031 where LM_NU9_Location_Parent_ID =" & intUserLoactionList & " and (LM_NU9_Location_ID_PK not in " & strCondition & " or LM_NU9_Location_Parent_ID not in " & strCondition & " )"
+                'Else
+                strSqlQuery = "select LM_NU9_Location_ID_PK  from T240031 where LM_NU9_Location_Parent_ID =" & intUserLoactionList
+                'End If
+
+                sqRDR = SQL.Search("T240031", "GetChildLoaction", strSqlQuery, SQL.CommandBehaviour.Default, blnStatus, "")
+
+                If blnStatus = True Then
+
+                    While sqRDR.Read
+                        strChildLocationList &= sqRDR.Item("LM_NU9_Location_ID_PK") & ","
+                        strChildLocationList &= GetChildLoactionId(sqRDR.Item("LM_NU9_Location_ID_PK"))
+                    End While
+                End If
+
+                sqRDR.Close()
+                sqRDR = Nothing
+
+                'strChildLocationList &= GetChildLoactionId(strChildLocationList)
+                Return strChildLocationList
+
+            Catch ex As Exception
+                Return Nothing
+            End Try
+
+        End Function
+        Private Function GetResponsibleUserList(ByVal strLoactionId As String) As String
+
+            Try
+
+                Dim strSqlQuery As String
+                Dim ds As New DataSet
+                Dim sqRDR As SqlClient.SqlDataReader
+                Dim blnStatus As Boolean
+                Dim strUserList As String = Nothing
+
+                strSqlQuery = "select  LM_NU9_Responsible_Person_ID_FK from T240031 where LM_NU9_Location_ID_PK in" & strLoactionId
+                sqRDR = SQL.Search("T240031", "GetUserList", strSqlQuery, SQL.CommandBehaviour.Default, blnStatus, "")
+
+                If blnStatus = True Then
+                    While sqRDR.Read
+                        strUserList &= sqRDR.Item("LM_NU9_Responsible_Person_ID_FK") & ","
+                    End While
+                End If
+
+                sqRDR.Close()
+                sqRDR = Nothing
+
+                Return strUserList
+
+            Catch ex As Exception
+                CreateLog("LocationMaster", "GetResponsibleUserList-394", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+                Return Nothing
+            End Try
+
+        End Function
+
+    End Class
+End Namespace

@@ -1,0 +1,760 @@
+﻿Imports ION.Logging.EventLogging
+Imports ION.Data
+Imports System.Data.SqlClient
+Imports Microsoft.Web.UI.WebControls
+Imports System.Text
+Imports Microsoft.Win32
+Imports ION.Net
+Imports System.Web.Security
+Imports System.Security.Cryptography
+Imports System.Drawing
+Imports System.Data
+Imports System.Configuration
+Imports System.Data.Common
+
+Namespace IONWSS
+    Partial Class Inventory_ItemLedger_itemissue
+        Inherits System.Web.UI.Page
+#Region "Page Level Variable"
+
+        Private arrTextBoxAssign As New ArrayList
+        Private arrColumnsAssign As New ArrayList
+        Private dsItemsView As New DataSet
+        Private arrTextBoxReturn As New ArrayList
+        Private arrColumnsReturn As New ArrayList
+        Private dsItemReturn As New DataSet
+        Protected _currentPageNumber As Int32 = 1
+        Public mintPageSize As Integer
+        Private saveFlag As Boolean = False
+        Private ReturnFlag As Boolean = False
+        Public dsEmpList As DataSet
+
+#End Region
+
+
+        Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+            Response.Write("<meta http-equiv=""refresh"" content=""" & Str(Val(HttpContext.Current.Session.Timeout) * 60) & ";Login.aspx"" />")
+            Response.CacheControl = "no-cache"
+            Response.AddHeader("Pragma", "no-cache")
+            Response.Expires = -1
+            txtCSS(Me.Page)
+            Call GetColumnInfo()
+            Dim strhiddenImage As String
+            strhiddenImage = Request.Form("txthiddenImage")
+            If strhiddenImage <> "" Then
+                Select Case strhiddenImage
+                    Case "Logout"
+                        LogoutWSS()
+                End Select
+            End If
+            If IsNothing(Request.Form("txthidden")) = False Then
+                If Val(Request.Form("txthidden")) > 0 Then
+                    Session("PropItemLID") = Val(Request.Form("txthidden"))
+                End If
+            End If
+            FillAssignToDDL()
+
+            If Not IsPostBack Then
+                Session("PropItemLID") = Nothing
+                Call fillItemDDL()
+                fillViewGrid()
+            Else
+                Call fillViewGrid()
+
+            End If
+        End Sub
+
+        Private Sub ddlItems_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ddlItems.SelectedIndexChanged
+            fillViewGrid()
+        End Sub
+        Private Sub imgSave_Click(ByVal sender As System.Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles imgSave.Click
+            If ddlTransactionType.SelectedValue = "NEW" Then
+                AssignItems()
+            ElseIf ddlTransactionType.SelectedValue = "ASSIGNED" Then
+                ReturnItems()
+            End If
+        End Sub
+
+        Private Sub grdItemIssue_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.DataGridItemEventArgs) Handles grdItemIssue.ItemDataBound
+            Try
+                If saveFlag = False Then
+                    If e.Item.ItemType = ListItemType.AlternatingItem Or e.Item.ItemType = ListItemType.Item Or e.Item.ItemType = ListItemType.SelectedItem Then
+                        If IsNothing(Request.Form("cpnlItemAssign:grdItemIssue:_ctl" & e.Item.ItemIndex + 2 & ":chkStatus")) Then
+                            CType(e.Item.Cells(0).FindControl("chkStatus"), CheckBox).Checked = False
+                        Else
+                            CType(e.Item.Cells(0).FindControl("chkStatus"), CheckBox).Checked = True
+                        End If
+                    End If
+                ElseIf saveFlag = True Then
+                End If
+                If e.Item.ItemType = ListItemType.Header Then
+                    For intI As Integer = 0 To arrTextBoxAssign.Count - 1
+                        CType(e.Item.Cells(intI).FindControl(arrTextBoxAssign(intI)), TextBox).Text = Request.Form("cpnlItemAssign:grdItemIssue:_ctl1:" & arrTextBoxAssign(intI))
+                    Next
+                End If
+            Catch ex As Exception
+            End Try
+        End Sub
+
+        Private Sub ddlTransactionType_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ddlTransactionType.SelectedIndexChanged
+            If ddlTransactionType.SelectedItem.Text.Trim = "ASSIGN" Then
+                fillViewGrid()
+                lblAssignTo.Enabled = True
+                lblAssignType.Enabled = True
+                ddlAssignType.Enabled = True
+                CDDLAssignTO.Enabled = True
+            ElseIf ddlTransactionType.SelectedItem.Text.Trim = "RETURN" Then
+                fillViewGrid()
+                lblAssignTo.Enabled = False
+                lblAssignType.Enabled = False
+                ddlAssignType.Enabled = False
+                CDDLAssignTO.Enabled = False
+            ElseIf ddlTransactionType.SelectedItem.Text.Trim = "--Select--" Then
+                fillViewGrid()
+                lblAssignTo.Enabled = False
+                lblAssignType.Enabled = False
+                ddlAssignType.Enabled = False
+                CDDLAssignTO.Enabled = False
+            End If
+        End Sub
+        Private Sub imgSearch_Click(ByVal sender As Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles imgSearch.Click
+            fillViewGrid()
+        End Sub
+
+        Private Sub ImgClose_Click(ByVal sender As System.Object, ByVal e As System.Web.UI.ImageClickEventArgs)
+            Response.Redirect("../../home.aspx", False)
+        End Sub
+
+        Private Sub ddlAssignType_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ddlAssignType.SelectedIndexChanged
+            FillAssignToDDL()
+        End Sub
+
+        Private Sub ddlItem_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ddlItem.SelectedIndexChanged
+            If Not IsPostBack Then
+            Else
+                saveFlag = True
+                fillViewGrid()
+            End If
+        End Sub
+
+#Region "Functions"
+        Private Sub AssignItems()
+            Try
+                If ddlAssignType.SelectedValue = "Employee" And Val(CDDLAssignTO.CDDLGetValue) = 0 Then
+                    lstError.Items.Clear()
+                    lstError.Items.Add("Please Select Employee In the AssignTo Combo...")
+                    ShowMsgPenel(cpnlErrorPanel, lstError, Image1, mdlMain.MSG.msgInfo)
+                    Exit Sub
+                ElseIf ddlAssignType.SelectedValue = "Location" And Val(CDDLAssignTO.CDDLGetValue) = 0 Then
+                    lstError.Items.Clear()
+                    lstError.Items.Add("Please Select Location In the AssignTo Combo...")
+                    ShowMsgPenel(cpnlErrorPanel, lstError, Image1, mdlMain.MSG.msgInfo)
+                    Exit Sub
+                Else
+                    Dim dsAssign As New DataSet
+                    dsAssign.Tables.Add("dtAssign")
+                    dsAssign.Tables("dtAssign").Columns.Add("DataKey", System.Type.GetType("System.Int32"))
+                    dsAssign.Tables("dtAssign").Columns.Add("Status", System.Type.GetType("System.String"))
+                    dsAssign.Tables("dtAssign").Columns.Add("AssignTo", System.Type.GetType("System.Int32"))
+                    dsAssign.Tables("dtAssign").Columns.Add("AssignDate", System.Type.GetType("System.DateTime"))
+
+                    '*************************************************
+                    dsAssign.Tables("dtAssign").Columns.Add("CompID", System.Type.GetType("System.Int32"))
+                    dsAssign.Tables("dtAssign").Columns.Add("LocationID", System.Type.GetType("System.Int32"))
+                    dsAssign.Tables("dtAssign").Columns.Add("IONCode", System.Type.GetType("System.String"))
+                    dsAssign.Tables("dtAssign").Columns.Add("TrnType", System.Type.GetType("System.String"))
+                    dsAssign.Tables("dtAssign").Columns.Add("AssignType", System.Type.GetType("System.String"))
+                    '*****************************************************
+
+                    Dim drItem As DataRow
+
+                    For intI As Integer = 0 To grdItemIssue.Items.Count - 1
+                        Dim AssignType As String = ddlAssignType.SelectedValue
+                        If CType(grdItemIssue.Items(intI).FindControl("chkStatus"), CheckBox).Checked And AssignType = "Employee" Then
+                            drItem = dsAssign.Tables("dtAssign").NewRow
+                            drItem.Item("DataKey") = grdItemIssue.DataKeys.Item(intI)
+                            drItem.Item("Status") = "ASSIGNED"
+                            drItem.Item("AssignTo") = Val(CDDLAssignTO.CDDLGetValue)
+                            drItem.Item("AssignDate") = Date.Now.ToShortDateString
+                            '*****************
+                            drItem.Item("CompID") = 8
+                            'drItem.Item("LocationID") = CType(grdItemIssue.Items(intI).FindControl("ddlAssignLocation"), DropDownList).SelectedValue
+                            drItem.Item("IONCode") = CType(grdItemIssue.Items(intI).FindControl("lblIONCode"), Label).Text
+                            drItem.Item("TrnType") = ddlTransactionType.SelectedItem.Text
+                            drItem.Item("AssignType") = ddlAssignType.SelectedValue
+                            '************************
+                            dsAssign.Tables("dtAssign").Rows.Add(drItem)
+                        ElseIf CType(grdItemIssue.Items(intI).FindControl("chkStatus"), CheckBox).Checked And AssignType = "Location" Then
+                            drItem = dsAssign.Tables("dtAssign").NewRow
+                            drItem.Item("DataKey") = grdItemIssue.DataKeys.Item(intI)
+                            drItem.Item("Status") = "ASSIGNED"
+                            'drItem.Item("AssignTo") = CType(grdItemIssue.Items(intI).FindControl("ddlAssignTO"), DropDownList).SelectedValue
+                            drItem.Item("AssignDate") = Date.Now.ToShortDateString
+                            '*****************
+                            drItem.Item("CompID") = 8
+                            drItem.Item("LocationID") = Val(CDDLAssignTO.CDDLGetValue)
+                            drItem.Item("IONCode") = CType(grdItemIssue.Items(intI).FindControl("lblIONCode"), Label).Text
+                            drItem.Item("TrnType") = ddlTransactionType.SelectedItem.Text
+                            drItem.Item("AssignType") = ddlAssignType.SelectedValue
+                            '************************
+                            dsAssign.Tables("dtAssign").Rows.Add(drItem)
+                        Else
+
+                        End If
+                    Next
+                    If UpdateAssignItem(dsAssign.Tables("dtAssign")) = True Then
+                        Call SaveTransactionAssign(dsAssign.Tables("dtAssign"))
+                    End If
+                End If
+                saveFlag = True
+                fillViewGrid()
+            Catch ex As Exception
+
+            End Try
+        End Sub
+
+        Private Sub ReturnItems()
+            Try
+                Dim dsReturn As New DataSet
+                dsReturn.Tables.Add("dtReturn")
+                dsReturn.Tables("dtReturn").Columns.Add("DataKey", System.Type.GetType("System.Int32"))
+                dsReturn.Tables("dtReturn").Columns.Add("Status", System.Type.GetType("System.String"))
+                dsReturn.Tables("dtReturn").Columns.Add("Comments", System.Type.GetType("System.String"))
+                dsReturn.Tables("dtReturn").Columns.Add("AssignTo", System.Type.GetType("System.Int32"))
+                dsReturn.Tables("dtReturn").Columns.Add("TransactionDate", System.Type.GetType("System.DateTime"))
+                '*************************************************
+                dsReturn.Tables("dtReturn").Columns.Add("CompID", System.Type.GetType("System.Int32"))
+                dsReturn.Tables("dtReturn").Columns.Add("LocationID", System.Type.GetType("System.Int32"))
+                dsReturn.Tables("dtReturn").Columns.Add("IONCode", System.Type.GetType("System.String"))
+                dsReturn.Tables("dtReturn").Columns.Add("TrnType", System.Type.GetType("System.String"))
+                '*****************************************************
+                Dim drItem As DataRow
+                For intI As Integer = 0 To GrdItemReturn.Items.Count - 1
+                    If CType(GrdItemReturn.Items(intI).FindControl("chkItemReturn"), CheckBox).Checked Then
+                        drItem = dsReturn.Tables("dtReturn").NewRow
+                        drItem.Item("DataKey") = GrdItemReturn.DataKeys.Item(intI)
+                        drItem.Item("Status") = "RETURNED"
+                        drItem.Item("Comments") = CType(GrdItemReturn.Items(intI).FindControl("txtComment"), TextBox).Text.Trim
+                        drItem.Item("AssignTo") = DBNull.Value
+                        drItem.Item("TransactionDate") = Date.Now.ToShortDateString
+                        '*****************
+                        drItem.Item("CompID") = 8
+                        drItem.Item("LocationID") = 0
+                        drItem.Item("IONCode") = CType(GrdItemReturn.Items(intI).FindControl("lblIONCode_IR"), Label).Text
+                        drItem.Item("TrnType") = ddlTransactionType.SelectedItem.Text
+                        '************************
+                        dsReturn.Tables("dtReturn").Rows.Add(drItem)
+
+                    Else
+                    End If
+                Next
+                If UpdateReturnItem(dsReturn.Tables("dtReturn")) = True Then
+                    Call SaveTransactionReturn(dsReturn.Tables("dtReturn"))
+                End If
+                saveFlag = True
+                fillViewGrid()
+            Catch ex As Exception
+
+            End Try
+        End Sub
+
+        Private Function UpdateAssignItem(ByVal dtAssign As DataTable) As Boolean
+            '*******************************************
+            'Name:      Update Function To Assign Items
+            'Purpose:  To update records of Item/groups
+            'Author:    Suresh Kharod
+            'Date:        Jan 7, 2008
+            'Called by:  Any
+            'Calls:     
+            'Inputs:     
+            'Output:    
+            '*******************************************
+            Try
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString").ToString
+                For intI As Integer = 0 To dtAssign.Rows.Count - 1
+                    Dim sqlUpdate As String = ""
+
+                    If dtAssign.Rows(intI).Item(8) = "Employee" Then
+                        Dim ItemLedgerID As Integer = dtAssign.Rows(intI).Item(0)
+
+                        sqlUpdate = "update T240012 set IL_NU9_Issue_To_ID=" & dtAssign.Rows(intI).Item(2) & ",IL_VC16_Item_Status='" & dtAssign.Rows(intI).Item(1) & "',IL_DT8_Transaction_Date='" & dtAssign.Rows(intI).Item(3) & "',IL_NU9_Location_ID_FK=Null,IL_VC8_Assign_Type='" & dtAssign.Rows(intI).Item(8) & "'  where IL_NU9_Item_Ledger_ID_PK=" & ItemLedgerID & ""
+
+                    ElseIf dtAssign.Rows(intI).Item(8) = "Location" Then
+                        Dim ItemLedgerID As Integer = dtAssign.Rows(intI).Item(0)
+
+                        sqlUpdate = "update T240012 set IL_NU9_Issue_To_ID=Null, IL_VC16_Item_Status='" & dtAssign.Rows(intI).Item(1) & "',IL_DT8_Transaction_Date='" & dtAssign.Rows(intI).Item(3) & "',IL_NU9_Location_ID_FK=" & dtAssign.Rows(intI).Item(5) & ",IL_VC8_Assign_Type='" & dtAssign.Rows(intI).Item(8) & "'  where IL_NU9_Item_Ledger_ID_PK=" & ItemLedgerID & ""
+                    End If
+                    If SQL.Update("ItemTransaction", "UpdateAssignItem", sqlUpdate, SQL.Transaction.Serializable) = True Then
+
+                    Else
+                        Return False
+                    End If
+                Next
+                Return True
+            Catch ex As Exception
+                CreateLog("ItemTransaction", "SaveItemDetail-603", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+                Return False
+            End Try
+        End Function
+
+        Private Function UpdateReturnItem(ByVal dtReturn As DataTable) As Boolean
+            '*******************************************
+            'Name:      Update Function To Assign Items
+            'Purpose:  To update records of Item/groups
+            'Author:    Suresh Kharod
+            'Date:        Jan 7, 2008
+            'Called by:  Any
+            'Calls:     
+            'Inputs:     
+            'Output:    
+            '*******************************************
+            Try
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString").ToString
+                For intI As Integer = 0 To dtReturn.Rows.Count - 1
+                    Dim arColName As New ArrayList
+                    Dim arRowData As New ArrayList
+                    Dim ItemLedgerID As Integer = dtReturn.Rows(intI).Item(0)
+                    'define column name
+                    'arColName.Add("IL_NU9_Issue_To_ID") 'Issue To ID
+                    'arColName.Add("IL_VC16_Item_Status") 'Item Status After Assignment
+                    'arColName.Add("IL_DT8_Transaction_Date") 'Assign Date
+
+                    'arRowData.Add(dtAssign.Rows(intI).Item(1))
+                    'arRowData.Add(dtAssign.Rows(intI).Item(2))
+                    'arRowData.Add(dtAssign.Rows(intI).Item(3))
+
+                    Dim sqlUpdate As String
+                    '= "Select * from t240012 where IL_NU9_Item_Ledger_ID_PK= " & ItemLedgerID
+                    sqlUpdate = "update T240012 set IL_NU9_Issue_To_ID=Null ,IL_VC16_Item_Status='" & dtReturn.Rows(intI).Item(1) & "',IL_DT8_Transaction_Date='" & dtReturn.Rows(intI).Item(4) & "',IL_NU9_Location_ID_FK=" & dtReturn.Rows(intI).Item(6) & ",IL_VC8_Assign_Type=Null  where IL_NU9_Item_Ledger_ID_PK=" & ItemLedgerID & ""
+                    If SQL.Update("ItemTransaction", "UpdateAssignItem", sqlUpdate, SQL.Transaction.Serializable) = True Then
+
+                    Else
+                        Return False
+                    End If
+                Next
+                Return True
+            Catch ex As Exception
+                CreateLog("ItemTransaction", "SaveItemDetail-603", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+                Return False
+            End Try
+        End Function
+
+        Private Function SaveTransactionAssign(ByVal dtAssign As DataTable) As Boolean
+            '*******************************************
+            'Name:      Save Function To Assign Items
+            'Purpose:  To update records of Item/groups
+            'Author:    Suresh Kharod
+            'Date:        Jan 7, 2008
+            'Called by:  Any
+            'Calls:     
+            'Inputs:     
+            'Output:    
+            '*******************************************
+            Try
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString").ToString
+                For intI As Integer = 0 To dtAssign.Rows.Count - 1
+                    Dim arColName As New ArrayList
+                    Dim arRowData As New ArrayList
+                    'define column name
+                    arColName.Add("ITL_NU9_Item_Ledger_ID_FK") 'Item_Ledger_ID
+                    arColName.Add("ITL_VC16_Item_Status") 'Item_Status
+                    arColName.Add("ITL_NU9_Issue_To_ID") 'Assign To
+                    arColName.Add("ITL_DT8_Transaction_Date") 'Assign Date
+                    arColName.Add("ITL_NU9_Company_ID_FK") 'CompanyID
+                    arColName.Add("ITL_NU9_Location_ID_FK") 'Location_ID
+                    arColName.Add("ITL_VC50_Item_ION_Code") 'ION_Code
+                    arColName.Add("ITL_VC16_Transaction_Type") 'Transaction_Type
+                    arColName.Add("ITL_VC8_Assign_Type") 'Assign Type
+                    arColName.Add("ITL_DT8_Inserted_On")
+                    arColName.Add("ITL_DT8_Updated_On")
+                    arColName.Add("ITL_VC32_Inserted_From")
+                    arColName.Add("ITL_VC32_Updated_From")
+                    arColName.Add("ITL_NU9_InsertedBy_ID_FK")
+                    arColName.Add("ITL_NU9_Last_UpdatedBy_ID_FK")
+
+                    arRowData.Add(dtAssign.Rows(intI).Item(0))
+                    arRowData.Add(dtAssign.Rows(intI).Item(1))
+                    arRowData.Add(dtAssign.Rows(intI).Item(2))
+                    arRowData.Add(dtAssign.Rows(intI).Item(3))
+                    arRowData.Add(dtAssign.Rows(intI).Item(4))
+                    arRowData.Add(dtAssign.Rows(intI).Item(5))
+                    arRowData.Add(dtAssign.Rows(intI).Item(6))
+                    arRowData.Add(dtAssign.Rows(intI).Item(7))
+                    arRowData.Add(dtAssign.Rows(intI).Item(8))
+                    arRowData.Add(Now)
+                    arRowData.Add(Now)
+                    arRowData.Add(Request.UserHostAddress)
+                    arRowData.Add(Request.UserHostAddress)
+                    arRowData.Add(Val(Session("PropUserID")))
+                    arRowData.Add(Val(Session("PropUserID")))
+
+                    If SQL.Save("T240015", "ItemTransaction", "SaveRecord", arColName, arRowData, "") = True Then
+
+                    Else
+                        Return False
+                    End If
+                Next
+                Return True
+            Catch ex As Exception
+                CreateLog("ItemTransaction", "SaveItemDetail-603", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+                Return False
+            End Try
+        End Function
+
+        Private Function SaveTransactionReturn(ByVal dtReturn As DataTable) As Boolean
+            '*******************************************
+            'Name:      Save Function To Assign Items
+            'Purpose:  To update records of Item/groups
+            'Author:    Suresh Kharod
+            'Date:        Jan 7, 2008
+            'Called by:  Any
+            'Calls:     
+            'Inputs:     
+            'Output:    
+            '*******************************************
+            Try
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString").ToString
+                For intI As Integer = 0 To dtReturn.Rows.Count - 1
+                    Dim arColName As New ArrayList
+                    Dim arRowData As New ArrayList
+                    'define column name
+                    arColName.Add("ITL_NU9_Item_Ledger_ID_FK") 'Item_Ledger_ID
+                    arColName.Add("ITL_VC16_Item_Status") 'Item_Status
+                    arColName.Add("ITL_VC1024_Return_Comments") 'Return_Comments
+                    arColName.Add("ITL_NU9_Issue_To_ID") 'Assign To
+                    arColName.Add("ITL_DT8_Transaction_Date") 'Assign Date
+                    arColName.Add("ITL_NU9_Company_ID_FK") 'CompanyID
+                    arColName.Add("ITL_NU9_Location_ID_FK") 'Location_ID
+                    arColName.Add("ITL_VC50_Item_ION_Code") 'ION_Code
+                    arColName.Add("ITL_VC16_Transaction_Type") 'Transaction_Type
+
+                    arColName.Add("ITL_DT8_Inserted_On")
+                    arColName.Add("ITL_DT8_Updated_On")
+                    arColName.Add("ITL_VC32_Inserted_From")
+                    arColName.Add("ITL_VC32_Updated_From")
+                    arColName.Add("ITL_NU9_InsertedBy_ID_FK")
+                    arColName.Add("ITL_NU9_Last_UpdatedBy_ID_FK")
+
+                    arRowData.Add(dtReturn.Rows(intI).Item(0))
+                    arRowData.Add(dtReturn.Rows(intI).Item(1))
+                    arRowData.Add(dtReturn.Rows(intI).Item(2))
+                    arRowData.Add(dtReturn.Rows(intI).Item(3))
+                    arRowData.Add(dtReturn.Rows(intI).Item(4))
+                    arRowData.Add(dtReturn.Rows(intI).Item(5))
+                    arRowData.Add(dtReturn.Rows(intI).Item(6))
+                    arRowData.Add(dtReturn.Rows(intI).Item(7))
+                    arRowData.Add(dtReturn.Rows(intI).Item(8))
+                    arRowData.Add(Now)
+                    arRowData.Add(Now)
+                    arRowData.Add(Request.UserHostAddress)
+                    arRowData.Add(Request.UserHostAddress)
+                    arRowData.Add(Val(Session("PropUserID")))
+                    arRowData.Add(Val(Session("PropUserID")))
+                    If SQL.Save("T240015", "ItemTransaction", "SaveRecord", arColName, arRowData, "") = True Then
+                    Else
+                        Return False
+                    End If
+                Next
+                Return True
+            Catch ex As Exception
+                CreateLog("ItemTransaction", "SaveTransactionReturn", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+                Return False
+            End Try
+        End Function
+
+        Private Function GetItemViewFilter() As String
+            Try
+                Dim strFilter As String = ""
+                For intI As Integer = 0 To arrTextBoxAssign.Count - 1
+                    Dim strTemp As String = Request.Form("cpnlItemAssign:grdItemIssue:_ctl1:" & arrTextBoxAssign(intI))
+                    If Not IsNothing(strTemp) Then
+                        If strTemp.Trim.Equals("") = False Then
+                            Select Case dsItemsView.Tables(0).Columns(arrColumnsAssign(intI)).DataType.FullName
+                                Case "System.String"
+                                    strFilter &= dsItemsView.Tables(0).Columns(arrColumnsAssign(intI)).ColumnName & " like '" & strTemp & "' AND "
+                                Case Else
+                                    If IsNumeric(strTemp) = False Then
+                                        strTemp = "-9999999999"
+                                    End If
+                                    strFilter &= dsItemsView.Tables(0).Columns(arrColumnsAssign(intI)).ColumnName & "=" & strTemp & " AND "
+                            End Select
+                        End If
+                    End If
+                Next
+                If strFilter.Equals("") = False Then
+                    strFilter = strFilter.Remove(strFilter.Length - 4, 4)
+                End If
+                strFilter = strFilter.Replace("*", "%")
+                Return strFilter
+            Catch ex As Exception
+                Return ""
+            End Try
+        End Function
+        Private Function GetItemViewFilterReturn() As String
+            Try
+                Dim strFilter As String = ""
+                For intI As Integer = 0 To arrTextBoxReturn.Count - 1
+                    Dim strTemp As String = Request.Form("cpnlItemReturn:GrdItemReturn:_ctl1:" & arrTextBoxReturn(intI))
+                    If Not IsNothing(strTemp) Then
+                        If strTemp.Trim.Equals("") = False Then
+                            Select Case dsItemsView.Tables(0).Columns(arrColumnsReturn(intI)).DataType.FullName
+                                Case "System.String"
+                                    strFilter &= dsItemsView.Tables(0).Columns(arrColumnsReturn(intI)).ColumnName & " like '" & strTemp & "' AND "
+                                Case Else
+                                    If IsNumeric(strTemp) = False Then
+                                        strTemp = "-9999999999"
+                                    End If
+                                    strFilter &= dsItemsView.Tables(0).Columns(arrColumnsReturn(intI)).ColumnName & "=" & strTemp & " AND "
+                            End Select
+                        End If
+                    End If
+                Next
+                If strFilter.Equals("") = False Then
+                    strFilter = strFilter.Remove(strFilter.Length - 4, 4)
+                End If
+                strFilter = strFilter.Replace("*", "%")
+                Return strFilter
+            Catch ex As Exception
+                Return ""
+            End Try
+        End Function
+
+        Private Function GetColumnInfo() As Boolean
+            If ddlTransactionType.SelectedItem.Text.Trim = "ASSIGN" Then
+                arrTextBoxAssign.Clear()
+                arrTextBoxAssign.Add("txtYN_AH")
+                arrTextBoxAssign.Add("txtIONCode_AH")
+                arrTextBoxAssign.Add("txtSerialNo_AH")
+                arrTextBoxAssign.Add("txtPurchaseDate_AH")
+                arrTextBoxAssign.Add("txtStatus_AH")
+
+                arrColumnsAssign.Clear()
+                arrColumnsAssign.Add("")
+                arrColumnsAssign.Add("IONCode")
+                arrColumnsAssign.Add("SerialNo")
+                arrColumnsAssign.Add("PurchaseDate")
+                arrColumnsAssign.Add("Status")
+            ElseIf ddlTransactionType.SelectedItem.Text.Trim = "RETURN" Then
+                arrTextBoxReturn.Clear()
+                arrTextBoxReturn.Add("txtYN_H")
+                arrTextBoxReturn.Add("txtComments_H")
+                arrTextBoxReturn.Add("ReturnBy_H")
+                arrTextBoxReturn.Add("txtReturnFrom_H")
+                arrTextBoxReturn.Add("txtIONCode_H")
+                arrTextBoxReturn.Add("txtSerialNo_H")
+                arrTextBoxReturn.Add("txtStatus")
+
+                arrColumnsReturn.Clear()
+                arrColumnsReturn.Add("")
+                arrColumnsReturn.Add("")
+                arrColumnsReturn.Add("AssignTO")
+                arrColumnsReturn.Add("Location")
+                arrColumnsReturn.Add("IONCode")
+                arrColumnsReturn.Add("SerialNo")
+                arrColumnsReturn.Add("Status")
+            End If
+        End Function
+#End Region
+
+#Region "Function to fill DropDowns and Grid"
+        Private Sub fillViewGrid()
+            Try
+                Dim strSQL As String = ""
+                If ddlTransactionType.SelectedItem.Text.Trim = "ASSIGN" Then
+                    strSQL = "select IL_NU9_Item_Ledger_ID_PK ItemKey,CI_VC36_Name AssignTO,T240012.IL_VC50_Item_ION_Code IONCode,T240011.IM_VC32_Item_Name ItemName, T240031.LM_VC32_Location_Name Location,IL_VC16_Item_Status Status,IL_VC50_Item_Part_No PartNo,IL_VC50_Item_Serial_No SerialNo,IL_FL8_Item_Price ItemPrice,IL_VC16_Price_Currency PriceCurrency,convert(varchar,IL_DT8_Purchasing_Date,101) PurchaseDate From T240012,T240011,T240031,T010011 where T240012.IL_NU9_Item_ID_FK=T240011.IM_NU9_Item_Master_ID_PK and T240012.IL_NU9_Location_ID_FK*=T240031.LM_NU9_Location_ID_PK and T240012.IL_NU9_Item_ID_FK=" & Val(ddlItem.SelectedValue) & " and IL_VC16_Item_Status<>'ASSIGNED' and T240012.IL_NU9_Issue_To_ID*=T010011.CI_NU8_Address_Number  and IL_VC16_Transaction_Type<>'ACCESSORY'"
+                ElseIf ddlTransactionType.SelectedItem.Text.Trim = "RETURN" Then
+                    strSQL = "select IL_NU9_Item_Ledger_ID_PK ItemKey,CI_VC36_Name AssignTO,T240012.IL_VC50_Item_ION_Code IONCode,T240011.IM_VC32_Item_Name ItemName, T240031.LM_VC32_Location_Name Location,IL_VC16_Item_Status Status,IL_VC50_Item_Part_No PartNo,IL_VC50_Item_Serial_No SerialNo,IL_FL8_Item_Price ItemPrice,IL_VC16_Price_Currency PriceCurrency,convert(varchar,IL_DT8_Purchasing_Date,101) PurchaseDate From T240012,T240011,T240031,T010011 where T240012.IL_NU9_Item_ID_FK=T240011.IM_NU9_Item_Master_ID_PK and T240012.IL_NU9_Location_ID_FK*=T240031.LM_NU9_Location_ID_PK and T240012.IL_NU9_Item_ID_FK=" & Val(ddlItem.SelectedValue) & " and IL_VC16_Item_Status='" & ddlTransactionType.SelectedValue & "' and T240012.IL_NU9_Issue_To_ID*=T010011.CI_NU8_Address_Number  and IL_VC16_Transaction_Type<>'ACCESSORY'"
+                End If
+                Dim intRows As Integer
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString")
+                dsItemsView = New DataSet
+                'grdItemIssue.PageSize = mintPageSize
+                If Not IsPostBack Then
+                    cpnlItemAssign.Visible = False
+                    cpnlItemReturn.Visible = False
+                Else
+                    If strSQL = "" Then
+                        cpnlItemAssign.Visible = True
+                        cpnlItemReturn.Visible = True
+                        cpnlItemAssign.State = CustomControls.Web.PanelState.Collapsed
+                        cpnlItemAssign.TitleCSS = "test2"
+                        cpnlItemAssign.Enabled = False
+                        cpnlItemReturn.State = CustomControls.Web.PanelState.Collapsed
+                        cpnlItemReturn.TitleCSS = "test2"
+                        cpnlItemReturn.Enabled = False
+                        lstError.Items.Clear()
+                        lstError.Items.Add("Please Select Transaction Type...")
+                        ShowMsgPenel(cpnlErrorPanel, lstError, Image1, mdlMain.MSG.msgInfo)
+                        Exit Sub
+                    Else
+                        If SQL.Search("ItemsView", "", "", strSQL, dsItemsView, "", "") = True Then
+                            If ddlTransactionType.SelectedItem.Text.Trim = "ASSIGN" Then
+                                '********************** 
+                                ViewState("ItemsView") = dsItemsView.Tables("ItemsView")
+                                Dim strTemp As String = GetItemViewFilter()
+                                If strTemp.Equals("") = False Then
+                                    Dim dtTemp As New DataTable
+                                    dtTemp = GetFilteredDataView(dsItemsView.Tables("ItemsView").DefaultView, strTemp).Table
+                                    'FillAssignToDDL()
+                                    If dtTemp.Rows.Count <= 0 Then
+                                        grdItemIssue.DataSource = dtTemp 'dsItemsView.Tables("ItemsView")
+                                        grdItemIssue.DataBind()
+                                        lstError.Items.Clear()
+                                        lstError.Items.Add("There is no item in the Inventory related to this search text...")
+                                        ShowMsgPenel(cpnlErrorPanel, lstError, Image1, mdlMain.MSG.msgInfo)
+                                        Exit Sub
+                                    Else
+                                        grdItemIssue.DataSource = dtTemp 'dsItemsView.Tables("ItemsView")
+                                        grdItemIssue.DataBind()
+                                        intRows = dtTemp.Rows.Count
+                                    End If
+
+                                Else
+                                    grdItemIssue.DataSource = dsItemsView.Tables("ItemsView")
+                                    grdItemIssue.DataBind()
+                                    intRows = dsItemsView.Tables(0).Rows.Count
+                                End If
+                                lstError.Items.Clear()
+                                cpnlErrorPanel.Visible = False
+                                cpnlItemAssign.Visible = True
+                                cpnlItemAssign.State = CustomControls.Web.PanelState.Expanded
+                                cpnlItemAssign.TitleCSS = "test"
+                                cpnlItemAssign.Enabled = True
+                                cpnlItemReturn.Visible = False
+                            ElseIf ddlTransactionType.SelectedItem.Text.Trim = "RETURN" Then
+                                Dim strTemp As String = GetItemViewFilterReturn()
+                                If strTemp.Equals("") = False Then
+                                    Dim dtTemp As New DataTable
+                                    dtTemp = GetFilteredDataView(dsItemsView.Tables("ItemsView").DefaultView, strTemp).Table
+                                    'FillAssignToDDL()
+                                    If dtTemp.Rows.Count <= 0 Then
+                                        GrdItemReturn.DataSource = dtTemp 'dsItemsView.Tables("ItemsView")
+                                        GrdItemReturn.DataBind()
+                                        lstError.Items.Clear()
+                                        lstError.Items.Add("No Item is Assigned related to this search text...")
+                                        ShowMsgPenel(cpnlErrorPanel, lstError, Image1, mdlMain.MSG.msgInfo)
+                                        Exit Sub
+                                    Else
+                                        GrdItemReturn.DataSource = dtTemp 'dsItemsView.Tables("ItemsView")
+                                        GrdItemReturn.DataBind()
+                                        intRows = dtTemp.Rows.Count
+                                    End If
+                                Else
+                                    GrdItemReturn.DataSource = dsItemsView.Tables("ItemsView")
+                                    GrdItemReturn.DataBind()
+                                    intRows = dsItemsView.Tables(0).Rows.Count
+                                End If
+                                lstError.Items.Clear()
+                                cpnlErrorPanel.Visible = False
+                                cpnlItemAssign.Visible = False
+                                cpnlItemReturn.Visible = True
+                                cpnlItemReturn.State = CustomControls.Web.PanelState.Expanded
+                                cpnlItemReturn.TitleCSS = "test"
+                                cpnlItemReturn.Enabled = True
+                            End If
+                        Else
+                            If ddlTransactionType.SelectedItem.Text.Trim = "ASSIGN" Then
+                                cpnlItemAssign.Visible = True
+                                cpnlItemReturn.Visible = True
+                                cpnlItemAssign.State = CustomControls.Web.PanelState.Collapsed
+                                cpnlItemAssign.TitleCSS = "test2"
+                                cpnlItemAssign.Enabled = False
+                                cpnlItemReturn.State = CustomControls.Web.PanelState.Collapsed
+                                cpnlItemReturn.TitleCSS = "test2"
+                                cpnlItemReturn.Enabled = False
+                                lstError.Items.Clear()
+                                lstError.Items.Add("There is no item in the Inventory to Assign...")
+                                ShowMsgPenel(cpnlErrorPanel, lstError, Image1, mdlMain.MSG.msgInfo)
+                                Exit Sub
+                            ElseIf ddlTransactionType.SelectedItem.Text.Trim = "RETURN" Then
+                                cpnlItemAssign.Visible = True
+                                cpnlItemReturn.Visible = True
+                                cpnlItemAssign.State = CustomControls.Web.PanelState.Collapsed
+                                cpnlItemAssign.TitleCSS = "test2"
+                                cpnlItemAssign.Enabled = False
+                                cpnlItemReturn.State = CustomControls.Web.PanelState.Collapsed
+                                cpnlItemReturn.TitleCSS = "test2"
+                                cpnlItemReturn.Enabled = False
+                                lstError.Items.Clear()
+                                lstError.Items.Add("No item is Assigned to anyone...")
+                                ShowMsgPenel(cpnlErrorPanel, lstError, Image1, mdlMain.MSG.msgInfo)
+                                Exit Sub
+                            Else
+                                cpnlItemAssign.Visible = False
+                                cpnlItemReturn.Visible = False
+                            End If
+                        End If
+                    End If
+                End If
+            Catch ex As Exception
+            End Try
+        End Sub
+        Private Function FillAssignToDDL() As Boolean
+            Try
+                If ddlAssignType.SelectedValue = "Employee" Then
+                    CDDLAssignTO.CDDLQuery = "SELECT um_in4_address_no_fk as ID,(um_vc50_userid + ' [' + UName.ci_vc36_name + ']') as Name,t010011.ci_vc36_name  as Company FROM T060011,T010011,T010011 UName where UM_VC4_Status_Code_FK='ENB' and t010011.ci_nu8_address_number=um_in4_company_ab_id and UName.ci_nu8_address_number=um_in4_address_no_fk and (um_in4_company_ab_id=8) and UM_IN4_Company_AB_ID=8 Order By Name"
+                ElseIf ddlAssignType.SelectedValue = "Location" Then
+                    CDDLAssignTO.CDDLQuery = "SELECT LM_NU9_Location_ID_PK as ID,LM_VC32_Location_Name as Name,LM_VC200_Location_Description  as Description  From T240031 where LM_NU9_Location_ID_PK<>1 and LM_VC8_Location_Status='ENB'and LM_NU9_Company_ID_FK=8 Order By Name"
+                End If
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString")
+                CDDLAssignTO.CDDLMandatoryField = True
+                CDDLAssignTO.CDDLUDC = False
+                CDDLAssignTO.CDDLFillDropDown(10, False)
+            Catch ex As Exception
+            End Try
+        End Function
+
+        Private Function fillItemsCDDL() As DataTable
+            Try
+
+                'CDDLItems.CDDLQuery = "Select IM_NU9_Item_Master_ID_PK ID,IM_VC32_Item_Name Name,IM_VC32_Item_Name ItemName From T240011  where IM_NU9_Leaf_Node=1 and IM_VC8_Item_Type<>'Accessry'   Order By Name"
+                'SQL.DBConnection = SQL.GetConncetionString("ConnectionString")
+                'CDDLItems.CDDLMandatoryField = True
+                'CDDLItems.CDDLUDC = False
+                ''CDDLItems.CDDLAutopostback = True
+                'CDDLItems.CDDLFillDropDown(2, False)
+            Catch ex As Exception
+            End Try
+        End Function
+
+        Private Sub fillItemDDL()
+            Try
+                Dim strSQL As String = "Select IM_NU9_Item_Master_ID_PK ItemID,IM_VC32_Item_Name ItemName From T240011  where IM_NU9_Leaf_Node=1 and IM_VC8_Item_Type<>'Accessry'   Order By ItemName"
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString")
+                Dim dsItemsView As New DataSet
+                If SQL.Search("ItemsView", "", "", strSQL, dsItemsView, "", "") = True Then
+                    ddlItem.DataSource = dsItemsView.Tables("ItemsView")
+                    ddlItem.DataValueField = "ItemID"
+                    ddlItem.DataTextField = "ItemName"
+                    ddlItem.DataBind()
+                End If
+            Catch ex As Exception
+            End Try
+        End Sub
+
+#End Region
+
+        Private Sub GrdItemReturn_ItemDataBound(ByVal sender As System.Object, ByVal e As System.Web.UI.WebControls.DataGridItemEventArgs)
+            Try
+                If saveFlag = False Then
+                    If e.Item.ItemType = ListItemType.AlternatingItem Or e.Item.ItemType = ListItemType.Item Or e.Item.ItemType = ListItemType.SelectedItem Then
+                        If IsNothing(Request.Form("cpnlItemReturn:GrdItemReturn:_ctl" & e.Item.ItemIndex + 2 & ":chkItemReturn")) Then
+                            CType(e.Item.Cells(0).FindControl("chkItemReturn"), CheckBox).Checked = False
+                        Else
+                            CType(e.Item.Cells(0).FindControl("chkItemReturn"), CheckBox).Checked = True
+                        End If
+                    End If
+                ElseIf saveFlag = True Then
+                End If
+                If e.Item.ItemType = ListItemType.Header Then
+                    For intI As Integer = 0 To arrTextBoxReturn.Count - 1
+                        CType(e.Item.Cells(intI).FindControl(arrTextBoxReturn(intI)), TextBox).Text = Request.Form("cpnlItemReturn:GrdItemReturn:_ctl1:" & arrTextBoxReturn(intI))
+                    Next
+                End If
+            Catch ex As Exception
+
+            End Try
+        End Sub
+    End Class
+End Namespace
+

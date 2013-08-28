@@ -1,0 +1,436 @@
+﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="item_group.aspx.vb" Inherits="Inventory_item_group" %>
+<%@ Register TagPrefix="cc1" Namespace="CustomControls.Web" Assembly="CustomControls.Web" %>
+<%@ Register TagPrefix="iewc" Namespace="Microsoft.Web.UI.WebControls" Assembly="Microsoft.Web.UI.WebControls" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+		<title>Item Group</title>
+		<meta content="Microsoft Visual Studio .NET 7.1" name="GENERATOR">
+		<meta content="Visual Basic .NET 7.1" name="CODE_LANGUAGE">
+		<meta content="JavaScript" name="vs_defaultClientScript">
+		<meta content="http://schemas.microsoft.com/intellisense/ie5" name="vs_targetSchema">
+		<script language="JavaScript" src="../Images/js/core.js" type="text/javascript"></script>
+		<script language="JavaScript" src="../Images/js/events.js" type="text/javascript"></script>
+		<script language="JavaScript" src="../Images/js/css.js" type="text/javascript"></script>
+		<script language="JavaScript" src="../Images/js/coordinates.js" type="text/javascript"></script>
+		<script language="JavaScript" src="../Images/js/drag.js" type="text/javascript"></script>
+		<script language="javascript" src="../Images/Js/JSValidation.js"></script>
+		<LINK href="../Images/js/StyleSheet1.css" type="text/css" rel="stylesheet">
+		<script>
+
+			var globleID;
+			var globleUser;
+			var globleRole;
+			var globleCompany;
+			
+			
+		
+			function callrefresh()
+				{
+					location.href="AB_Search.aspx";
+					//Form1.submit();
+				}
+								
+			function ConfirmDelete(varImgValue)
+				{
+					
+							if  (document.Form1.txthidden.value=="")
+							{
+									alert("Please select the row");
+									return false;
+							}
+							else
+							{
+										var confirmed
+										confirmed=window.confirm("Delete,Are you sure you want to Delete the selected record ?");
+										if(confirmed==true)
+										{
+											    document.Form1.txthiddenImage.value=varImgValue;
+												Form1.submit(); 
+												
+										}
+										
+							}
+							return false;
+				}
+				
+				
+				
+			function SaveEdit(varImgValue)
+				{
+			    		
+			    		if (varImgValue=='ShowAll')
+							{
+								document.Form1.txthiddenImage.value=varImgValue;
+								Form1.submit(); 
+								return false;
+							}	
+			    		
+			    					    		
+			    	if (varImgValue=='Edit')
+								{
+								//Security Block
+							var obj=document.getElementById("imgEdit")
+							if(obj==null)
+							{
+								alert("You don't have access rights to edit record");
+								return false;
+							}
+
+							if (obj.disabled==true) 
+							{
+								alert("You don't have access rights to edit record");
+								return false;
+							}
+							//End of Security Block
+							
+															if  (document.Form1.txthidden.value=="")
+															{
+																 alert("Please select the row");
+																 return false;
+															}
+															else
+															{
+															 //alert(document.Form1.txthiddenAdno.value);
+																 document.Form1.txthiddenImage.value=varImgValue;
+																 Form1.submit(); 
+																 return false;
+															}
+															
+												}	
+												
+					if (varImgValue=='Close')
+												{
+																 document.Form1.txthiddenImage.value=varImgValue;
+																 Form1.submit(); 
+																 return false;
+																 
+												}
+								
+								
+					if (varImgValue=='Add')
+												{
+													 document.Form1.txthiddenImage.value=varImgValue;
+													Form1.submit();
+													return false;
+													  
+												}	
+			     if (varImgValue=='Search')
+								{
+									document.Form1.txthiddenImage.value=varImgValue;
+									Form1.submit(); 
+									return false;
+								}	
+								
+								if (varImgValue=='Logout')
+								{
+									document.Form1.txthiddenImage.value=varImgValue;
+									Form1.submit(); 
+								}	
+								
+				if (varImgValue=='Reset')
+									{
+												var confirmed
+												confirmed=window.confirm("Do  You Want To reset The Page ?");
+												if(confirmed==true)
+														{	
+																 Form1.reset()
+																 return false;
+														}		
+														else
+														{
+														return false;
+														}
+
+									}			
+				}				
+				
+				function KeyCheck(nn,rowvalues)
+					{
+						//alert(rowvalues);
+						globleID = nn;
+						document.Form1.txthidden.value=nn;
+			/*			document.Form1.txthiddenUser.value=nn;
+						document.Form1.txthiddenRole.value=nn;
+						document.Form1.txthiddenCompany.value=nn;
+			*/
+						//Form1.submit();
+						
+										var tableID='GrdAddSerach'  //your datagrids id
+										var table;
+												      
+											if (document.all) table=document.all[tableID];
+												if (document.getElementById) table=document.getElementById(tableID);
+												if (table)
+												{
+														
+														for ( var i = 1 ;  i < table.rows.length ;  i++)
+															{	
+																if(i % 2 == 0)
+																	{
+																		table.rows [ i ] . style . backgroundColor = "#f5f5f5";
+																	}
+																	else
+																	{
+																	
+																		table.rows [ i ] . style . backgroundColor = "#ffffff";
+																	}
+															}
+												    table.rows [ rowvalues  ] . style . backgroundColor = "#d4d4d4";
+												}
+				
+					}	
+					
+					function KeyCheck55(nn,rowvalues)
+					{
+							document.Form1.txthiddenImage.value='Edit';
+							Form1.submit(); 
+					}	
+					
+			function OpenW(varTable)
+				{
+				
+				//window.open('../../Search/Common/PopSearch.aspx?ID=select Name as ID,Description,Company  from UDC where ProductCode='+ a + '  and UDCType='+"'"+b+"'"+' &tbname=' + c  ,'Search','scrollBars=no,resizable=No,width=550,height=450,status=yes');
+				wopen('../AdministrationCenter/AddressBook/AB_ViewColumns.aspx? ID='+varTable,'Search',500,450);
+				//	wopen('AB_ViewColumns.aspx','UserView',500,450);
+				}
+				
+		function wopen(url, name, w, h)
+			{
+				// Fudge factors for window decoration space.
+				// In my tests these work well on all platforms & browsers.
+				w += 32;
+				h += 96;
+				wleft = (screen.width - w) / 2;
+				wtop = (screen.height - h) / 2;
+				var win = window.open(url,
+					name,
+					'width=' + w + ', height=' + h + ', ' +
+					'left=' + wleft + ', top=' + wtop + ', ' +
+					'location=no, menubar=no, ' +
+					'status=no, toolbar=no, scrollbars=no, resizable=no');
+				// Just in case width and height are ignored
+				win.resizeTo(w, h);
+				// Just in case left and top are ignored
+				win.moveTo(wleft, wtop);
+				win.focus();
+			}
+				
+		</script>
+	</HEAD>
+<body bottomMargin="0" leftMargin="0" topMargin="0" onload="Hideshow();" rightMargin="0">
+		<form id="Form1" method="post" runat="server">
+			<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td><div align="right"><img src="../Images/top_right_line.gif" width="96" height="2"></div>
+								</td>
+							</tr>
+							<tr>
+								<td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td background="../Images/top_left_back.gif">&nbsp;</td>
+											<td width="50"><img src="../Images/top_right.gif" width="50" height="20"></td>
+											<td width="21"><a href="#"><img src="../Images/bt_min.gif" width="21" height="20" border="0"></a></td>
+											<td width="21"><a href="#"><img src="../Images/bt_max.gif" width="21" height="20" border="0"></a></td>
+											<td width="19"><a href="#"><img onclick="CloseWSS();" src="../Images/bt_clo.gif" width="19" height="20" border="0"></a></td>
+											<td width="6"><img src="../Images/bt_space.gif" width="6" height="20"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr width="100%">
+											<td background="../Images/top_nav_back.gif" height="67">
+												<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+													<TR>
+														<TD>
+															<asp:button id="BtnGrdSearch" runat="server" Width="0px" Height="0"></asp:button>
+															<asp:imagebutton id="imgbtnSearch" tabIndex="1" runat="server" ImageUrl="white.GIF" Width="1px" Height="1px"
+																CommandName="submit" AlternateText="."></asp:imagebutton><IMG onclick="HideContents();" alt="Hide" src="../Images/left005.gif" name="imgHide"
+																class="PlusImageCSS"> <IMG onclick="ShowContents();" alt="Show" src="../Images/Right005.gif" name="ingShow"
+																class="PlusImageCSS">
+															<asp:label id="lblTitleLabelUserSearch" runat="server" Width="111px" Height="12px" BorderStyle="None"
+																BorderWidth="2px" CssClass="TitleLabel">ITEM GROUP</asp:label>
+														</TD>
+														<TD background="../Images/top_nav_back.gif" height="67" vAlign="middle" align="center"
+															bgColor="lightgrey">
+															<IMG title="Seperator" alt="R" src="../Images/00Seperator.gif" border="0">&nbsp;
+															<asp:ImageButton id="imgAdd" runat="server" ImageUrl="../Images/s2Add01.gif" AccessKey="A" ToolTip="Add"></asp:ImageButton>&nbsp;&nbsp;
+															<asp:ImageButton id="imgEdit" runat="server" ImageUrl="../Images/S2edit01.gif" AccessKey="E" ToolTip="Edit"></asp:ImageButton>&nbsp;
+															<asp:ImageButton id="imgSearch" runat="server" ImageUrl="../Images/s1search02.gif" AccessKey="H"
+																ToolTip="Search"></asp:ImageButton>&nbsp;&nbsp;
+															<asp:ImageButton id="imgReset" runat="server" ImageUrl="../Images/reset_20.gif" AccessKey="R" ToolTip="Reset"></asp:ImageButton>&nbsp;
+															<asp:imagebutton id="imgDelete" accessKey="D" runat="server" ImageUrl="../Images/s2delete01.gif"
+																ToolTip="Delete"></asp:imagebutton>&nbsp;
+															<asp:imagebutton id="imgShowAll" accessKey="A" runat="server" ImageUrl="../Images/Disabled.gif" ToolTip="Show All"></asp:imagebutton>&nbsp;
+															<IMG title="Seperator" alt="R" src="../Images/00Seperator.gif" border="0">&nbsp;
+														</TD>
+														<TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+															</STRONG></FONT></TD>
+														<td>&nbsp;
+														</td>
+													</TR>
+												</table>
+											</td>
+											<td align="right" width="152" background="../Images/top_nav_back01.gif" height="67"><IMG class="PlusImageCSS" id="Help" title="Help" onclick="ShowHelp('970','../');" alt="E"
+													src="../Images/s1question02.gif" border="0" name="tbrbtnEdit">&nbsp;&nbsp;<IMG class="PlusImageCSS" id="Logout" title="Logout" onclick="LogoutWSS();" alt="E" src="../icons/logoff.gif"
+													border="0" name="tbrbtnEdit">&nbsp;&nbsp;&nbsp;</td>
+										</tr>
+									</table>
+							<tr>
+								<td height="10">
+									<table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td background="../Images/main_line.gif" height="10"><img src="../Images/main_line.gif" width="6" height="10"></td>
+											<td width="7" height="10"><img src="../Images/main_line01.gif" width="7" height="10"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td height="2"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td background="../Images/main_line02.gif" height="2"><img src="../Images/main_line02.gif" width="2" height="2"></td>
+											<td width="12" height="2"><img src="../Images/main_line03.gif" width="12" height="2"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<DIV style="OVERFLOW: auto; WIDTH: 100%; HEIGHT: 581px">
+										<TABLE id="Table16" borderColor="activeborder" cellSpacing="0" cellPadding="0" width="100%"
+											border="0">
+											<TR>
+												<TD vAlign="top" colSpan="1">
+													<!--  **********************************************************************-->
+													<DIV style="OVERFLOW: auto; WIDTH: 100%; HEIGHT: 581px">
+														<table width="100%" border="0" cellpadding="0" cellspacing="0">
+															<TBODY>
+																<tr>
+																	<td colSpan="2"><cc1:collapsiblepanel id="cpnlErrorPanel" runat="server" Width="100%" Height="47px" BorderStyle="Solid"
+																			BorderWidth="0px" BorderColor="Indigo" Visible="False" TitleCSS="test" PanelCSS="panel" TitleForeColor="black"
+																			TitleClickable="True" TitleBackColor="Transparent" Text="Error Message" ExpandImage="../Images/ToggleDown.gif"
+																			CollapseImage="../Images/ToggleUp.gif" Draggable="False">
+																			<TABLE id="Table2" borderColor="lightgrey" cellSpacing="0" cellPadding="0" border="0">
+																				<TR>
+																					<TD colSpan="0" rowSpan="0">
+																						<asp:Image id="Image1" runat="server" Height="16px" Width="16px" ImageUrl="../Images/warning.gif"></asp:Image></TD>
+																					<TD colSpan="0" rowSpan="0">&nbsp;
+																						<asp:Label id="lblError" runat="server" Font-Size="XX-Small" Font-Names="Verdana" ForeColor="Red"></asp:Label>
+																						<asp:ListBox id="lstError" runat="server" Width="752px" BorderWidth="0" BorderStyle="Groove"
+																							Font-Size="XX-Small" Font-Names="Verdana" ForeColor="Red"></asp:ListBox></TD>
+																				</TR>
+																			</TABLE>
+																		</cc1:collapsiblepanel></td>
+																</tr>
+																<TR>
+																	<td>
+																	
+																		<DIV style="OVERFLOW: auto; WIDTH: 100%; HEIGHT: 400pt">
+																			<TABLE id="Table1261" borderColor="activeborder" cellSpacing="0" cellPadding="0" width="100%"
+																				align="left" border="0">
+																				<tr>
+																					<td>
+																						<asp:panel id="Panel1" runat="server"></asp:panel></td>
+																				</tr>
+																				<TR>
+																					<TD vAlign="top" align="left">
+																						<!--  **********************************************************************-->
+																						<cc1:collapsiblepanel id="cpnlItemGroup" runat="server" Width="100%" BorderStyle="Solid" BorderWidth="0px"
+																							BorderColor="Indigo" Visible="true" TitleCSS="test" PanelCSS="panel" TitleForeColor="black" TitleClickable="True"
+																							TitleBackColor="Transparent" Text="Item Group" ExpandImage="../Images/ToggleDown.gif" CollapseImage="../Images/ToggleUp.gif"
+																							Draggable="False">
+																			
+																			Design Go HERE
+																			
+																			</cc1:collapsiblepanel>
+																						<!-- Panel for displaying Task Info --> <!-- Panel for displaying Action Info-->  <!-- ***********************************************************************--></TD>
+																				</TR>
+																			</TABLE>
+																		</DIV>
+																		<asp:panel id="Panel6" runat="server">
+																			<asp:panel id="Panel7" runat="server">
+																				<TABLE height="25">
+																					<TR>
+																						<TD>
+																							<asp:Label id="pg" Height="12pt" Width="40px" Font-Size="8pt" Font-Names="Verdana" ForeColor="#0000C0"
+																								Runat="server" Font-Bold="True">Page</asp:Label></TD>
+																						<TD>
+																							<asp:Label id="CurrentPg" runat="server" Height="12px" Width="10px" Font-Size="X-Small" ForeColor="Crimson"
+																								Font-Bold="True"></asp:Label></TD>
+																						<TD>
+																							<asp:Label id="of" Font-Size="8pt" Font-Names="Verdana" ForeColor="#0000C0" Runat="server"
+																								Font-Bold="True">of</asp:Label></TD>
+																						<TD>
+																							<asp:label id="TotalPages" runat="server" Height="12px" Width="10px" Font-Size="X-Small" ForeColor="Crimson"
+																								Font-Bold="True"></asp:label></TD>
+																						<TD>
+																							<asp:imagebutton id="Firstbutton" runat="server" AlternateText="First" ImageUrl="../Images/next9.jpg"
+																								ToolTip="First"></asp:imagebutton></TD>
+																						<TD width="14">
+																							<asp:imagebutton id="Prevbutton" runat="server" ImageUrl="../Images/next99.jpg" ToolTip="Previous"></asp:imagebutton></TD>
+																						<TD>
+																							<asp:imagebutton id="Nextbutton" runat="server" ImageUrl="../Images/next9999.jpg" ToolTip="Next"></asp:imagebutton></TD>
+																						<TD>
+																							<asp:imagebutton id="Lastbutton" runat="server" ImageUrl="../Images/next999.jpg" ToolTip="Last"></asp:imagebutton></TD>
+																						<TD>
+																							<asp:textbox id="txtPageSize" runat="server" Height="14px" Width="24px" Font-Size="7pt" MaxLength="3"></asp:textbox></TD>
+																						<TD>
+																							<asp:Button id="Button3" runat="server" Height="12pt" Width="16px" BorderStyle="None" ToolTip="Change Paging Size"
+																								Text=">" Font-Size="7pt" ForeColor="Navy" Font-Bold="True"></asp:Button></TD>
+																						<TD></TD>
+																						<TD>
+																							<asp:Label id="lblrecords" runat="server" Height="12pt" Font-Size="8pt" Font-Names="Verdana"
+																								ForeColor="MediumBlue" Font-Bold="True">Total Records</asp:Label></TD>
+																						<TD>
+																							<asp:Label id="TotalRecods" runat="server" Height="12pt" Font-Size="8pt" Font-Names="Verdana"
+																								ForeColor="Crimson" Font-Bold="True"></asp:Label></TD>
+																						<TD></TD>
+																						<TD></TD>
+																					</TR>
+																				</TABLE>
+																			</asp:panel>
+																		</asp:panel>
+																	</td>
+												</TD>
+											</TR>
+										</TABLE>
+									</DIV>
+								</td>
+								<td width="12" valign="top" background="../Images/main_line04.gif"><img src="../Images/main_line04.gif" width="12" height="1"></td>
+							</tr>
+						</table>
+						</DIV>
+					</td>
+				</tr>
+				<tr>
+					<td height="2"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td background="../Images/main_line06.gif" height="2"><img src="../Images/main_line06.gif" width="2" height="2"></td>
+								<td width="12" height="2"><img src="../Images/main_line05.gif" width="12" height="2"></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td background="../Images/bottom_back.gif">&nbsp;</td>
+								<td width="66"><img src="../Images/bottom_right.gif" width="66" height="31"></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			</TD></TR></TBODY></TABLE></TD></TR></TABLE>
+			<DIV></DIV>
+			<INPUT type="hidden" name="txthidden"> <INPUT type="hidden" name="txthiddenImage">
+		</form>
+	</body>
+</html>

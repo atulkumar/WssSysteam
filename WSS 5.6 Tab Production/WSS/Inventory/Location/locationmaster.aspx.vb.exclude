@@ -1,0 +1,756 @@
+﻿Imports ION.Logging.EventLogging
+Imports ION.Data
+Imports System.Data.SqlClient
+Imports Microsoft.Web.UI.WebControls
+Imports System.Text
+Imports Microsoft.Win32
+Imports ION.Net
+Imports System.Web.Security
+Imports System.Security.Cryptography
+Imports System.Drawing
+Imports System.Data
+Imports System.Configuration
+Imports System.Data.Common
+
+Namespace IONWSS
+    Partial Class Inventory_Location_locationmaster
+        Inherits System.Web.UI.Page
+        Private mobjParentNode As TreeNode     ' This will be the Parent node in the Menu
+        Private mobjChildNode As TreeNode       ' Child node under parent node
+        Private txthiddenImage As String 'stored clicked button's cation
+        Private dsMainMainSkill As New DataSet
+        Private dvMainSkill As New DataView
+        Private dvMainSCR As DataView
+        Private dsMain As New DataSet
+        Private mdvtable As New DataView
+        Private arrTextBox As New ArrayList
+        Private arrColumns As New ArrayList
+        Private strCollectIDList As String = ""
+
+
+        Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+            'Put user code to initialize the page here
+
+
+            Try
+
+                imgSave.Attributes.Add("Onclick", "return SaveEdit('Save');")
+                imgAdd.Attributes.Add("Onclick", "return SaveEdit('Add');")
+                txthiddenImage = Request.Form("txthiddenImage")
+                cpnlErrorPanel.Visible = False
+
+                GetTextboxs()
+
+                If Not IsPostBack Then
+                    CreateMainSkillMenu(mobjTreeMenu)
+                    FillCustomDDl()
+                End If
+
+
+                If txthiddenImage <> "" Then
+                    Select Case txthiddenImage
+                        Case "Save"
+                            If ViewState("AddStatus") = 1 Then
+                                If DataValidation() = True Then
+                                    If SaveLocationDetail() = True Then
+                                        lstError.Items.Clear()
+                                        lstError.Items.Add("Record Save Successfully...")
+                                        ShowMsgPenel(cpnlErrorPanel, lstError, Image1, mdlMain.MSG.msgOK)
+                                        ViewState("AddStatus") = 0
+                                        CreateMainSkillMenu(mobjTreeMenu)
+                                        mobjTreeMenu.SelectExpands = True
+                                    End If
+                                End If
+                            Else
+                                If DataValidation() = True Then
+                                    If UpdateLocationDetail() = True Then
+                                        lstError.Items.Clear()
+                                        lstError.Items.Add("Record Updated Successfully...")
+                                        ShowMsgPenel(cpnlErrorPanel, lstError, Image1, mdlMain.MSG.msgOK)
+
+                                        CreateMainSkillMenu(mobjTreeMenu)
+                                        mobjTreeMenu.SelectExpands = True
+
+
+                                        '**********************************************************************
+                                        '******************************************* 
+                                        Dim strResponsibleUserIdList As String
+                                        Dim strResponsibleUserId As String
+                                        Dim strIDList As String = ""
+                                        Dim strID As String = ""
+
+                                        strIDList = GetResponsibleUserList(ViewState("strCollectAllIDList"))
+
+                                        If strIDList.Length > 0 Then
+                                            strID = strIDList.Substring(0, strIDList.IndexOf(","))
+                                            ViewState("strResponsibleUserId") = "(" & strID & ")"
+                                            If strIDList.Length > 0 Then
+                                                strIDList = strIDList.Substring(strIDList.IndexOf(",") + 1, strIDList.Length - strIDList.IndexOf(",") - 1)
+
+                                                If strIDList.Length > 0 Then
+                                                    strIDList = strIDList.Substring(0, strIDList.Length - 1) ' remove root parent id for the query
+                                                End If
+
+                                            End If
+                                        End If
+
+                                        strResponsibleUserIdList = ""
+                                        strResponsibleUserIdList = "(" & strIDList & ")"
+                                        ViewState("strResponsibleUserIdList") = strResponsibleUserIdList
+
+                                        '******************************************************
+                                        '**********************************************************************
+
+                                        Bindgrid()
+
+                                    Else
+                                    End If
+                                End If
+                            End If
+                        Case "Logout"
+                            LogoutWSS()
+                            Exit Sub
+                        Case "Add"
+                            ClearFields()
+                            ViewState("AddStatus") = 1
+                    End Select
+                End If
+
+                If Not ViewState("intLocationID") = Nothing Or Not ViewState("intLocationID") = 0 Then
+                    Bindgrid()
+                End If
+
+                'Security Block
+                '****************************************
+                Dim intId As Integer
+                If Not IsPostBack Then
+                    Dim str As String
+                    str = HttpContext.Current.Session("PropRootDir")
+                    '    intId = Request.QueryString("ScrID")
+                    Dim obj As New clsSecurityCache
+                    If obj.ScreenAccess(971) = False Then
+                        Response.Redirect("../../frm_NoAccess.aspx", False)
+                    End If
+                    obj.ControlSecurity(Me.Page, 971)
+                End If
+                'End of Security Block
+                '*****************************************
+
+                mobjTreeMenu.SelectExpands = False
+            Catch ex As Exception
+                CreateLog("LocationMaster", "Pageload-214", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+            End Try
+        End Sub
+
+        Public Sub CreateMainSkillMenu(ByVal mobjTreeMenu As TreeView)
+            Try
+                Dim sqlQuery As String = "select LM_NU9_Location_ID_PK,LM_VC32_Location_Name,LM_NU9_Location_Parent_ID as ParentID, LM_BT1_Is_Leaf_Node from T240031"
+                If SQL.Search("T240031", "", "", sqlQuery, dsMain, "", "") = True Then
+                    CreateMainSkillTreeMenu(mobjTreeMenu)
+                End If
+            Catch ex As Exception
+                CreateLog("LocationMaster", "CreateMainSkillMenu-218", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+            End Try
+        End Sub
+        Private Function CreateMainSkillTreeMenu(ByVal mobjTreeMenu As TreeView) As Boolean
+            Try
+
+                mobjTreeMenu.Nodes.Clear()
+                Dim trParentNode As New TreeNode
+                mobjTreeMenu.ShowLines = True
+                mobjTreeMenu.ShowPlus = True
+                mobjTreeMenu.SelectExpands = True
+                mobjTreeMenu.AutoSelect = True
+
+                dsMainMainSkill = dsMain
+                dvMainSkill = GetFilteredDataView(dsMainMainSkill.Tables(0).DefaultView, "ParentID is null or ParentID =0")
+                For intI As Integer = 0 To dvMainSkill.Table.Rows.Count - 1
+                    dvMainSCR = New DataView
+                    dvMainSCR = GetFilteredDataView(dsMainMainSkill.Tables(0).DefaultView, "ParentID=" & dvMainSkill.Table.Rows(intI).Item("LM_NU9_Location_ID_PK"))
+                    trParentNode = New TreeNode
+                    trParentNode.Text = dvMainSkill.Table.Rows(intI).Item("LM_VC32_Location_Name")
+                    trParentNode.ID = dvMainSkill.Table.Rows(intI).Item("LM_NU9_Location_ID_PK")
+                    trParentNode.Text = "<font Size=""1""   face=""verdana""><b>" & dvMainSkill.Table.Rows(intI).Item("LM_VC32_Location_Name") & "</b></font>"
+                    Dim dvTemp As New DataView
+
+                    dvTemp = GetFilteredDataView(dsMain.Tables(0).DefaultView, "ParentID =" & dvMainSkill.Table.Rows(intI).Item("LM_NU9_Location_ID_PK"))
+                    If dvTemp.Table.Rows.Count = 0 Then
+                        'trParentNode.SelectAction = TreeNodeSelectAction.SelectExpand
+                        trParentNode.Expandable = ExpandableValue.Always
+                    End If
+                    'trParentNode.Value = dvMainSkill.Table.Rows(intI).Item("SKM_NU9_SkillID_PK")
+                    AddsMainkill(trParentNode, dvMainSkill.Table.Rows(intI).Item("LM_NU9_Location_ID_PK"), dsMainMainSkill.Tables(0).DefaultView)
+                    mobjTreeMenu.Nodes.Add(trParentNode)
+                Next
+                mobjTreeMenu.ExpandLevel = 5
+            Catch ex As Exception
+                CreateLog("LocationMaster", "CreateMainSkillTreeMenu-260", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+            End Try
+        End Function
+        Private Sub AddsMainkill(ByRef trvParentNode As TreeNode, ByVal ParentID As Integer, ByVal dvChildsMain As DataView)
+            Dim trvChildNode As New TreeNode
+            Dim dvLast As DataView
+            Dim intL As Integer
+            Try
+                dvLast = GetFilteredDataView(dvChildsMain, "ParentID=" & ParentID)
+                For intL = 0 To dvLast.Table.Rows.Count - 1
+                    trvChildNode = New TreeNode
+                    trvChildNode.Text = dvLast.Table.Rows(intL).Item("LM_VC32_Location_Name")
+                    'trvChildNode.NavigateUrl = dvLast.Table.Rows(intL).Item("LM_NU9_Location_ID_PK")
+                    trvChildNode.ID = dvLast.Table.Rows(intL).Item("LM_NU9_Location_ID_PK")
+                    Dim dvTemp As New DataView
+                    dvTemp = GetFilteredDataView(dsMain.Tables(0).DefaultView, "ParentID =" & dvLast.Table.Rows(intL).Item("LM_NU9_Location_ID_PK"))
+                    'If dvTemp.Table.Rows.Count = 0 Then
+                    '    trvChildNode.SelectAction = TreeNodeSelectAction.SelectExpand
+                    'Else
+                    '    trvChildNode.SelectAction = TreeNodeSelectAction.Select
+                    'End If
+                    AddsMainkill(trvChildNode, dvLast.Table.Rows(intL).Item("LM_NU9_Location_ID_PK"), dsMainMainSkill.Tables(0).DefaultView)
+                    trvParentNode.Nodes.Add(trvChildNode)
+                Next
+            Catch ex As Exception
+                CreateLog("LocationMaster", "AddsMainkill-285", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+            End Try
+        End Sub
+        Private Sub mobjTreeMenu_SelectedIndexChange(ByVal sender As Object, ByVal e As Microsoft.Web.UI.WebControls.TreeViewSelectEventArgs) Handles mobjTreeMenu.SelectedIndexChange
+
+            Try
+
+                Dim Tn As TreeNode
+                Dim intLocationID As Integer
+
+                ViewState("AddStatus") = 0
+                ViewState.Add("intLocationID", intLocationID)
+                Tn = mobjTreeMenu.GetNodeFromIndex(e.NewNode)
+                intLocationID = Val(Tn.ID)
+                ViewState("intLocationID") = intLocationID
+                viewState("strLoactionName") = Tn.Text.Trim
+                GetLocationDetails()
+
+                'getting all child node Ids
+                '****************************************
+                Dim strNodeID As String
+                strNodeID = GetNodeID(Tn)
+                Dim str As String = strNodeID
+                str = str.Substring(0, str.Length - 1) ' remove root parent id for the query 
+                viewstate("strCollectAllIDList") = "(" & str & ")"
+
+                strNodeID = strNodeID.Substring(strNodeID.IndexOf(",") + 1, strNodeID.Length - strNodeID.IndexOf(",") - 1) ' remove root parent id for the query 
+
+                If strNodeID.Length > 0 Then
+                    strNodeID = strNodeID.Substring(0, strNodeID.Length - 1) ' remove root parent id for the query
+                End If
+
+                strCollectIDList = ""
+                strCollectIDList = "(" & strNodeID & ")"
+                ViewState("strCollectIDList") = strCollectIDList
+
+                '**************************************** 
+                'Getting responsible ID  
+                '******************************************* 
+                Dim strResponsibleUserIdList As String
+                Dim strResponsibleUserId As String
+                Dim strIDList As String = ""
+                Dim strID As String = ""
+
+                strIDList = GetResponsibleUserList(ViewState("strCollectAllIDList"))
+
+                If strIDList.Length > 0 Then
+                    strID = strIDList.Substring(0, strIDList.IndexOf(","))
+                    ViewState("strResponsibleUserId") = "(" & strID & ")"
+                    If strIDList.Length > 0 Then
+                        strIDList = strIDList.Substring(strIDList.IndexOf(",") + 1, strIDList.Length - strIDList.IndexOf(",") - 1)
+
+                        If strIDList.Length > 0 Then
+                            strIDList = strIDList.Substring(0, strIDList.Length - 1) ' remove root parent id for the query
+                        End If
+
+                    End If
+                End If
+
+                strResponsibleUserIdList = ""
+                strResponsibleUserIdList = "(" & strIDList & ")"
+                ViewState("strResponsibleUserIdList") = strResponsibleUserIdList
+                '******************************************************
+                Bindgrid()
+
+            Catch ex As Exception
+                CreateLog("LocationMaster", "mobjTreeMenu_SelectedIndexChange-285", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+            End Try
+        End Sub
+        Private Function GetNodeID(ByVal Tn As TreeNode) As String
+            Try
+
+                Dim Tnc As New TreeNodeCollection
+                Dim NodeIds As String = ""
+                Dim i As Integer
+                Tnc = Tn.Nodes
+                NodeIds &= Tn.ID & ","
+                For i = 0 To Tnc.Count - 1
+                    NodeIds &= GetNodeID(Tnc.Item(i))
+                Next
+                Return NodeIds
+
+            Catch ex As Exception
+                CreateLog("LocationMaster", "GetNodeID-285", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+            End Try
+
+        End Function
+        Private Function GetResponsibleUserList(ByVal strId As String) As String
+
+            Try
+
+                Dim strSqlQuery As String
+                Dim ds As New DataSet
+                Dim sqRDR As SqlClient.SqlDataReader
+                Dim blnStatus As Boolean
+                Dim strUserList As String
+
+                strSqlQuery = "select  LM_NU9_Responsible_Person_ID_FK from T240031 where LM_NU9_Location_ID_PK in" & strId
+                sqRDR = SQL.Search("T240031", "GetUserList", strSqlQuery, SQL.CommandBehaviour.Default, blnStatus, "")
+
+                If blnStatus = True Then
+                    While sqRDR.Read
+                        strUserList &= sqRDR.Item("LM_NU9_Responsible_Person_ID_FK") & ","
+                    End While
+                End If
+                sqRDR.Close()
+                sqRDR = Nothing
+                Return strUserList
+
+            Catch ex As Exception
+                CreateLog("LocationMaster", "GetResponsibleUserList-394", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+            End Try
+
+        End Function
+        Private Sub Bindgrid()
+
+            Try
+
+                Dim tempDS As New DataSet
+                Dim sqlQuery As String
+
+
+
+                If viewstate("intLocationID") = "44" Then
+
+                    sqlQuery = "(select IL_NU9_Item_Ledger_ID_PK as ItemID,IL_VC50_Item_ION_Code as IONCode, IL_VC16_Item_Status as Status,convert(varchar,IL_DT8_Transaction_Date,101) as AssignedDate,IM_NU9_Responsible_Person_ID_FK as ResponsibleID,UM_VC50_UserID as Responsible,IM_VC32_Item_Name as ItemName ,'Direct' as ResType  from  T240011,T240012 IDetail,T060011  where IM_NU9_Item_Master_ID_PK=IDetail.IL_NU9_Item_ID_FK and   IM_NU9_Company_ID=IDetail.IL_NU9_Company_ID_FK and IM_NU9_Responsible_Person_ID_FK=T060011.UM_IN4_Address_No_FK and ( IL_NU9_Location_ID_FK in (" & ViewState("intLocationID") & ") or IL_NU9_Issue_To_ID in " & ViewState("strResponsibleUserId") & "))  union (select IL_NU9_Item_Ledger_ID_PK as ItemID, IL_VC50_Item_ION_Code as IONCode, IL_VC16_Item_Status as Status,convert(varchar,IL_DT8_Transaction_Date,101) as AssignedDate,IM_NU9_Responsible_Person_ID_FK as ResponsibleID,UM_VC50_UserID as Responsible,IM_VC32_Item_Name as ItemName ,'Indirect'  as ResType from  T240011,T240012 IDetail,T060011  where IM_NU9_Item_Master_ID_PK=IDetail.IL_NU9_Item_ID_FK and   IM_NU9_Company_ID=IDetail.IL_NU9_Company_ID_FK and IM_NU9_Responsible_Person_ID_FK=T060011.UM_IN4_Address_No_FK and ( IL_NU9_Location_ID_FK in " & ViewState("strCollectIDList") & " or IL_NU9_Issue_To_ID in " & ViewState("strResponsibleUserIdList") & ") and ( IL_NU9_Issue_To_ID not in " & ViewState("strResponsibleUserId") & " or IL_NU9_Issue_To_ID is null) union (select IL_NU9_Item_Ledger_ID_PK as ItemID, IL_VC50_Item_ION_Code as IONCode, IL_VC16_Item_Status as Status,convert(varchar,IL_DT8_Transaction_Date,101) as AssignedDate,IM_NU9_Responsible_Person_ID_FK as ResponsibleID,UM_VC50_UserID as Responsible,IM_VC32_Item_Name as ItemName ,'InStore'  as ResType from  T240011,T240012 IDetail,T060011  where IM_NU9_Item_Master_ID_PK=IDetail.IL_NU9_Item_ID_FK and   IM_NU9_Company_ID=IDetail.IL_NU9_Company_ID_FK and IM_NU9_Responsible_Person_ID_FK=T060011.UM_IN4_Address_No_FK and  IL_NU9_Issue_To_ID is null and IL_NU9_Location_ID_FK=0) )  order by itemid   "
+
+
+                ElseIf ViewState("strCollectIDList") = "()" Then
+
+                    sqlQuery = "select IL_NU9_Item_Ledger_ID_PK as ItemID,IL_VC50_Item_ION_Code as IONCode, IL_VC16_Item_Status as Status,convert(varchar,IL_DT8_Transaction_Date,101) as AssignedDate,IM_NU9_Responsible_Person_ID_FK as ResponsibleID,UM_VC50_UserID as Responsible,IM_VC32_Item_Name as ItemName ,'Direct' as ResType  from  T240011,T240012 IDetail,T060011  where IM_NU9_Item_Master_ID_PK=IDetail.IL_NU9_Item_ID_FK and   IM_NU9_Company_ID=IDetail.IL_NU9_Company_ID_FK and IM_NU9_Responsible_Person_ID_FK=T060011.UM_IN4_Address_No_FK and ( IL_NU9_Location_ID_FK in (" & ViewState("intLocationID") & ") or IL_NU9_Issue_To_ID in " & ViewState("strResponsibleUserId") & ") order by itemid  "
+
+                Else
+
+                    sqlQuery = "(select IL_NU9_Item_Ledger_ID_PK as ItemID,IL_VC50_Item_ION_Code as IONCode, IL_VC16_Item_Status as Status,convert(varchar,IL_DT8_Transaction_Date,101) as AssignedDate,IM_NU9_Responsible_Person_ID_FK as ResponsibleID,UM_VC50_UserID as Responsible,IM_VC32_Item_Name as ItemName ,'Direct' as ResType  from  T240011,T240012 IDetail,T060011  where IM_NU9_Item_Master_ID_PK=IDetail.IL_NU9_Item_ID_FK and   IM_NU9_Company_ID=IDetail.IL_NU9_Company_ID_FK and IM_NU9_Responsible_Person_ID_FK=T060011.UM_IN4_Address_No_FK and ( IL_NU9_Location_ID_FK in (" & ViewState("intLocationID") & ") or IL_NU9_Issue_To_ID in " & ViewState("strResponsibleUserId") & "))  union (select IL_NU9_Item_Ledger_ID_PK as ItemID, IL_VC50_Item_ION_Code as IONCode, IL_VC16_Item_Status as Status,convert(varchar,IL_DT8_Transaction_Date,101) as AssignedDate,IM_NU9_Responsible_Person_ID_FK as ResponsibleID,UM_VC50_UserID as Responsible,IM_VC32_Item_Name as ItemName ,'Indirect'  as ResType from  T240011,T240012 IDetail,T060011  where IM_NU9_Item_Master_ID_PK=IDetail.IL_NU9_Item_ID_FK and   IM_NU9_Company_ID=IDetail.IL_NU9_Company_ID_FK and IM_NU9_Responsible_Person_ID_FK=T060011.UM_IN4_Address_No_FK and ( IL_NU9_Location_ID_FK in " & ViewState("strCollectIDList") & " or IL_NU9_Issue_To_ID in " & ViewState("strResponsibleUserIdList") & ") and ( IL_NU9_Issue_To_ID not in " & ViewState("strResponsibleUserId") & " or IL_NU9_Issue_To_ID is null))  order by itemid   "
+
+                End If
+
+                If SQL.Search("T240012", "", "", sqlQuery, tempDS, "", "") = True Then
+                    dsMain = tempDS
+                    Dim strTemp As String = GetFilter()
+                    Dim htDateCols As New Hashtable
+                    htDateCols.Add("AssignedDate", 2)
+
+                    If strTemp.Equals("") = False Then
+                        Dim dtTemp As New DataTable
+                        dtTemp = GetFilteredDataView(dsMain.Tables(0).DefaultView, strTemp).Table
+                        SetDataTableDateFormat(dtTemp, htDateCols)
+                        grdItems.DataSource = dtTemp.DefaultView
+                        grdItems.DataBind()
+                    Else
+                        SetDataTableDateFormat(dsMain.Tables(0), htDateCols)
+                        grdItems.DataSource = dsMain.Tables(0).DefaultView
+                        grdItems.DataBind()
+                    End If
+                Else
+                    Dim ds As New DataSet
+                    Dim dtRow As DataRow
+                    ds.Tables.Add("Dummy")
+                    ds.Tables("Dummy").Columns.Add("MachName")
+                    dtRow = ds.Tables("Dummy").NewRow
+                    dtRow.Item(0) = ""
+                    mdvtable.Table = ds.Tables("Dummy")
+                    grdItems.DataSource = mdvtable.Table
+                    grdItems.DataBind()
+                End If
+
+            Catch ex As Exception
+                CreateLog("LocationMaster", "Bindgrid-452", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+            End Try
+
+        End Sub
+        Private Sub imgClose_Click(ByVal sender As System.Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles imgClose.Click
+            Response.Redirect("../../Home.aspx", False)
+        End Sub
+
+        Private Sub FillCustomDDl(Optional ByVal CustomerChanged As Boolean = False)
+            Try
+
+                '--Location Type
+                CddlLocTyp.CDDLQuery = " Select Name as ID,Description,CI_VC36_Name as Company from UDC,T010011  where UDC.Company=CI_NU8_Address_Number and ProductCode=0   and UDCType='LOCT' and UDC.Company=" & Session("PropCompanyID") & "  union  Select Name as ID,Description,'' as Company from UDC  where  ProductCode=0   and UDCType='LOCT' and UDC.Company=0 Order By Name"
+                CddlLocTyp.CDDLMandatoryField = True
+                CddlLocTyp.CDDLUDC = True
+                '------------------------------------------
+                If IsPostBack = False Or CustomerChanged = True Then
+                    CddlLocTyp.CDDLFillDropDown(10, True)
+                    CddlLocTyp.CDDLFillDropDown(10, True)
+                End If
+
+                '--Resposible Person
+                CDdlRP.CDDLQuery = " SELECT um_in4_address_no_fk as ID,(um_vc50_userid + '[' + UName.ci_vc36_name + ']') as Name,t010011.ci_vc36_name  as Company FROM T060011,T010011,T010011 UName where UM_VC4_Status_Code_FK='ENB' and t010011.ci_nu8_address_number=um_in4_company_ab_id and UName.ci_nu8_address_number=um_in4_address_no_fk and (um_in4_company_ab_id=" & Session("PropCompanyID") & ") and UM_IN4_Company_AB_ID=" & Session("PropCompanyID") & " Order By Name"
+
+                CDdlRP.CDDLMandatoryField = True
+                CDdlRP.CDDLUDC = False
+                CDdlRP.CDDLFillDropDown(10, False)
+
+
+                '--Location Category1
+                CddlLCat1.CDDLQuery = " Select Name as ID,Description,CI_VC36_Name as Company from UDC,T010011  where UDC.Company=CI_NU8_Address_Number and ProductCode=0   and UDCType='LCT1' and UDC.Company=" & Session("PropCompanyID") & "  union  Select Name as ID,Description,'' as Company from UDC  where  ProductCode=0   and UDCType='LCT1' and UDC.Company=0 Order By Name"
+                CddlLCat1.CDDLMandatoryField = True
+                CddlLCat1.CDDLUDC = True
+                '------------------------------------------
+                If IsPostBack = False Or CustomerChanged = True Then
+                    CddlLCat1.CDDLFillDropDown(10, True)
+                    CddlLCat1.CDDLFillDropDown(10, True)
+                End If
+
+
+                '--Location Category2
+                CddlLCat2.CDDLQuery = " Select Name as ID,Description,CI_VC36_Name as Company from UDC,T010011  where UDC.Company=CI_NU8_Address_Number and ProductCode=0   and UDCType='LCT2' and UDC.Company=" & Session("PropCompanyID") & "  union  Select Name as ID,Description,'' as Company from UDC  where  ProductCode=0   and UDCType='LCT2' and UDC.Company=0 Order By Name"
+                CddlLCat2.CDDLMandatoryField = True
+                CddlLCat2.CDDLUDC = True
+                '------------------------------------------
+                If IsPostBack = False Or CustomerChanged = True Then
+                    CddlLCat2.CDDLFillDropDown(10, True)
+                    CddlLCat2.CDDLFillDropDown(10, True)
+                End If
+
+            Catch ex As Exception
+                CreateLog("LocationMaster", "FillCustomDDL-258", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString, Session("PropUserID"), Session("PropUserName"), "NA", )
+            End Try
+        End Sub
+
+        Private Function UpdateLocationDetail() As Boolean
+            '*******************************************
+            'Name: 
+            'Purpose: 
+            'Author: Sachin 
+            'Date: Jan 2, 2008
+            'Called by: Any
+            'Calls: 
+            'Inputs: 
+            'Output: 
+            '*******************************************
+            Try
+                'If ValidateRequest() = False Then
+                ' Exit Function
+                'End If
+
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString").ToString
+
+                Dim arColName As New ArrayList
+                Dim arRowData As New ArrayList
+
+                'Define column name for database enrty
+                arColName.Add("LM_NU9_Company_ID_FK")
+                arColName.Add("LM_VC32_Location_Name")
+                arColName.Add("LM_VC8_Location_Type")
+                arColName.Add("LM_VC200_Location_Description")
+                arColName.Add("LM_NU9_Responsible_Person_ID_FK")
+                arColName.Add("LM_BT1_Is_Leaf_Node")
+                ' arColName.Add("LM_NU9_Location_Parent_ID")
+                arColName.Add("LM_VC8_Location_Status")
+                arColName.Add("LM_VC50_Category_Code1")
+                arColName.Add("LM_VC50_Category_Code2")
+                arColName.Add("LM_VC50_Category_Code3")
+                arColName.Add("LM_VC50_Category_Code4")
+
+                arColName.Add("LM_DT8_Updated_On")
+                arColName.Add("LM_VC32_Updated_From")
+                arColName.Add("LM_NU9_Last_UpdatedBy_ID_FK")
+
+
+                'Define the Values for dabase enrty
+                arRowData.Add(Session("PropCompanyID"))
+                arRowData.Add(txtLoaction.Text)
+                arRowData.Add(CddlLocTyp.CDDLGetValue.trim)
+                arRowData.Add(txtdescription.Text)
+                arRowData.Add(CDdlRP.CDDLGetValue.trim)
+                arRowData.Add(0)
+                'If ViewState("intLocationID") = Nothing Or ViewState("intLocationID") = 0 Then
+                '    arRowData.Add(1)
+                'Else
+                '    arRowData.Add(ViewState("intLocationID"))
+                'End If
+                arRowData.Add(DdlLocStatus.SelectedValue)
+                arRowData.Add(CddlLCat1.CDDLGetValue.trim)
+                arRowData.Add(CddlLCat2.CDDLGetValue.trim)
+                arRowData.Add(txtCategorycode4.Text)
+                arRowData.Add(txtCategorycode5.Text)
+
+                arRowData.Add(Date.Now)
+                arRowData.Add(Request.UserHostAddress)
+                arRowData.Add(Session("PropUserID"))
+
+                'Define and save data when Object Typeis QUE
+                Dim sqlUpdate As String = "Select * from T240031 where LM_NU9_Location_ID_PK= " & ViewState("intLocationID")
+                If SQL.Update("T240031", "LocationMaster", "Update", sqlUpdate, arColName, arRowData) = True Then
+                    Return True
+                Else
+                    Return False
+                End If
+
+            Catch ex As Exception
+                CreateLog("LocationMaster", "SaveItemDetail-375", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+                Return False
+            End Try
+        End Function
+        Private Function SaveLocationDetail() As Boolean
+            '*******************************************
+            'Name: SaveLocationDetail
+            'Purpose: 
+            'Author:Sachin
+            'Date: Jan 2, 2008, 02:39PM
+            'Called by: Any
+            'Calls: 
+            'Inputs: 
+            'Output: 
+            '********************************************
+            Try
+
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString").ToString
+
+                Dim arColName As New ArrayList
+                Dim arRowData As New ArrayList
+
+                'Define column name for database enrty
+                arColName.Add("LM_NU9_Company_ID_FK")
+                arColName.Add("LM_VC32_Location_Name")
+                arColName.Add("LM_VC8_Location_Type")
+                arColName.Add("LM_VC200_Location_Description")
+                arColName.Add("LM_NU9_Responsible_Person_ID_FK")
+                arColName.Add("LM_BT1_Is_Leaf_Node")
+                arColName.Add("LM_NU9_Location_Parent_ID")
+                arColName.Add("LM_VC8_Location_Status")
+                arColName.Add("LM_VC50_Category_Code1")
+                arColName.Add("LM_VC50_Category_Code2")
+                arColName.Add("LM_VC50_Category_Code3")
+                arColName.Add("LM_VC50_Category_Code4")
+
+                arColName.Add("LM_DT8_Inserted_On")
+                arColName.Add("LM_VC32_Inserted_From")
+                arColName.Add("LM_NU9_InsertedBy_ID_FK")
+
+
+                'Define the Values for dabase enrty
+                arRowData.Add(Session("PropCompanyID"))
+                arRowData.Add(txtLoaction.Text)
+                arRowData.Add(CddlLocTyp.CDDLGetValue.trim)
+                arRowData.Add(txtdescription.Text)
+                arRowData.Add(CDdlRP.CDDLGetValue.trim)
+                arRowData.Add(0)
+                If ViewState("intLocationID") = Nothing Or ViewState("intLocationID") = 0 Then
+                    arRowData.Add(1)
+                Else
+                    arRowData.Add(ViewState("intLocationID"))
+                End If
+
+                arRowData.Add(DdlLocStatus.SelectedValue)
+                arRowData.Add(CddlLCat1.CDDLGetValue.trim)
+                arRowData.Add(CddlLCat2.CDDLGetValue.trim)
+                arRowData.Add(txtCategorycode4.Text)
+                arRowData.Add(txtCategorycode5.Text)
+
+                arRowData.Add(Date.Now)
+                arRowData.Add(Request.UserHostAddress)
+                arRowData.Add(Session("PropUserID"))
+
+                If SQL.Save("T240031", "LocationMaster", "SaveRecord", arColName, arRowData, "") = True Then
+                    Return True
+                Else
+                    Return False
+                End If
+
+            Catch ex As Exception
+                CreateLog("LocationMaster", "SaveItemDetail-448", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+                Return False
+            End Try
+        End Function
+
+        Private Function GetLocationDetails()
+
+            Dim blnStatus As Boolean
+            Dim sqRDR As SqlClient.SqlDataReader
+
+            Dim strSQLQuery As String = "select T1.LM_VC32_Location_Name,T1.LM_VC8_Location_Type,t1.LM_VC200_Location_Description,t1.LM_NU9_Responsible_Person_ID_FK,t1.LM_BT1_Is_Leaf_Node,t1.LM_NU9_Location_Parent_ID,t1.LM_VC8_Location_Status,t1.LM_VC50_Category_Code1,t1.LM_VC50_Category_Code2,t1.LM_VC50_Category_Code3,t1.LM_VC50_Category_Code4,CI_VC36_Name,T2.LM_VC32_Location_Name as PName from T240031 T1,T010011, T240031 T2 where t1.LM_NU9_Responsible_Person_ID_FK=T010011.CI_NU8_Address_Number  and t2.LM_NU9_Location_ID_PK=T1.LM_NU9_Location_Parent_ID and  t1.lm_nu9_location_id_pk=" & ViewState("intLocationID") & ""
+
+
+            Try
+                sqRDR = SQL.Search("T240031", "GetLocationDetails", strSQLQuery, SQL.CommandBehaviour.SingleRow, blnStatus, "")
+                If blnStatus = True Then
+                    'sqRDR reader read data from T240031 and fill Textboxes
+                    While sqRDR.Read
+                        txtLoaction.Text = IIf(IsDBNull(sqRDR("LM_VC32_Location_Name")), "", sqRDR("LM_VC32_Location_Name"))
+                        CddlLocTyp.CDDLSetSelectedItem(IIf(IsDBNull(sqRDR.Item("LM_VC8_Location_Type")), "", sqRDR.Item("LM_VC8_Location_Type")), True, IIf(IsDBNull(sqRDR.Item("LM_VC8_Location_Type")), "", sqRDR.Item("LM_VC8_Location_Type")))
+                        DdlLocStatus.SelectedValue = IIf(IsDBNull(sqRDR("LM_VC8_Location_Status")), "", sqRDR("LM_VC8_Location_Status"))
+                        CDdlRP.CDDLSetSelectedItem(IIf(IsDBNull(sqRDR.Item("LM_NU9_Responsible_Person_ID_FK")), "", sqRDR.Item("LM_NU9_Responsible_Person_ID_FK")), False, sqRDR.Item("CI_VC36_Name"))
+                        txtdescription.Text = IIf(IsDBNull(sqRDR("LM_VC200_Location_Description")), "", sqRDR("LM_VC200_Location_Description"))
+                        CddlLCat1.CDDLSetSelectedItem(IIf(IsDBNull(sqRDR.Item("LM_VC50_Category_Code1")), "", sqRDR.Item("LM_VC50_Category_Code1")), True, IIf(IsDBNull(sqRDR.Item("LM_VC50_Category_Code1")), "", sqRDR.Item("LM_VC50_Category_Code1")))
+                        CddlLCat2.CDDLSetSelectedItem(IIf(IsDBNull(sqRDR.Item("LM_VC50_Category_Code2")), "", sqRDR.Item("LM_VC50_Category_Code2")), True, IIf(IsDBNull(sqRDR.Item("LM_VC50_Category_Code2")), "", sqRDR.Item("LM_VC50_Category_Code2")))
+                        txtCategorycode4.Text = IIf(IsDBNull(sqRDR("LM_VC50_Category_Code3")), "", sqRDR("LM_VC50_Category_Code3"))
+                        txtCategorycode5.Text = IIf(IsDBNull(sqRDR("LM_VC50_Category_Code4")), "", sqRDR("LM_VC50_Category_Code4"))
+
+                        txtPLocation.Text = IIf(IsDBNull(sqRDR("PName")), "", sqRDR("PName"))
+
+                    End While
+                Else
+                    ClearFields()
+                    txtPLocation.Text = ""
+                End If
+                sqRDR.Close()  'Close
+                sqRDR = Nothing
+
+            Catch ex As Exception
+                CreateLog("LocationMaster", "GetLocationDetails-687", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+            End Try
+
+        End Function
+        Private Sub ClearFields()
+
+            txtLoaction.Text = ""
+            txtdescription.Text = ""
+            txtCategorycode4.Text = ""
+            txtCategorycode5.Text = ""
+            txtPLocation.Text = viewState("strLoactionName")
+
+            CddlLCat1.CDDLSetBlank()
+            CddlLCat2.CDDLSetBlank()
+            CDdlRP.CDDLSetBlank()
+            CddlLocTyp.CDDLSetBlank()
+            DdlLocStatus.SelectedValue = "ENB"
+
+        End Sub
+        Private Function DataValidation() As Boolean
+
+            Dim shFlag As Short = 0
+            lstError.Items.Clear()
+
+            If txtdescription.Text.Trim.Length > 200 Then
+                lstError.Items.Add("Description text cannot be more than 200 characters...")
+                shFlag = 1
+            End If
+            If txtLoaction.Text.Trim.Equals("") Then
+                lstError.Items.Add("Loaction name cannot be blank...")
+                shFlag = 1
+            Else
+            End If
+            If txtdescription.Text.Trim.Equals("") Then
+                lstError.Items.Add("Description cannot be blank...")
+                shFlag = 1
+            End If
+            If CDdlRP.CDDLGetValue = "" Then
+                lstError.Items.Add("Responsible person cannot be blank...")
+                shFlag = 1
+            End If
+            If CddlLocTyp.CDDLGetValue = "" Then
+                lstError.Items.Add("Loaction type cannot be blank...")
+                shFlag = 1
+            End If
+            If shFlag = 1 Then
+                Panel1.Visible = False
+                ShowMsgPenel(cpnlErrorPanel, lstError, Image1, mdlMain.MSG.msgInfo)
+                Return False
+            Else
+                Return True
+            End If
+        End Function
+        Private Sub GetTextboxs()
+
+            Try
+
+                arrTextBox.Clear()
+                arrTextBox.Add("txtItemID_H")
+                arrTextBox.Add("txtIONCode_H")
+                arrTextBox.Add("txtItemName_H")
+                arrTextBox.Add("txtStatus_H")
+                arrTextBox.Add("txtAssignedDate_H")
+                arrTextBox.Add("txtResponsible_H")
+                arrTextBox.Add("txtResType_H")
+
+                arrColumns.Clear()
+                arrColumns.Add("ItemID")
+                arrColumns.Add("IONCode")
+                arrColumns.Add("ItemName")
+                arrColumns.Add("Status")
+                arrColumns.Add("AssignedDate")
+                arrColumns.Add("Responsible")
+                arrColumns.Add("ResType")
+
+            Catch ex As Exception
+                CreateLog("LocationMaster", "GetTextboxs-687", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+            End Try
+
+        End Sub
+
+        Private Function GetFilter() As String
+            Try
+                Dim strFilter As String = ""
+                For intI As Integer = 0 To arrTextBox.Count - 1
+                    Dim strTemp As String = Request.Form("cpnlGrdView:cpnlItemList:grdItems:_ctl1:" & arrTextBox(intI))
+                    If Not IsNothing(strTemp) Then
+                        If strTemp.Trim.Equals("") = False Then
+                            Select Case dsMain.Tables(0).Columns(arrColumns(intI)).DataType.FullName
+                                Case "System.String"
+                                    strFilter &= dsMain.Tables(0).Columns(arrColumns(intI)).ColumnName & " like '" & strTemp & "' AND "
+                                Case Else
+                                    If IsNumeric(strTemp) = False Then
+                                        strTemp = "-9999999999"
+                                    End If
+                                    strFilter &= dsMain.Tables(0).Columns(arrColumns(intI)).ColumnName & "=" & strTemp & " AND "
+                            End Select
+                        End If
+                    End If
+                Next
+                If strFilter.Equals("") = False Then
+                    strFilter = strFilter.Remove(strFilter.Length - 4, 4)
+                End If
+                strFilter = strFilter.Replace("*", "%")
+                Return strFilter
+            Catch ex As Exception
+                Return ""
+                CreateLog("LocationMaster", "GetFilter-794", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+            End Try
+        End Function
+
+        Private Sub grdItems_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.DataGridItemEventArgs) Handles grdItems.ItemDataBound
+
+            Try
+
+                If e.Item.ItemType = ListItemType.Header Then
+                    For intI As Integer = 0 To arrTextBox.Count - 1
+                        CType(e.Item.Cells(intI).FindControl(arrTextBox(intI)), TextBox).Text = Request.Form("cpnlGrdView:cpnlItemList:grdItems:_ctl1:" & arrTextBox(intI))
+                    Next
+                End If
+
+                If e.Item.ItemType = ListItemType.Item Or e.Item.ItemType = ListItemType.AlternatingItem Then
+                    If CType(e.Item.Cells(5).FindControl("lblResType"), Label).Text = "Direct" Then
+                        For intI As Integer = 0 To e.Item.Cells.Count - 1
+                            e.Item.Cells(intI).ForeColor = System.Drawing.Color.Red
+                        Next
+                    ElseIf CType(e.Item.Cells(5).FindControl("lblResType"), Label).Text = "InStore" Then
+                        For intI As Integer = 0 To e.Item.Cells.Count - 1
+                            e.Item.Cells(intI).ForeColor = System.Drawing.Color.Silver
+                        Next
+                    End If
+                End If
+
+            Catch ex As Exception
+                CreateLog("LocationMaster", "grdItems_ItemDataBound-820", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+            End Try
+
+        End Sub
+    End Class
+End Namespace
+

@@ -1,0 +1,184 @@
+﻿#Region "NameSpace"
+Imports ION.Data
+Imports ION.Logging.EventLogging
+Imports System.Data
+Imports System.Data.SqlClient
+Imports CrystalDecisions.CrystalReports.Engine
+Imports CrystalDecisions.Shared
+Imports WSSBLL
+#End Region
+Partial Class Reports_RBMDetail
+    Inherits System.Web.UI.Page
+#Region "Variables"
+    Private objRMB As New ReimburstmentBLL(System.Configuration.ConfigurationManager.ConnectionStrings("ConnectionString").ToString, System.Configuration.ConfigurationManager.ConnectionStrings("ConnectionString").ProviderName)
+    Private rptDoc As New ReportDocument 'declare object to load Report
+    Private txthiddenImage As String 'stored clicked button's cation  
+#End Region
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        txthiddenImage = Request.Form("txthiddenImage")
+        crvReport.ToolbarStyle.Width = New Unit("800px")
+        If IsPostBack = False Then
+            'Get the Value of Financial Year
+            ViewState("FinancialYear") = objRMB.GetFinacialYear()
+            FillEmployeeName()
+            FillReimbursementType()
+            ddlMonth.SelectedValue = Now.Month
+
+        Else
+            If ViewState("Flag") = 1 Then
+                ShowReport()
+            End If
+        End If
+        If txthiddenImage <> "" Then
+            Try
+                Select Case txthiddenImage
+                    Case "Logout"
+                        LogoutWSS()
+                        Exit Sub
+                End Select
+            Catch ex As Exception
+                CreateLog("Reports_RaimbursementPaidDetail", "Page_Load-37", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString)
+            End Try
+        End If
+    End Sub
+#Region "Functions"
+#Region "FillEmployeeName"
+    ''' <summary>
+    ''' This Function is used to Fill the Employee DropDown
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Sub FillEmployeeName()
+        Try
+            Dim dtEmpName As New Data.DataTable
+            Dim dr As DataRow
+            dtEmpName = objRMB.GetEmployeesName
+            ddlEmp.DataSource = dtEmpName
+            dr = dtEmpName.NewRow
+            dr(0) = "ALL"
+            dr(1) = 0
+            dtEmpName.Rows.InsertAt(dr, 0)
+            dtEmpName.AcceptChanges()
+            ddlEmp.DataTextField = "CI_VC36_Name"
+            ddlEmp.DataValueField = "Emp_ID"
+            ddlEmp.DataBind()
+        Catch ex As Exception
+            CreateLog("Reimbursement_RaimbursementPaidDetail", "FillEmployeeName-60", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString)
+        End Try
+    End Sub
+#End Region
+
+#Region "FillReimbursementType"
+    ''' <summary>
+    ''' Function to Fill RBMType Combo
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Sub FillReimbursementType()
+        Try
+            Dim dtRBM As New Data.DataTable
+            Dim dr As DataRow
+            dtRBM = objRMB.GetReimburstmentName
+            ddlReimbursement.DataSource = dtRBM
+            dr = dtRBM.NewRow
+            dr(0) = "All"
+            dr(1) = 0
+            dtRBM.Rows.InsertAt(dr, 0)
+            dtRBM.AcceptChanges()
+            ddlReimbursement.DataTextField = "RBMType"
+            ddlReimbursement.DataValueField = "RBMID"
+            ddlReimbursement.DataBind()
+        Catch ex As Exception
+            CreateLog("Reimbursement_RaimbursementPaidDetail", "FillReimbursementType-79", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString)
+        End Try
+    End Sub
+#End Region
+
+#Region "FillEmpReimbursement"
+    ''' <summary>
+    ''' Function to Fill RBMType Combo
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Sub FillEmpReimbursement(ByVal EMPID As Integer)
+        Try
+            Dim dtRBM As New Data.DataTable
+            dtRBM = objRMB.GetReimburstmentType(EMPID, ViewState("FinancialYear"))
+            Dim dr As DataRow
+            ddlReimbursement.DataSource = dtRBM
+            dr = dtRBM.NewRow
+            dr(0) = "All"
+            dr(1) = 0
+            dtRBM.Rows.InsertAt(dr, 0)
+            dtRBM.AcceptChanges()
+            ddlReimbursement.DataTextField = "RBMType"
+            ddlReimbursement.DataValueField = "RBM_ID"
+            ddlReimbursement.DataBind()
+        Catch ex As Exception
+            CreateLog("Reimbursement_RaimbursementPaidDetail", "FillReimbursementType-96", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString)
+        End Try
+    End Sub
+#End Region
+
+#Region "ShowReport"
+    ''' <summary>
+    ''' This Function is used to show the records according to Filter condition
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub ShowReport()
+        Try
+            Dim strReportPath As String 'To store the Report Path
+            Dim dtRBMPaid As New DataTable
+            Dim strFilter As String = ""
+            Dim arrvalues As New ArrayList
+            ViewState("Flag") = 1
+            If ddlEmp.SelectedValue = 0 Then
+                'strFilter += " and Emp_ID in (select Emp_ID from  Emp_Reimbursement_Detail where RBM_ID=RBMBD.RBM_ID_FK  and RBM_Yearly<>0 )"
+                strFilter += " and EmpName.CI_NU8_Address_Number*=RBMBD.emp_id"
+            Else
+                strFilter += " and Emp_ID='" & ddlEmp.SelectedItem.Value.Trim & "' and EmpName.CI_NU8_Address_Number=RBMBD.emp_id"
+            End If
+
+            If ddlReimbursement.SelectedValue = 0 Then
+                strFilter += " and RBM_ID_FK in (select RBM_ID from Emp_Reimbursement_Detail where Emp_ID=RBMBD.Emp_ID and RBM_Yearly<>0  and RBM_FinanicalYear='" & ViewState("FinancialYear") & "')"
+            Else
+                strFilter += " and RBM_ID_FK='" & ddlReimbursement.SelectedItem.Value.Trim & "'"
+            End If
+            rptDoc = New ReportDocument()
+            strReportPath = Server.MapPath("crDSRBMDetail.rpt") 'to store Report Path
+            rptDoc.Load(strReportPath)
+            dtRBMPaid = objRMB.GetRBMSummary(ViewState("FinancialYear"), ddlMonth.SelectedValue, strFilter)
+            rptDoc.SetDataSource(dtRBMPaid)
+            crvReport.ReportSource = rptDoc
+            crvReport.Visible = True
+        Catch ex As Exception
+            CreateLog("Reimbursement_RaimbursementPaidDetail", "btnShow_Click-125", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString)
+        End Try
+    End Sub
+#End Region
+#End Region
+
+#Region "btnShow_Click"
+    Protected Sub imgOK_Click(ByVal sender As Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles imgOK.Click
+        ShowReport()
+    End Sub
+
+    Protected Sub imgClose_Click(ByVal sender As Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles imgClose.Click
+        Response.Redirect("../Home.aspx", False)
+    End Sub
+    Protected Overrides Sub Render(ByVal writer As HtmlTextWriter)
+        'Code to change CssClass for Pager in Radgrid
+        Dim sb As StringBuilder = New StringBuilder
+        sb.Append("<script>onEnd();</script>")
+        ScriptManager.RegisterStartupScript(Me, Me.GetType, "onend", sb.ToString, False)
+        MyBase.Render(writer)
+    End Sub
+#End Region
+
+#Region "SelectIndexChanged"
+    Protected Sub ddlEmp_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlEmp.SelectedIndexChanged
+        If ddlEmp.SelectedValue = 0 Then
+            FillReimbursementType()
+        Else
+            FillEmpReimbursement(ddlEmp.SelectedValue)
+        End If
+    End Sub
+#End Region
+End Class

@@ -1,0 +1,1335 @@
+﻿Imports ION.Logging.EventLogging
+Imports ION.Data
+Imports System.Data.SqlClient
+Imports Microsoft.Web.UI.WebControls
+Imports System.Text
+Imports Microsoft.Win32
+Imports ION.Net
+Imports System.Web.Security
+Imports System.Security.Cryptography
+Imports System.Drawing
+Imports System.Data
+Imports System.Configuration
+Imports System.Data.Common
+
+
+Imports ION.Logging
+Imports System.IO
+
+Namespace IONWSS
+    Partial Class Inventory_ItemLedger_itemmaster
+        Inherits System.Web.UI.Page
+        Private mobjParentNode As TreeNode   ' This will be the Parent node in the Menu
+        Private mobjChildNode As TreeNode   ' Child node under parent node
+        Private intParentID As Integer 'This is used to stor parnent Id
+        Dim txthiddenImage As String
+        Private Shared arrColWidth As New ArrayList
+        Private Shared arrColumnName As New ArrayList
+        Private Shared arrTextboxName As New ArrayList
+        Dim dsMainMainSkill As New DataSet
+        Dim dvMainSkill As New DataView
+        Dim dvMainSCR As DataView
+        Protected _currentPageNumber As Int32 = 1
+        Public mintPageSize As Integer
+        Dim dsMain As New DataSet
+        Dim ItemViewId As String
+
+
+
+        Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+            Try
+
+                imgSave.Attributes.Add("Onclick", "return SaveEdit('Save');")
+                imgAdd.Attributes.Add("Onclick", "return SaveEdit('Add');")
+                btnUpload.Attributes.Add("Onclick", "return SaveEdit('Upload');")
+                btnRem.Attributes.Add("Onclick", "return SaveEdit('Remove');")
+                imgClose.Attributes.Add("Onclick", "return SaveEdit('Close');")
+                Dim URL As String = "SingleItemview.aspx"
+                'imgReset.Attributes.Add("Onclick", "javascript:wopen('" & URL & "','ItemView',650 ,508)")
+                'paging
+                If IsNothing(Request.Form("cpnlGrdView:cpnlItemList:txtPageSize")) = False Then
+                    mintPageSize = Val(Request.Form("cpnlGrdView:cpnlItemList:txtPageSize"))
+                End If
+                If mintPageSize = 0 Or mintPageSize < 0 Then
+                    mintPageSize = 8
+                End If
+                txtPageSize.Text = mintPageSize
+                cpnlErrorPanel.Visible = False
+                txtParnetGroup.ReadOnly = True
+                ViewState("ItemViweFlag") = False
+
+                If Not IsPostBack Then
+                    CreateMainSkillMenu(mobjTreeMenu)
+
+                End If
+                If Not IsPostBack Then
+                    ViewState("ParentId") = 1 'To maintain state of Parent by default its 1
+                    ViewState("GridFlag") = False 'For serarch
+                    'flag to check whether we come from Item view screen or direct from Item Master
+
+                    'To Fill ItemCategory Dropdown list
+                    FillNonUDCDropDown(ddlCategory, "select name Name  ,Description Description from udc where udctype='ICAT' ")
+                    'To Fill ItemType Dropdown list
+                    FillNonUDCDropDown(ddlType, "select name Name  , Description Description from udc  where udctype='ITYP' ")
+                    'To Fill reponsible person Dropdown list
+                    FillNonUDCDropDown(ddlResperson, "select CI_NU8_Address_Number ID, CI_VC36_Name Name, CI_VC36_Address_Line_1 Description from T010011 where CI_VC8_Address_Book_Type='EM' and CI_VC8_Status='ENA' and CI_IN4_Business_Relation='" & Session("PropCompanyID") & "' order by Name", True)
+                    'To Fill Category Dropdown list
+                    FillNonUDCDropDown(ddlcat1, "select name Name  ,Description Description from udc where udctype='ICT1' ")
+                    FillNonUDCDropDown(ddlcat2, "select  name Name  ,Description Description  from udc where udctype='ICT2' ")
+                    'Code when come from ITEMView Screen
+                    ItemViewId = Request.QueryString("ID") 'to get ItemIDfrom Item Viewscreen
+                    If IsNothing(ItemViewId) = True Then
+                        pnlAMC.Visible = False
+                        PanelModel.Visible = False
+                        cpnlItemList.Visible = False
+                        imgDesign.Visible = False
+                        PanelUpload.Visible = False
+                        PanelUpload1.Visible = False
+                        ddlGroupItem.Enabled = False
+                        DisableTextBoxesFunction()
+                    Else
+                        ViewState("ParentId") = ItemViewId
+                        GetNodeDetails(ItemViewId) 'call function to fill text boxes
+
+                    End If
+                    CurrentPg.Text = _currentPageNumber.ToString()
+                Else
+                    txthiddenImage = Request.Form("txthiddenImage")
+                    If txthiddenImage <> "" Then
+                        Select Case txthiddenImage
+                            Case "Logout"
+                                LogoutWSS()
+                                Exit Sub
+                            Case "Save"
+                                'call save function to save Item/Group info
+                                If ViewState("intFlag") = 0 Then
+                                    If SaveItemDetail() = True Then
+                                        lstError.Items.Clear()
+                                        lstError.Items.Add("Record saved successfully...")
+                                        ShowMsgPenel(cpnlErrorPanel, lstError, Image1, mdlMain.MSG.msgOK)
+                                        CreateMainSkillMenu(mobjTreeMenu)
+                                        ViewState("intFlag") = 1
+                                        Dim MasterItemId As String = SQL.Search("ItemMaster", "mobjTreeMenu_SelectedIndexChange", "select max(IM_NU9_Item_Master_ID_PK) from T240011 ", "")
+                                        ViewState("ParentId") = MasterItemId
+
+                                    End If
+                                Else
+                                    'call Update function to Update  Item/Group info
+                                    If UpdateItemDetail() = True Then
+                                        lstError.Items.Clear()
+                                        lstError.Items.Add("Record Updated successfully...")
+                                        ShowMsgPenel(cpnlErrorPanel, lstError, Image1, mdlMain.MSG.msgOK)
+                                        CreateMainSkillMenu(mobjTreeMenu)
+                                    End If
+                                End If
+                                'call Save function to Save Fast Entry
+                                If ddlass_cat.SelectedValue <> "" And ddlAss_Type.SelectedValue <> "" Then
+                                    If SaveFastEntry() = True Then
+                                        lstError.Items.Clear()
+                                        lstError.Items.Add("Record saved successfully...")
+                                        ShowMsgPenel(cpnlErrorPanel, lstError, Image1, mdlMain.MSG.msgOK)
+                                        txtcomments_f.Text = ""
+                                        ddlass_cat.SelectedIndex = -1
+                                        ddlAss_Type.SelectedIndex = -1
+                                        DefineGridColumnData()
+                                        'To bind grid
+                                        Bindgrid(ViewState("ParentId"))
+
+                                        ViewState("GridFlag") = True
+                                        FormatGrid()
+                                    End If
+                                End If
+
+                            Case "Add"
+                                EnabletextboxesFunction()
+                                ddlGroupItem.Enabled = True
+                                pnlItem.Visible = True
+                                pnlCategory.Visible = True
+                                cpnlItemList.Visible = False
+                                'To get  value of Leaf Node
+                                Dim leafnode As String = SQL.Search("ItemMaster", "mobjTreeMenu_SelectedIndexChange", "select IM_NU9_Leaf_Node from T240011 where IM_NU9_Item_Master_ID_PK=" & ViewState("ParentId"), "")
+
+                                If leafnode = True Then
+                                    lstError.Items.Clear()
+                                    lstError.Items.Add("Selected Node cann't contain any Item or group...")
+                                    ShowMsgPenel(cpnlErrorPanel, lstError, Image1, mdlMain.MSG.msgInfo)
+                                    Exit Sub
+                                End If
+                                ClearTextBoxes()
+                                txtParnetGroup.Text = SQL.Search("ItemMaster", "mobjTreeMenu_SelectedIndexChange", "select IM_VC32_Item_Name from T240011 where IM_NU9_Item_Master_ID_PK=" & ViewState("ParentId"), "")
+                                ViewState("intFlag") = 0
+
+                            Case "Upload"
+                                'call function to uploadImage
+                                uploadImage()
+                                Exit Sub
+                            Case "Remove"
+                                'call function to remove Image
+                                removeImage()
+                                Exit Sub
+                            Case "Close"
+                                Response.Redirect("ItemTransaction.aspx?ItemCat=" & ddlCategory.SelectedValue & "&ItemID=" & ViewState("ParentId"), False)
+                        End Select
+                    End If
+                End If
+
+                'Bind Grid 
+
+                If ddlGroupItem.SelectedValue.Equals("Group") Then
+                Else
+                    If ddlType.SelectedValue.Equals("Accessry") Then
+                        cpnlItemList.Visible = False
+                        cpnlItemList.Enabled = False
+                        cpnlItemList.State = CustomControls.Web.PanelState.Collapsed
+                    Else
+                        cpnlItemList.Visible = True
+                        cpnlItemList.Enabled = True
+                        cpnlItemList.State = CustomControls.Web.PanelState.Expanded
+                        DefineGridColumnData()
+                        Bindgrid(ViewState("ParentId"))
+                        FormatGrid()
+                    End If
+                End If
+                Dim a As System.Web.UI.CssStyleCollection
+                mobjTreeMenu.SelectExpands = False
+                mobjTreeMenu.ExpandLevel = 5
+            Catch ex As Exception
+                CreateLog("ItemMaster", "Page_Load-321", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString, HttpContext.Current.Session("PropUserID"), HttpContext.Current.Session("PropUserName"))
+            End Try
+        End Sub
+
+        Private Function CreateMenuFromDB(ByVal MenuPanel As Panel) As Boolean
+            '*******************************************
+            'Name:      CreateMenuFromDB (Function)
+            'Purpose:   Checks to see if the Word document is already open
+            'Author:    sachin prashar
+            'Date:        December 27, 2007, 01:10PM
+            'Called by:  Any
+            'Calls:       None
+            'Inputs:     
+            'Output:    
+            '*******************************************
+            Try
+                Dim blnBool As Boolean
+                Dim sqReader As SqlDataReader
+                Dim intMenu As Integer
+                'Tree Menu
+                mobjTreeMenu = New TreeView
+                ' Parent Node
+                mobjParentNode = New TreeNode
+                mobjTreeMenu.ShowLines = False
+                mobjTreeMenu.ShowPlus = False
+                'hide plus sign in side menu
+                mobjParentNode = New TreeNode
+                mobjParentNode.Expanded = False
+                '******************
+                '***************************
+                mobjTreeMenu.SelectExpands = True
+                'Set Font and other options on Tree Menu
+                mobjTreeMenu.Font.Name = "Verdana"
+                'mobjTreeMenu.ForeColor = Color.LightGray
+                mobjTreeMenu.ExpandedImageUrl = "../images/sort_down.gif"
+                mobjTreeMenu.ExpandLevel = 5
+                ' Provide the connection string from the web config file
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString")
+                SQL.DBTracing = False
+                ' Get those Menu Heads for which permission (Right2 is V) is allowed.
+                sqReader = SQL.Search("createsidemenu", "CreateMenuFromDB-35", "SELECT tbl_mainnode_acc.ObjID, MENUHEAD.HEAD_DESC,MENUHEAD.HEAD_URL,MENUHEAD.HEAD_IMG FROM tbl_mainnode_acc INNER JOIN MENUHEAD ON tbl_mainnode_acc.ObjID = MENUHEAD.HEAD_ID WHERe (tbl_mainnode_acc.comp = 0) AND (tbl_mainnode_acc.Right2 = 'V')", SQL.CommandBehaviour.CloseConnection, blnBool)
+                ' If  there are menu heads with permission granted to view
+                While sqReader.Read
+                    ' Set the parent node text bgcolor=""lightgray""
+                    mobjParentNode.Text = "<font Size=""1""   face=""verdana""><b>" & sqReader.Item("HEAD_DESC") & "</b></font>"
+                    If sqReader.Item("HEAD_DESC") = "" Or sqReader.Item("HEAD_DESC") = "#" Then
+                    Else
+                        mobjParentNode.NavigateUrl = sqReader.Item("HEAD_URL")
+                        mobjParentNode.Expandable = ExpandableValue.Auto
+                    End If
+                    mobjParentNode.ImageUrl = sqReader.Item("HEAD_IMG")
+                    'Add the Node to the tree menu
+                    mobjTreeMenu.Nodes.Add(mobjParentNode)
+                    ' Get all the child heads for that Menu head
+                    Dim sqrdChild As SqlClient.SqlDataReader
+                    sqrdChild = SQL.Search("location menu", "CreateMenuFromDB-79", "SELECT * FROM MENUCHILD WHERE HEAD_ID=" & sqReader.Item("ObjID"), SQL.CommandBehaviour.CloseConnection, blnBool)
+                    ' If child heads are found for that Menu head bgcolor=lightgray
+                    If blnBool = True Then
+                        While sqrdChild.Read
+                            mobjChildNode = New TreeNode
+                            mobjChildNode.Text = "<font Size=""1""   face=""verdana"">" & sqrdChild.Item("CHILD_DESC") & "</font>"
+                            mobjChildNode.NavigateUrl = sqrdChild.Item("CHILD_URL")
+
+                            mobjChildNode.Target = "MainPage"
+                            mobjChildNode.ExpandedImageUrl = "../images/sort_down.gif"
+                            mobjChildNode.ImageUrl = sqrdChild.Item("CHILD_IMG")
+                            mobjChildNode.SelectedImageUrl = sqrdChild.Item("CHILD_IMG")
+                            mobjTreeMenu.Nodes(intMenu).Nodes.Add(mobjChildNode)
+                        End While
+                        sqrdChild.Close()
+                    End If
+                    intMenu += 1
+                End While
+                ' Add the treemenu to the panel
+                MenuPanel.Controls.Add(mobjTreeMenu)
+                sqReader.Close()
+
+            Catch ex As Exception
+                CreateLog("CreateSideMenus", "CreateMenuFromDB-104", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString, HttpContext.Current.Session("PropUserID"), HttpContext.Current.Session("PropUserName"))
+            End Try
+        End Function
+
+        Public Sub CreateMainSkillMenu(ByVal mobjTreeMenu As TreeView)
+            Try
+                Dim sqlQuery As String = "select IM_NU9_Item_Master_ID_PK,IM_VC32_Item_Name,IM_NU9_Parent_ID_FK as ParentID,IM_NU9_Leaf_Node from T240011"
+                If SQL.Search("T240011", "", "", sqlQuery, dsMain, "", "") = True Then
+                    CreateMainSkillTreeMenu(mobjTreeMenu)
+                End If
+            Catch ex As Exception
+                CreateLog("ItemMaster", "CreateMainSkillMenu-419", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString, HttpContext.Current.Session("PropUserID"), HttpContext.Current.Session("PropUserName"))
+            End Try
+        End Sub
+
+        Private Function CreateMainSkillTreeMenu(ByVal mobjTreeMenu As TreeView) As Boolean
+
+            Try
+                mobjTreeMenu.Nodes.Clear()
+                Dim trParentNode As New TreeNode
+
+                mobjTreeMenu.ShowLines = True
+                mobjTreeMenu.ShowPlus = True
+                mobjTreeMenu.SelectExpands = True
+                mobjTreeMenu.AutoSelect = True
+
+                dsMainMainSkill = dsMain
+                dvMainSkill = GetFilteredDataView(dsMainMainSkill.Tables(0).DefaultView, "ParentID is null or ParentID =0")
+                For intI As Integer = 0 To dvMainSkill.Table.Rows.Count - 1
+                    dvMainSCR = New DataView
+                    dvMainSCR = GetFilteredDataView(dsMainMainSkill.Tables(0).DefaultView, "ParentID=" & dvMainSkill.Table.Rows(intI).Item("IM_NU9_Item_Master_ID_PK"))
+                    trParentNode = New TreeNode
+                    trParentNode.Text = dvMainSkill.Table.Rows(intI).Item("IM_VC32_Item_Name")
+                    trParentNode.ID = dvMainSkill.Table.Rows(intI).Item("IM_NU9_Item_Master_ID_PK")
+                    trParentNode.Text = "<font Size=""1""   face=""verdana""><b>" & dvMainSkill.Table.Rows(intI).Item("IM_VC32_Item_Name") & "</b></font>"
+                    Dim dvTemp As New DataView
+                    dvTemp = GetFilteredDataView(dsMain.Tables(0).DefaultView, "ParentID =" & dvMainSkill.Table.Rows(intI).Item("IM_NU9_Item_Master_ID_PK") & " and IM_NU9_Leaf_Node=1")
+                    If dvTemp.Table.Rows.Count = 0 Then
+                        'trParentNode.SelectAction = TreeNodeSelectAction.SelectExpand
+                        trParentNode.Expandable = ExpandableValue.Always
+                    End If
+                    'trParentNode.Value = dvMainSkill.Table.Rows(intI).Item("SKM_NU9_SkillID_PK")
+                    AddsMainkill(trParentNode, dvMainSkill.Table.Rows(intI).Item("IM_NU9_Item_Master_ID_PK"), dsMainMainSkill.Tables(0).DefaultView)
+                    mobjTreeMenu.Nodes.Add(trParentNode)
+                Next
+                'mobjTreeMenu.ExpandAll()
+                ' trvmenu.ExpandDepth = 1
+                mobjTreeMenu.ExpandLevel = 1
+
+            Catch ex As Exception
+                CreateLog("ItemMaster", "CreateMainSkillTreeMenu-458", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString, HttpContext.Current.Session("PropUserID"), HttpContext.Current.Session("PropUserName"))
+            End Try
+        End Function
+
+        Private Sub AddsMainkill(ByRef trvParentNode As TreeNode, ByVal ParentID As Integer, ByVal dvChildsMain As DataView)
+            Dim trvChildNode As New TreeNode
+            Dim dvLast As DataView
+            Dim intL As Integer
+            Try
+
+                dvLast = GetFilteredDataView(dvChildsMain, "ParentID=" & ParentID)
+                For intL = 0 To dvLast.Table.Rows.Count - 1
+
+                    trvChildNode = New TreeNode
+                    trvChildNode.Text = dvLast.Table.Rows(intL).Item("IM_VC32_Item_Name")
+                    'trvChildNode.NavigateUrl = dvLast.Table.Rows(intL).Item("LM_NU9_Location_ID_PK")
+                    trvChildNode.ID = dvLast.Table.Rows(intL).Item("IM_NU9_Item_Master_ID_PK")
+                    Dim dvTemp As New DataView
+
+                    dvTemp = GetFilteredDataView(dsMain.Tables(0).DefaultView, "ParentID =" & dvLast.Table.Rows(intL).Item("IM_NU9_Item_Master_ID_PK") & " and IM_NU9_Leaf_Node=1")
+
+                    'If dvTemp.Table.Rows.Count = 0 Then
+                    '    trvChildNode.SelectAction = TreeNodeSelectAction.SelectExpand
+                    'Else
+                    '    trvChildNode.SelectAction = TreeNodeSelectAction.Select
+                    'End If
+
+                    AddsMainkill(trvChildNode, dvLast.Table.Rows(intL).Item("IM_NU9_Item_Master_ID_PK"), dsMainMainSkill.Tables(0).DefaultView)
+                    'trvParentNode.ChildNodes.Add(trvChildNode)
+                    trvParentNode.Nodes.Add(trvChildNode)
+                Next
+
+            Catch ex As Exception
+                CreateLog("ItemMaster", "AddsMainkill-491", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString, HttpContext.Current.Session("PropUserID"), HttpContext.Current.Session("PropUserName"))
+            End Try
+
+        End Sub
+        Private Sub mobjTreeMenu_SelectedIndexChange(ByVal sender As Object, ByVal e As Microsoft.Web.UI.WebControls.TreeViewSelectEventArgs) Handles mobjTreeMenu.SelectedIndexChange
+
+            Dim Tn As TreeNode
+            Tn = mobjTreeMenu.GetNodeFromIndex(e.NewNode)
+            intParentID = Val(Tn.ID)
+            ViewState("ParentId") = intParentID
+            ViewState("intFlag") = 1
+            'function to open selected node in edit mode
+            GetNodeDetails(ViewState("ParentId"))
+
+        End Sub
+        '*******************************************
+        'Name:       Bindgrid
+        'Purpose:  To Bind Grid
+        'Author:   Mandeep
+        'Date:        December 27, 2007, 01:10PM
+        'Called by:  Any
+        'Calls:       None
+        'Inputs:     
+        'Output:    
+        '*******************************************
+        Private Sub Bindgrid(ByVal ItemID As String)
+            Try
+
+                Dim sqlQuery As String = "select IM_VC16_Item_Category as Type,IM_VC32_Item_Name as Name,AD_VC150_Comments as Comments  from T240014,T240011 where AD_NU9_Item_Master_ID_FK=IM_NU9_Item_Master_ID_PK  and AD_NU9_Parent_Item_ID_Fk=" & ItemID
+                Dim intRows As Integer
+
+                dsMain = New DataSet
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString")
+                dgrItemMaster.PageSize = mintPageSize
+                If SQL.Search("ItemsView", "", "", sqlQuery, dsMain, "", "") = True Then
+                    Dim strTemp As String = GetItemAccFilter()
+                    If strTemp.Equals("") = False Then
+                        Dim dtTemp As New DataTable
+                        dtTemp = GetFilteredDataView(dsMain.Tables(0).DefaultView, strTemp).Table
+                        If (mintPageSize) * (dgrItemMaster.CurrentPageIndex) >= dtTemp.Rows.Count Then
+                            dgrItemMaster.CurrentPageIndex = 0
+                            CurrentPg.Text = 1
+                        End If
+                        dgrItemMaster.DataSource = dtTemp.DefaultView
+                        dgrItemMaster.DataBind()
+                        intRows = dtTemp.Rows.Count
+                    Else
+                        If (mintPageSize) * (dgrItemMaster.CurrentPageIndex) >= dsMain.Tables(0).Rows.Count Then
+                            dgrItemMaster.CurrentPageIndex = 0
+                            CurrentPg.Text = 1
+                        End If
+                        dgrItemMaster.DataSource = dsMain.Tables(0).DefaultView
+                        dgrItemMaster.DataBind()
+                        intRows = dsMain.Tables(0).Rows.Count
+                    End If
+
+                Else
+                    If (mintPageSize) * (dgrItemMaster.CurrentPageIndex) >= dsMain.Tables(0).Rows.Count Then
+                        dgrItemMaster.CurrentPageIndex = 0
+                        CurrentPg.Text = 1
+                    End If
+                    dgrItemMaster.DataSource = dsMain.Tables(0).DefaultView
+                    dgrItemMaster.DataBind()
+                    intRows = dsMain.Tables(0).Rows.Count
+                End If
+
+                Dim _totalPages As Double = 1
+                Dim _totalrecords As Int32
+                If Not Page.IsPostBack Then
+                    _totalrecords = intRows
+                    _totalPages = _totalrecords / mintPageSize
+                    TotalPages.Text = (System.Math.Ceiling(_totalPages)).ToString()
+                    TotalRecods.Text = _totalrecords
+
+                Else
+                    _totalrecords = intRows
+                    If CurrentPg.Text = 0 And _totalrecords > 0 Then
+                        CurrentPg.Text = 1
+                    End If
+                    If _totalrecords = 0 Then
+                        CurrentPg.Text = 0
+                    End If
+                    _totalPages = _totalrecords / mintPageSize
+                    TotalPages.Text = (System.Math.Ceiling(_totalPages)).ToString()
+                    _totalPages = Double.Parse(TotalPages.Text)
+                    TotalRecods.Text = _totalrecords
+                End If
+
+            Catch ex As Exception
+                CreateLog("ItemMaster", "Bindgrid-581", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString, HttpContext.Current.Session("PropUserID"), HttpContext.Current.Session("PropUserName"))
+            End Try
+
+        End Sub
+
+        Private Sub ddlGroupItem_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ddlGroupItem.SelectedIndexChanged
+            If ddlGroupItem.SelectedValue.Equals("Group") Then
+
+                DisableControl()
+            Else
+                EnableControl()
+                cpnlItemList.Visible = False
+                FillNonUDCDropDown(ddlVendor, "select CI_NU8_Address_Number ID, CI_VC36_Name Name, CI_VC36_Address_Line_1 Description from T010011 where CI_VC8_Address_Book_Type='VN' and CI_VC8_Status='ENA' and CI_IN4_Business_Relation='" & Session("PropCompanyID") & "' order by Name", True)
+                FillNonUDCDropDown(ddlAMCVendor, "select CI_NU8_Address_Number ID, CI_VC36_Name Name, CI_VC36_Address_Line_1 Description from T010011 where CI_VC8_Address_Book_Type='VN' and CI_VC8_Status='ENA' and CI_IN4_Business_Relation='" & Session("PropCompanyID") & "' order by Name", True)
+            End If
+        End Sub
+        Private Sub DisableTextBoxesFunction()
+            'ddlGroupItem.Enabled = False
+            'txtManfacturedBy.ReadOnly = True
+            'txtModelNo.ReadOnly = True
+            'txtUnitMeasure.ReadOnly = True
+            txtItemName.ReadOnly = True
+            txtDescription.ReadOnly = True
+            'txtParnetGroup.ReadOnly = True
+            'ddlGroupItem.Enabled = False
+            ddlCategory.Enabled = False
+            ddlType.Enabled = False
+            ddlResperson.Enabled = False
+            ddlStatus.Enabled = False
+            'ddlVendor.Enabled = False
+            'ddlwarrantyIn.Enabled = False
+            'txtWarrenty.ReadOnly = True
+            'txtAMCalertDays.ReadOnly = True
+            'txtAMCComments.ReadOnly = True
+            ddlcat1.Enabled = False
+            ddlcat2.Enabled = False
+            txtcat3.ReadOnly = True
+            txtcat4.ReadOnly = True
+        End Sub
+        Private Sub ClearTextBoxes()
+            txtWarrenty.Text = ""
+            txtAMCalertDays.Text = ""
+            txtAMCComments.Text = ""
+            txtManfacturedBy.Text = ""
+            txtModelNo.Text = ""
+            txtUnitMeasure.Text = ""
+            txtItemName.Text = ""
+            txtDescription.Text = ""
+            txtParnetGroup.Text = ""
+            txtcat4.Text = ""
+            txtcat3.Text = ""
+            imgDesign.ImageUrl = ""
+            ddlResperson.SelectedIndex = -1
+            ddlCategory.SelectedIndex = -1
+            ddlType.SelectedIndex = -1
+            dtAmcExpireon.CalendarDate = ""
+            txtTotal.Text = ""
+            txtBalance.Text = ""
+
+        End Sub
+        Private Sub EnableControl()
+            pnlAMC.Visible = True
+            PanelModel.Visible = True
+            'cpnlItemList.Visible = False
+            imgDesign.Visible = True
+            PanelUpload.Visible = True
+            PanelUpload1.Visible = True
+
+        End Sub
+        Private Sub DisableControl()
+            pnlAMC.Visible = False
+            PanelModel.Visible = False
+            cpnlItemList.Visible = False
+            imgDesign.Visible = False
+            PanelUpload.Visible = False
+            PanelUpload1.Visible = False
+
+
+        End Sub
+
+        Private Sub EnabletextboxesFunction()
+            'ddlGroupItem.Enabled = True
+            'txtManfacturedBy.ReadOnly = False
+            'txtModelNo.ReadOnly = False
+            'txtUnitMeasure.ReadOnly = False
+            txtItemName.ReadOnly = False
+            txtDescription.ReadOnly = False
+            'txtParnetGroup.ReadOnly = False
+            'ddlGroupItem.Enabled = True
+            ddlCategory.Enabled = True
+            ddlType.Enabled = True
+            ddlResperson.Enabled = True
+            ddlStatus.Enabled = True
+            'ddlVendor.Enabled = True
+            'ddlwarrantyIn.Enabled = True
+            'txtWarrenty.ReadOnly = False
+            'txtAMCalertDays.ReadOnly = False
+            'txtAMCComments.ReadOnly = False
+            ddlcat1.Enabled = True
+            ddlcat2.Enabled = True
+            txtcat3.ReadOnly = False
+
+            txtcat4.ReadOnly = False
+        End Sub
+
+        Private Function UpdateItemDetail() As Boolean
+            '*******************************************
+            'Name:      UpdateItemDetail
+            'Purpose:  To update records of Item/groups
+            'Author:    Mandeep
+            'Date:        Jan 2, 2008
+            'Called by:  Any
+            'Calls:     
+            'Inputs:     
+            'Output:    
+            '*******************************************
+            Dim AMCExpiredate As Date
+            Dim parentname As String
+            Dim Itemname As String
+            Dim Ioncode As String
+
+            Try
+                If ValidateRequest() = False Then
+                    Exit Function
+                End If
+
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString").ToString
+                Dim arColName As New ArrayList
+                Dim arRowData As New ArrayList
+
+                'define column name
+                'arColName.Add("IM_NU9_Company_ID") 'Company
+                arColName.Add("IM_VC32_Item_Name") 'Item Name
+                arColName.Add("IM_VC200_Item_Decription") 'Description
+                arColName.Add("IM_VC16_Item_Category") 'Category
+                arColName.Add("IM_VC8_Item_Type") 'Type
+                arColName.Add("IM_VC16_Status") 'status
+                arColName.Add("IM_VC50_Category_Code1") 'Cat-1
+                arColName.Add("IM_VC50_Category_Code2") 'Cat-2
+                arColName.Add("IM_VC50_Category_Code3") 'Cat-3
+                arColName.Add("IM_VC50_Category_Code4") 'Cat-4
+                arColName.Add("IM_NU9_Responsible_Person_ID_FK") 'responsible Person
+
+                'arRowData.Add(Session("PropCompanyID"))
+                arRowData.Add(txtItemName.Text)
+                arRowData.Add(txtDescription.Text)
+                arRowData.Add(ddlCategory.SelectedValue)
+                arRowData.Add(ddlType.SelectedValue)
+                arRowData.Add(ddlStatus.SelectedValue)
+                arRowData.Add(ddlcat1.SelectedValue)
+                arRowData.Add(ddlcat2.SelectedValue)
+                arRowData.Add(txtcat3.Text)
+                arRowData.Add(txtcat4.Text)
+                arRowData.Add(ddlResperson.SelectedValue)
+
+
+                If ddlGroupItem.SelectedValue.Equals("Item") Then
+
+                    arColName.Add("IM_NU9_Warranty_Period") 'warranty period
+                    arColName.Add("IM_VC32_Warranty_IN") 'Warranty
+                    arColName.Add("IM_NU9_Vendor_ID_FK") 'vendor
+                    arColName.Add("IM_NU9_AMCVendor_ID_FK") 'AMCVendor
+                    arColName.Add("IM_VC50_Manufactured_By") 'ManufacturedBy
+                    arColName.Add("IM_VC32_Model_No") 'Model no
+                    arColName.Add("IM_VC32_Unit_Of_Measure") 'Unit Of Measure
+                    arColName.Add("IM_VC200_AMCComments") 'AMCComments
+                    arColName.Add("IM_VC255_Image_URL") 'ImageURL
+                    arColName.Add("IM_VC7_IONCode_Infix")
+
+                    arRowData.Add(Val(txtWarrenty.Text))
+                    arRowData.Add(ddlwarrantyIn.SelectedValue)
+                    arRowData.Add(ddlVendor.SelectedValue)
+                    arRowData.Add(ddlAMCVendor.SelectedValue)
+                    arRowData.Add(txtManfacturedBy.Text)
+                    arRowData.Add(txtModelNo.Text)
+                    arRowData.Add(txtUnitMeasure.Text)
+                    arRowData.Add(txtAMCComments.Text)
+                    arRowData.Add(txtpath.Text)
+                    If txtParnetGroup.Text.Length >= 4 Then
+                        parentname = txtParnetGroup.Text.Substring(0, 3)
+                    Else
+                        parentname = txtParnetGroup.Text
+                    End If
+                    If txtItemName.Text.Length >= 4 Then
+                        Itemname = txtItemName.Text.Substring(0, 3)
+                    Else
+                        Itemname = txtItemName.Text
+                    End If
+
+                    Ioncode = parentname & "/" & Itemname
+                    arRowData.Add(Ioncode)
+
+                    If dtAmcExpireon.CalendarDate <> "" Then
+                        AMCExpiredate = dtAmcExpireon.CalendarDate
+                        arColName.Add("IM_DT8_AMCExpire_ON") '
+                        arRowData.Add(AMCExpiredate)
+                        arColName.Add("IM_NU9_AMCAdvance_Alert_Days") 'AMCComments
+                        arRowData.Add(txtAMCalertDays.Text)
+                    Else
+
+                    End If
+
+                End If
+
+                Dim sqlUpdate As String = "Select * from t240011 where IM_NU9_Item_Master_ID_PK= " & ViewState("ParentId")
+                If SQL.Update("t240011", "ItemMaster", "Update", sqlUpdate, arColName, arRowData) = True Then
+                    Return True
+                Else
+                    Return False
+                End If
+
+            Catch ex As Exception
+                CreateLog("ItemMaster", "SaveItemDetail-603", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+                Return False
+            End Try
+        End Function
+
+        Private Function SaveItemDetail() As Boolean
+            '*******************************************
+            'Name:      SaveItemDetail
+            'Purpose:   Checks to see if the Word document is already open
+            'Author:    Mandeep
+            'Date:        Jan 1, 2008, 02:39PM
+            'Called by:  Any
+            'Calls:     
+            'Inputs:     
+            'Output:    
+            '*******************************************
+
+            Try
+                If ValidateRequest() = False Then
+                    Exit Function
+                End If
+
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString").ToString
+                Dim arColName As New ArrayList
+                Dim arRowData As New ArrayList
+                Dim AMCExpiredate As Date
+                Dim Ioncode As String
+
+                'define column name
+                arColName.Add("IM_NU9_Company_ID") 'Company
+                arColName.Add("IM_VC32_Item_Name") 'Item Name
+                arColName.Add("IM_VC200_Item_Decription") 'Description
+                arColName.Add("IM_VC16_Item_Category") 'Category
+                arColName.Add("IM_VC8_Item_Type") 'Item Type
+                arColName.Add("IM_VC16_Status") 'Status
+                arColName.Add("IM_VC50_Category_Code1") 'Cat1
+                arColName.Add("IM_VC50_Category_Code2") 'Cat2
+                arColName.Add("IM_VC50_Category_Code3") 'Cat3
+                arColName.Add("IM_VC50_Category_Code4") 'Cat4
+                arColName.Add("IM_NU9_Responsible_Person_ID_FK")
+                arColName.Add("IM_NU9_Leaf_Node") 'leaf Node
+                arColName.Add("IM_NU9_Parent_ID_FK") 'Parent Name
+
+                arRowData.Add(Session("PropCompanyID"))
+                arRowData.Add(txtItemName.Text)
+                arRowData.Add(txtDescription.Text)
+                arRowData.Add(ddlCategory.SelectedValue)
+                arRowData.Add(ddlType.SelectedValue)
+                arRowData.Add(ddlStatus.SelectedValue)
+                arRowData.Add(ddlcat1.SelectedValue)
+                arRowData.Add(ddlcat2.SelectedValue)
+                arRowData.Add(txtcat3.Text)
+                arRowData.Add(txtcat4.Text)
+                arRowData.Add(ddlResperson.SelectedValue)
+
+                If ddlGroupItem.SelectedValue.Equals("Group") Then
+                    arRowData.Add(0)
+                Else
+                    arRowData.Add(1)
+                End If
+
+                If ViewState("ParentId") = 0 Then
+                    arRowData.Add(0)
+                Else
+                    arRowData.Add(ViewState("ParentId"))
+                End If
+
+                If ddlGroupItem.SelectedValue.Equals("Item") Then
+
+                    arColName.Add("IM_NU9_Warranty_Period") '
+
+                    arColName.Add("IM_VC32_Warranty_IN") '
+                    arColName.Add("IM_NU9_Vendor_ID_FK") '
+                    arColName.Add("IM_NU9_AMCVendor_ID_FK") '
+                    arColName.Add("IM_VC50_Manufactured_By") '
+                    arColName.Add("IM_VC32_Model_No") 'Model No
+                    arColName.Add("IM_VC32_Unit_Of_Measure") 'Unit Of meaure
+                    arColName.Add("IM_DT8_Receive_Date") 'Recieve date
+                    arColName.Add("IM_VC200_AMCComments") 'Comments
+                    arColName.Add("IM_VC255_Image_URL") 'StartTime
+                    arColName.Add("IM_VC7_IONCode_Infix")
+
+
+                    arRowData.Add(Val(txtWarrenty.Text))
+                    arRowData.Add(ddlwarrantyIn.SelectedValue)
+                    arRowData.Add(ddlVendor.SelectedValue)
+                    arRowData.Add(ddlAMCVendor.SelectedValue)
+                    arRowData.Add(txtManfacturedBy.Text)
+                    arRowData.Add(txtModelNo.Text)
+                    arRowData.Add(txtUnitMeasure.Text)
+                    arRowData.Add(Now.Date)
+                    arRowData.Add(txtAMCComments.Text)
+                    arRowData.Add(txtpath.Text)
+                    Dim parentname As String
+                    Dim Itemname As String
+                    If txtParnetGroup.Text.Length >= 4 Then
+                        parentname = txtParnetGroup.Text.Substring(0, 3)
+                    Else
+                        parentname = txtParnetGroup.Text
+                    End If
+                    If txtItemName.Text.Length >= 4 Then
+                        Itemname = txtItemName.Text.Substring(0, 3)
+                    Else
+                        Itemname = txtItemName.Text
+                    End If
+
+                    Ioncode = parentname & "/" & Itemname
+                    arRowData.Add(Ioncode)
+
+                    If dtAmcExpireon.CalendarDate <> "" Then
+                        AMCExpiredate = dtAmcExpireon.CalendarDate
+                        arColName.Add("IM_DT8_AMCExpire_ON") '
+                        arRowData.Add(AMCExpiredate)
+                        arColName.Add("IM_NU9_AMCAdvance_Alert_Days") 'Alert
+                        arRowData.Add(txtAMCalertDays.Text)
+                    Else
+                    End If
+                End If
+
+                If SQL.Save("t240011", "ItemMaster", "SaveRecord", arColName, arRowData, "") = True Then
+                    Return True
+                Else
+                    Return False
+                End If
+            Catch ex As Exception
+                CreateLog("ItemMaster", "SaveItemDetail-448", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+                Return False
+            End Try
+        End Function
+
+        '***************************************************************************************
+        'Created By:        Mandeep
+        'Create Date:     1/1/2008 
+        'Purpose:           This function fill ItemCategory dropdown 
+        'Table                  UDC
+        'Modify Date:       ------
+        '***************************************************************************************
+        Private Function GetAccessoryList(ByVal category As String)
+            Try
+
+                Dim sqstr As String
+                sqstr = "select IM_NU9_Item_Master_ID_PK as Id,IM_VC32_Item_Name as Name from T240011 where IM_VC8_Item_Type='Accessry'  and IM_NU9_Leaf_Node=1  and IM_VC16_Item_Category='" & category & "'  "
+                FillNonUDCDropDown(ddlAss_Type, sqstr, True)
+
+
+            Catch ex As Exception
+                CreateLog("ItemMaster", "GetItemType", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString)
+            End Try
+        End Function
+
+        '***************************************************************************************
+        'Created By:        Mandeep
+        'Create Date:    2/1/2008
+        'Purpose:           This function is used to chek all textboxes are fill
+        'Table                  t130022
+        'Modify Date:       ------
+        '***************************************************************************************
+        Private Function GetNodeDetails(ByVal ItemID As Integer)
+
+
+            Dim blnStatus As Boolean
+            Dim sqRDR As SqlClient.SqlDataReader
+            ddlGroupItem.Enabled = False
+            txtParnetGroup.ReadOnly = True
+            EnabletextboxesFunction()
+            imgDesign.ImageUrl = ""
+            cpnlItemList.Visible = False
+            cpnlItemList.Enabled = False
+            cpnlItemList.State = CustomControls.Web.PanelState.Collapsed
+            Try
+                FillNonUDCDropDown(ddlCategory, "select name Name  ,Description Description from udc where udctype='ICAT' ")
+                FillNonUDCDropDown(ddlType, "select name Name  , Description Description from udc  where udctype='ITYP' ")
+                FillNonUDCDropDown(ddlResperson, "select CI_NU8_Address_Number ID, CI_VC36_Name Name, CI_VC36_Address_Line_1 Description from T010011 where CI_VC8_Address_Book_Type='EM' and CI_VC8_Status='ENA' and CI_IN4_Business_Relation='" & Session("PropCompanyID") & "' order by Name", True)
+                FillNonUDCDropDown(ddlcat1, "select name Name  ,Description Description from udc where udctype='ICT1' ")
+                FillNonUDCDropDown(ddlcat2, "select  name Name  ,Description Description  from udc where udctype='ICT2' ")
+                FillNonUDCDropDown(ddlVendor, "select CI_NU8_Address_Number ID, CI_VC36_Name Name, CI_VC36_Address_Line_1 Description from T010011 where CI_VC8_Address_Book_Type='VN' and CI_VC8_Status='ENA' and CI_IN4_Business_Relation='" & Session("PropCompanyID") & "' order by Name", True)
+                FillNonUDCDropDown(ddlAMCVendor, "select CI_NU8_Address_Number ID, CI_VC36_Name Name, CI_VC36_Address_Line_1 Description from T010011 where CI_VC8_Address_Book_Type='VN' and CI_VC8_Status='ENA' and CI_IN4_Business_Relation='" & Session("PropCompanyID") & "' order by Name", True)
+
+                sqRDR = SQL.Search("DBMonitorEdit", "Monitoredit", "select Parents.Im_Vc32_item_name as parnet,AllItems.* from t240011 as AllItems, t240011 Parents where  Parents.IM_NU9_Item_Master_ID_PK=*AllItems.IM_NU9_Parent_ID_FK and AllItems.IM_NU9_Item_Master_ID_PK=" & ItemID, SQL.CommandBehaviour.SingleRow, blnStatus, "")
+                'if blnStatus True 
+                If blnStatus = True Then
+
+                    'sqRDR reader read data from t240011 and fill Textboxes
+                    While sqRDR.Read
+                        If sqRDR("IM_NU9_Leaf_Node") = 0 Then
+                            ddlGroupItem.SelectedValue = "Group"
+                            DisableControl()
+                        Else
+                            ddlGroupItem.SelectedValue = "Item"
+                            EnableControl()
+                            txtTotal.Text = SQL.Search("ItemMaster", "mobjTreeMenu_SelectedIndexChange", "select count(*) as TotBal from T240012 where IL_NU9_Item_ID_FK=" & ViewState("ParentId"), "")
+                            txtTotal.ReadOnly = True
+                            txtBalance.Text = SQL.Search("ItemMaster", "mobjTreeMenu_SelectedIndexChange", "select count(*) as AvlBal from T240012 where  IL_VC16_Item_Status in('NEW','RETURNED') and IL_NU9_Item_ID_FK=" & ViewState("ParentId"), "")
+                            txtBalance.ReadOnly = True
+                            ddlVendor.SelectedValue = IIf(IsDBNull(sqRDR("IM_NU9_Vendor_ID_FK")), "", sqRDR("IM_NU9_Vendor_ID_FK"))
+                            ddlAMCVendor.SelectedValue = IIf(IsDBNull(sqRDR("IM_NU9_AMCVendor_ID_FK")), "", sqRDR("IM_NU9_AMCVendor_ID_FK"))
+                            ddlwarrantyIn.SelectedValue = IIf(IsDBNull(sqRDR("IM_VC32_Warranty_IN")), "", sqRDR("IM_VC32_Warranty_IN"))
+                            dtAmcExpireon.CalendarDate = IIf(IsDBNull(sqRDR("IM_DT8_AMCExpire_ON")), "", sqRDR("IM_DT8_AMCExpire_ON"))
+                            Viewstate("Date") = dtAmcExpireon.CalendarDate
+                            txtWarrenty.Text = IIf(IsDBNull(sqRDR("IM_NU9_Warranty_Period")), "", sqRDR("IM_NU9_Warranty_Period"))
+                            txtAMCalertDays.Text = IIf(IsDBNull(sqRDR("IM_NU9_AMCAdvance_Alert_Days")), "", sqRDR("IM_NU9_AMCAdvance_Alert_Days"))
+                            txtAMCComments.Text = IIf(IsDBNull(sqRDR("IM_VC200_AMCComments")), "", sqRDR("IM_VC200_AMCComments"))
+                            txtManfacturedBy.Text = IIf(IsDBNull(sqRDR("IM_VC50_Manufactured_By")), "", sqRDR("IM_VC50_Manufactured_By"))
+                            txtModelNo.Text = IIf(IsDBNull(sqRDR("IM_VC32_Model_No")), "", sqRDR("IM_VC32_Model_No"))
+                            txtUnitMeasure.Text = IIf(IsDBNull(sqRDR("IM_VC32_Unit_Of_Measure")), "", sqRDR("IM_VC32_Unit_Of_Measure"))
+
+                            If sqRDR("IM_VC8_Item_Type") <> "Accessry" Then
+                                cpnlItemList.Visible = True
+                                cpnlItemList.Enabled = True
+                                cpnlItemList.State = CustomControls.Web.PanelState.Expanded
+                                DefineGridColumnData()
+                                Bindgrid(ViewState("ParentId"))
+                                FormatGrid()
+                                Dim strCategory As String = sqRDR("IM_VC16_Item_Category")
+                                If strCategory = "Hardware" Then
+                                    FillNonUDCDropDown(ddlAss_Type, "select IM_NU9_Item_Master_ID_PK as Id,IM_VC32_Item_Name as Name from T240011 where IM_VC8_Item_Type='Accessry' and  IM_VC16_Item_Category in('Hardware','Software')  and IM_NU9_Leaf_Node=1 ", True)
+                                Else
+                                    GetAccessoryList(strCategory)
+                                End If
+                                FillNonUDCDropDown(ddlass_cat, "select name Name  ,Description Description from udc where udctype='ICAT' ", True)
+
+                            End If
+                        End If
+                        'txtpath.Text = IIf(IsDBNull(sqRDR("IM_VC255_Image_URL")), "", sqRDR("IM_VC255_Image_URL"))
+
+                        If IsDBNull(sqRDR("IM_VC255_Image_URL")) = False Then
+                            If sqRDR("IM_VC255_Image_URL") = "" Then
+                                imgDesign.ImageUrl = "../../Images/NoPhoto.jpg"
+                            Else
+                                imgDesign.ImageUrl = IIf(System.IO.File.Exists(Server.MapPath(sqRDR("IM_VC255_Image_URL"))), sqRDR("IM_VC255_Image_URL"), "../../Images/NoPhoto.jpg")
+                            End If
+                        Else
+                            imgDesign.ImageUrl = "../../Images/NoPhoto.jpg"
+                        End If
+
+
+                        'If Not txtpath.Text.Trim = "" Then
+                        '    imgDesign.ImageUrl = IIf(System.IO.File.Exists(Server.MapPath(txtpath.Text.Trim)), sqRDR(txtpath.Text.Trim), "../../Images/NoPhoto.jpg")
+                        'Else
+                        '    imgDesign.ImageUrl = "../../Images/NoPhoto.jpg"
+                        'End If
+
+                        txtItemName.Text = IIf(IsDBNull(sqRDR("IM_VC32_Item_Name")), "", sqRDR("IM_VC32_Item_Name"))
+                        txtDescription.Text = IIf(IsDBNull(sqRDR("IM_VC200_Item_Decription")), "", sqRDR("IM_VC200_Item_Decription"))
+                        txtParnetGroup.Text = IIf(IsDBNull(sqRDR("parnet")), "", sqRDR("parnet"))
+                        ddlResperson.SelectedValue = IIf(IsDBNull(sqRDR("IM_NU9_Responsible_Person_ID_FK")), "", sqRDR("IM_NU9_Responsible_Person_ID_FK"))
+                        txtcat3.Text = IIf(IsDBNull(sqRDR("IM_VC50_Category_Code3")), "", sqRDR("IM_VC50_Category_Code3"))
+                        txtcat4.Text = IIf(IsDBNull(sqRDR("IM_VC50_Category_Code4")), "", sqRDR("IM_VC50_Category_Code4"))
+
+                        If sqRDR("IM_VC32_Item_Name") <> "Group/Item" Then
+                            ddlcat1.SelectedValue = IIf(IsDBNull(sqRDR("IM_VC50_Category_Code1")), "", sqRDR("IM_VC50_Category_Code1"))
+                            ddlcat2.SelectedValue = IIf(IsDBNull(sqRDR("IM_VC50_Category_Code2")), "", sqRDR("IM_VC50_Category_Code2"))
+                            ddlStatus.SelectedValue = IIf(IsDBNull(sqRDR("IM_VC16_Status")), "", sqRDR("IM_VC16_Status"))
+                            ddlCategory.SelectedValue = IIf(IsDBNull(sqRDR("IM_VC16_Item_Category")), "", sqRDR("IM_VC16_Item_Category"))
+                            ddlType.SelectedValue = IIf(IsDBNull(sqRDR("IM_VC8_Item_Type")), "", sqRDR("IM_VC8_Item_Type"))
+                            EnabletextboxesFunction()
+                        Else
+                            DisableTextBoxesFunction()
+                            txtItemName.Text = ""
+                        End If
+
+                    End While
+                End If
+                'Close
+                sqRDR.Close()
+            Catch ex As Exception
+                CreateLog("ItemMaster", "GetNodeDetails-1025", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString)
+            End Try
+
+        End Function
+
+        '*******************************************
+        'Name:         ValidateRequest
+        'Purpose:   Checks to text boxes are filled or not
+        'Author:    Mandeep
+        'Date:        Jan 3, 2008, 02:39PM
+        'Called by: 
+        'Calls:     
+        'Inputs:     
+        'Output:    
+        '*******************************************
+        Private Function ValidateRequest() As Boolean
+            Dim shFlag As Short
+            shFlag = 0
+            lstError.Items.Clear()
+
+            Dim currentDate As Date
+            currentDate = Date.Now.Today
+
+            If txtItemName.Text = "" Then
+                lstError.Items.Add("Item Name cannot be blank...")
+                shFlag = 1
+            End If
+
+            If ddlGroupItem.SelectedValue.Equals("Item") Then
+                If ddlwarrantyIn.SelectedValue.Equals("None") Then
+                Else
+                    If txtWarrenty.Text = "" Then
+                        lstError.Items.Add("Warrienty Period cannot be blank...")
+                        shFlag = 1
+                    End If
+                End If
+
+                If ddlVendor.SelectedValue = "" Then
+                    lstError.Items.Add("Please select Vendor...")
+                    shFlag = 1
+                End If
+
+                If ddlAMCVendor.SelectedValue = "" Then
+                    lstError.Items.Add(" Please  select AMCVendor...")
+                    shFlag = 1
+                End If
+
+                If dtAmcExpireon.CalendarDate <> "" Then
+                    If txtAMCalertDays.Text = "" Then
+                        lstError.Items.Add("AMC AlertDays cannot be blank...")
+                        shFlag = 1
+                    End If
+                End If
+                If ViewState("intFlag") = 0 Then
+                    If dtAmcExpireon.CalendarDate = "" Then
+                    Else
+                        If CDate(dtAmcExpireon.CalendarDate) <= currentDate Then
+                            lstError.Items.Add("AMCExpire Date cannot be Less than or Equal to Current date...")
+                            shFlag = 1
+                        End If
+                    End If
+                Else
+                    If dtAmcExpireon.CalendarDate = "" Then
+                    Else
+                        If ViewState("Date") <> "" Then
+                            If CDate(dtAmcExpireon.CalendarDate) <> ViewState("Date") Then
+                                If CDate(dtAmcExpireon.CalendarDate) < Now.ToShortDateString Then
+                                    lstError.Items.Add("AMCExpire Date cannot be Less than or Equal to Current date...")
+                                    shFlag = 1
+                                End If
+                            End If
+                        End If
+                    End If
+                End If
+            End If
+            If ddlResperson.SelectedValue = "" Then
+                lstError.Items.Add("Please select Responsible person...")
+                shFlag = 1
+            End If
+
+            If shFlag = 1 Then
+                'message panel display msg
+                ShowMsgPenel(cpnlErrorPanel, lstError, Image1, mdlMain.MSG.msgInfo)
+                'return False
+                Return False
+            Else
+                'return True
+                Return True
+            End If
+
+        End Function
+        Function uploadImage() As Boolean
+            If Not Upload.PostedFile Is Nothing And Upload.PostedFile.ContentLength > 0 Then
+                Dim fn As String = System.IO.Path.GetFileName(Upload.PostedFile.FileName)
+                ' Dim Ext = upload.Accept
+                ' Dim SaveLocation As String = Server.MapPath("..\..\Dockyard\ABImages") & "\" & fn
+                Dim strPath As String = Server.MapPath("../../Dockyard/ItemImages")
+                Dim objFolder As DirectoryInfo = New DirectoryInfo(strPath & "\" & HttpContext.Current.Session("SAddressNumber"))
+                If objFolder.Exists = False Then
+                    ' Then Create the folder for that Resume.
+                    objFolder.Create()
+                End If
+
+                Try
+                    If File.Exists(Server.MapPath("..\..\Dockyard\ItemImages") & "\" & HttpContext.Current.Session("SAddressNumber") & "\" & fn) Then
+                        File.Delete(Server.MapPath("..\..\Dockyard\ItemImages") & "\" & HttpContext.Current.Session("SAddressNumber") & "\" & fn)
+                    End If
+
+                    Dim SaveLocation As String = Server.MapPath("..\..\Dockyard\ItemImages") & "\" & HttpContext.Current.Session("SAddressNumber") & "\" & fn
+
+                    Upload.PostedFile.SaveAs(SaveLocation)
+
+                    With imgDesign
+                        ' .ImageUrl = "..\..\Dockyard\ABImages\" & fn
+                        .ImageUrl = "..\..\Dockyard\ItemImages" & "\" & HttpContext.Current.Session("SAddressNumber") & "\" & fn
+                    End With
+                    'txtpath.Text = "..\..\Dockyard\ABImages\" & fn
+                    txtpath.Text = "..\..\Dockyard\ItemImages" & "\" & HttpContext.Current.Session("SAddressNumber") & "\" & fn
+                    'lblImageName.Text = fn
+
+                Catch ex As Exception
+                    DisplayError("Problem in to upload image plz try later or contact with Technical Team...")
+                    CreateLog("AB_Main", "uploadImage-2038", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString, HttpContext.Current.Session("PropUserID"), HttpContext.Current.Session("PropUserName"), "grdskillset", )
+                End Try
+            Else
+                '"Please select a file"
+            End If
+
+        End Function
+
+        Sub removeImage()
+            txtpath.Text = ""
+            'lblImageName.Text = ""
+            imgDesign.ImageUrl = ""
+        End Sub
+        Private Sub DisplayError(ByVal ErrMsg As String)
+            'cpnlError.Visible = True
+            'cpnlError.State = CustomControls.Web.PanelState.Expanded
+            lstError.Items.Add(ErrMsg)
+            'cpnlError.TitleCSS = "Test3"
+            ' cpnlError.Text = "Server is busy please try later..."
+            ShowMsgPenel(cpnlErrorPanel, lstError, Image1, mdlMain.MSG.msgError)
+        End Sub
+
+        Private Sub ddlType_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlType.SelectedIndexChanged
+            If ddlGroupItem.SelectedValue.Equals("Group") Then
+            Else
+                If ddlType.SelectedValue.Equals("Accessry") Then
+                Else
+                    cpnlItemList.Visible = True
+                    cpnlItemList.Enabled = True
+                    cpnlItemList.State = CustomControls.Web.PanelState.Expanded
+                    'DefineGridColumnData()
+                    'If ViewState("ItemViweFlag") = True Then
+                    '    Bindgrid(viewstate("ItemViewId"))
+                    'Else
+                    '    Bindgrid(ViewState("ParentId"))
+                    'End If
+                    'viewstate("GridFlag") = True
+                    'FormatGrid()
+                    Dim strCategory As String = ddlCategory.SelectedValue
+                    If strCategory = "Hardware" Then
+                        FillNonUDCDropDown(ddlAss_Type, "select IM_NU9_Item_Master_ID_PK as Id,IM_VC32_Item_Name as Name from T240011 where IM_VC8_Item_Type='Accessry' and  IM_VC16_Item_Category in('Hardware','Software')  and IM_NU9_Leaf_Node=1  ", True)
+                    Else
+                        GetAccessoryList(strCategory)
+                    End If
+
+                    FillNonUDCDropDown(ddlass_cat, "select name Name  ,Description Description from udc where udctype='ICAT' ", True)
+                End If
+            End If
+
+        End Sub
+        Private Sub DefineGridColumnData()
+            'define width of columns
+            arrColWidth.Clear()
+
+            arrColWidth.Add(100)
+            arrColWidth.Add(100) '
+            arrColWidth.Add(304)
+
+            arrTextboxName.Clear()
+            arrTextboxName.Add("txtcat_s")
+            arrTextboxName.Add("Txtass_s")
+            arrTextboxName.Add("Txtdesc_s")
+
+
+            arrColumnName.Clear()
+            arrColumnName.Add("Type")
+            arrColumnName.Add("Name")
+            arrColumnName.Add("Comments")
+
+
+        End Sub
+
+        '*******************************************
+        'Name:        FormatGrid
+        'Purpose:   To Set width of Grid column and search Text boxes
+        'Author:     Mandeep
+        'Date:        Jan 3, 2008
+        'Called by:  Any
+        'Calls:     
+        'Inputs:     
+        'Output:    
+        '*******************************************
+        Private Sub FormatGrid()
+            Try
+
+                For inti As Integer = 0 To arrColWidth.Count - 1
+                    dgrItemMaster.Columns(inti).HeaderStyle.Width = Unit.Pixel(arrColWidth(inti))
+                    dgrItemMaster.Columns(inti).ItemStyle.Width = Unit.Pixel(arrColWidth(inti))
+                    dgrItemMaster.Columns(inti).ItemStyle.Wrap = True
+                Next
+            Catch ex As Exception
+                CreateLog("BasicMonitoring", "FormatGrid-331", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString)
+            End Try
+
+        End Sub
+        Private Function SaveFastEntry() As Boolean
+            '*******************************************
+            'Name:        SaveFastEntry
+            'Purpose:   To save fast entry Details
+            'Author:     Mandeep
+            'Date:        Jan 3, 2008
+            'Called by:  Any
+            'Calls:     
+            'Inputs:     
+            'Output:    
+            '*******************************************
+            Try
+                If ValidateRequest() = False Then
+                    Exit Function
+                End If
+                If ddlAss_Type.SelectedValue <> "" Then
+                    If ddlass_cat.SelectedValue = "" Then
+                        lstError.Items.Clear()
+                        lstError.Items.Add("Item Category Cannot be black...")
+                        ShowMsgPenel(cpnlErrorPanel, lstError, Image1, mdlMain.MSG.msgInfo)
+                    End If
+                End If
+
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString").ToString
+                Dim arColName As New ArrayList
+                Dim arRowData As New ArrayList
+                Dim AMCExpiredate As Date
+
+
+                'define column name
+                arColName.Add("AD_NU9_Item_Master_ID_FK")
+                arColName.Add("AD_NU9_Parent_Item_ID_Fk") 'Item Name
+                arColName.Add("AD_VC150_Comments")
+
+
+                arRowData.Add(ddlAss_Type.SelectedValue)
+                arRowData.Add(ViewState("ParentId"))
+                arRowData.Add(txtcomments_f.Text)
+
+                If SQL.Save("t240014", "ItemMaster", "SaveRecord", arColName, arRowData, "") = True Then
+                    Return True
+                Else
+                    Return False
+                End If
+
+            Catch ex As Exception
+                CreateLog("ItemMaster", "SaveFastEntry-1266", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.Message, "", "", "")
+                Return False
+            End Try
+        End Function
+
+        Private Sub ddlass_cat_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlass_cat.SelectedIndexChanged
+            If ddlass_cat.SelectedValue = "" Then
+            Else
+                ' Call function to fill Fast entry AssessoryList Drop down acc to selected assessory Type
+                FillNonUDCDropDown(ddlAss_Type, "select IM_NU9_Item_Master_ID_PK as Id,IM_VC32_Item_Name as Name from T240011 where IM_VC8_Item_Type='Accessry' and IM_NU9_Leaf_Node=1 and  IM_VC16_Item_Category ='" & ddlass_cat.SelectedValue & "' ", True)
+            End If
+
+        End Sub
+
+        Private Sub ddlCategory_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlCategory.SelectedIndexChanged
+
+            If ddlGroupItem.SelectedValue.Equals("Group") Then
+            Else
+                If ddlType.SelectedValue.Equals("Accessry") Then
+                Else
+                    'visible Accessory panel visible and bind grid if selected item is not accesory
+                    cpnlItemList.Visible = True
+                    cpnlItemList.Enabled = True
+                    cpnlItemList.State = CustomControls.Web.PanelState.Expanded
+                    'DefineGridColumnData()
+                    'If ViewState("ItemViweFlag") = True Then
+                    '    Bindgrid(viewstate("ItemViewId"))
+                    'Else
+                    '    Bindgrid(ViewState("ParentId"))
+                    'End If
+                    'viewstate("GridFlag") = True
+                    'FormatGrid()
+                    Dim strCategory As String = ddlCategory.SelectedValue 'To store Category
+                    'Fill Aceesoryfastentry drop Acc to selected category
+                    If strCategory = "Hardware" Then
+                        FillNonUDCDropDown(ddlAss_Type, "select IM_NU9_Item_Master_ID_PK as Id,IM_VC32_Item_Name as Name from T240011 where IM_VC8_Item_Type='Accessry' and  IM_VC16_Item_Category in('Hardware','Software') and IM_NU9_Leaf_Node=1 ", True)
+                    Else
+                        'call function to fill Aceesoryfastentry drop if selected category is not "Hardware"
+                        GetAccessoryList(strCategory)
+                    End If
+                    ' Call function to fill Item category
+                    FillNonUDCDropDown(ddlass_cat, "select name Name  ,Description Description from udc where udctype='ICAT' ", True)
+                End If
+            End If
+        End Sub
+
+        Private Sub Imagebutton1_Click(ByVal sender As System.Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles Imagebutton1.Click
+            Response.Redirect("../../Home.aspx", False)
+        End Sub
+        Private Function GetItemAccFilter() As String
+            Try
+                Dim strFilter As String = ""
+                For intI As Integer = 0 To arrTextboxName.Count - 1
+                    Dim strTemp As String = Request.Form("cpnlGrdView:cpnlItemList:dgrItemMaster:_ctl2:" & arrTextboxName(intI))
+                    If Not IsNothing(strTemp) Then
+                        If strTemp.Trim.Equals("") = False Then
+                            Select Case dsMain.Tables(0).Columns(arrColumnName(intI)).DataType.FullName
+                                Case "System.String"
+                                    strFilter &= dsMain.Tables(0).Columns(arrColumnName(intI)).ColumnName & " like '" & strTemp & "' AND "
+                                Case Else
+                                    If IsNumeric(strTemp) = False Then
+                                        strTemp = "-9999999999"
+                                    End If
+                                    strFilter &= dsMain.Tables(0).Columns(arrColumnName(intI)).ColumnName & "=" & strTemp & " AND "
+                            End Select
+                        End If
+                    End If
+                Next
+                If strFilter.Equals("") = False Then
+                    strFilter = strFilter.Remove(strFilter.Length - 4, 4)
+                End If
+                strFilter = strFilter.Replace("*", "%")
+                Return strFilter
+            Catch ex As Exception
+                Return ""
+            End Try
+        End Function
+
+        Private Sub dgrItemMaster_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.DataGridItemEventArgs) Handles dgrItemMaster.ItemDataBound
+            If e.Item.ItemType = ListItemType.Header Then
+                For intI As Integer = 0 To arrTextboxName.Count - 1
+                    CType(e.Item.Cells(intI).FindControl(arrTextboxName(intI)), TextBox).Text = Request.Form("cpnlGrdView:cpnlItemList:dgrItemMaster:_ctl2:" & arrTextboxName(intI))
+                Next
+            End If
+        End Sub
+        Private Sub Firstbutton_Click(ByVal sender As System.Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles Firstbutton.Click
+            dgrItemMaster.CurrentPageIndex = Convert.ToInt32("0")
+            _currentPageNumber = 1
+            CurrentPg.Text = _currentPageNumber
+
+            Bindgrid(ViewState("ParentId"))
+
+            If dgrItemMaster.Items.Count = 0 Then
+
+                CurrentPg.Text = 0
+            End If
+
+        End Sub
+
+        Private Sub Prevbutton_Click(ByVal sender As System.Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles Prevbutton.Click
+            If (dgrItemMaster.CurrentPageIndex > 0) Then
+                dgrItemMaster.CurrentPageIndex -= 1
+                _currentPageNumber = Int32.Parse(CurrentPg.Text) - 1
+                CurrentPg.Text = _currentPageNumber
+            End If
+
+            Bindgrid(ViewState("ParentId"))
+
+            If dgrItemMaster.Items.Count = 0 Then
+                CurrentPg.Text = 0
+            End If
+
+        End Sub
+
+        Private Sub Nextbutton_Click(ByVal sender As System.Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles Nextbutton.Click
+            If (dgrItemMaster.CurrentPageIndex < (dgrItemMaster.PageCount - 1)) Then
+                dgrItemMaster.CurrentPageIndex += 1
+
+                If dgrItemMaster.PageCount = Int32.Parse(CurrentPg.Text) Then
+                    CurrentPg.Text = dgrItemMaster.PageCount
+                Else
+                    _currentPageNumber = Int32.Parse(CurrentPg.Text) + 1
+                    CurrentPg.Text = _currentPageNumber
+
+                End If
+            End If
+
+            Bindgrid(ViewState("ParentId"))
+
+            If dgrItemMaster.Items.Count = 0 Then
+                CurrentPg.Text = 0
+            End If
+
+        End Sub
+
+        Private Sub Lastbutton_Click(ByVal sender As System.Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles Lastbutton.Click
+            dgrItemMaster.CurrentPageIndex = (dgrItemMaster.PageCount - 1)
+            _currentPageNumber = Int32.Parse(TotalPages.Text)
+            CurrentPg.Text = _currentPageNumber
+
+            Bindgrid(ViewState("ParentId"))
+
+            If dgrItemMaster.Items.Count = 0 Then
+                CurrentPg.Text = 0
+            End If
+        End Sub
+    End Class
+End Namespace

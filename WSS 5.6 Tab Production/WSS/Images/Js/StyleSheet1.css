@@ -1,0 +1,369 @@
+body
+{
+/*scrollbar-face-color: #a8d0a0;
+scrollbar-shadow-color: #c0c0c0;
+scrollbar-3dlight-color: #000000;
+scrollbar-arrow-color: #000000;
+
+scrollbar-face-color:#EBF5FF;
+scrollbar-base-color:#EBF5FF;
+scrollbar-arrow-color:black;
+scrollbar-track-color:#F3F3F3;
+scrollbar-shadow-color:#EBF5FF;
+scrollbar-highlight-color:#EBF5FF;
+scrollbar-3dlight-color:#78AAFF;
+scrollbar-darkshadow-Color:#78AAFF;*/
+}
+
+.txtFocusFE
+{
+ background-color:#A6CD9E;
+    border-style:solid;
+    border-width:1px;
+    border-color:gray;
+    font-family:Verdana;
+    font-size:10px;
+    font-weight:bold;
+    height:18px;
+    color:Black;
+    text-align:left;
+}
+.txtNoFocusFE
+{
+  text-align:left;
+  background-color:#D7E3F3;
+ /*background-color:#E3F0E1;*/
+    border-style:solid;
+    border-width:1px;
+    border-color:Gray;
+    font-family:Verdana;
+    font-size:10px;
+    font-weight:normal;
+    height:18px;
+    color:Black;
+ 
+}
+
+.txtFocus
+{
+ background-color:#e5e5e5;
+    border-style:solid;
+    border-width:1px;
+    border-color:gray;
+    font-family:Verdana;
+    font-size:10px;
+    font-weight:bold;
+    height:18px;
+    color:Black;
+    text-align:left;
+}
+.txtNoFocus
+{
+  text-align:left;
+  background-color :White;
+    border-style:solid;
+    border-width:1px;
+    border-color:Gray;
+    font-family:Verdana;
+    font-size:10px;
+    height:18px;
+    color:Black;
+ 
+}
+
+.test
+{
+	cursor: hand;
+	color:#000000;
+	font-family: Verdana;
+	font-size: 12px ;
+	font-weight:bold ;
+	height: 16px; 
+	text-decoration: none;	
+	padding-top:2px;
+	 padding-left:4px;
+	 background-image: url(../../images/taskbar_back1.jpg); 
+	
+}
+.testOLD
+{
+	 background-image: url(../../images/taskbar_back1.jpg); 
+}
+.panel
+{
+	border-right: black 1px solid;
+	border-top: black 1px solid;
+	border-left: black 1px solid;
+	border-bottom: black 1px solid;
+	background-color: #F5F5F5;
+	border-color: white;
+	
+}
+.test2
+{
+	cursor: hand;
+	color: #ffffff;
+	font-family: Verdana;
+	font-size: 10px ;
+	font-weight:bold ;
+	background-color: #E0E0E0;
+	text-decoration: none;	
+	height: 16px; 
+	padding-top:2px;
+	padding-left:4px;
+	 background-image: url(../../images/taskbar_back1.jpg); 
+
+}
+.panel2
+{
+	border-right: black 1px solid;
+	border-top: black 1px solid;
+	border-left: black 1px solid;
+	border-bottom: black 1px solid;
+	background-color: #F5F5F5;
+	border-color: white;
+
+}
+.test3
+{
+	cursor: hand;
+	color:White;
+	font-family: Verdana;
+	font-size:10px ;
+	font-weight:bold ;
+	background-color: #E0E0E0;
+	text-decoration: none;	
+	height: 16px; 
+	padding-top:2px;
+    padding-left:4px;
+	 background-image: url(../../images/taskbar_back1.jpg); 
+
+}
+
+.Grid td
+{
+	border-width: 1px;
+	font-family: Verdana;
+	color: black;
+	Border-Color:Silver;
+	background-position: center;
+	border-style:Solid;
+	
+	overflow:hidden;
+	table-layout:fixed;
+}
+.Grid table
+{
+	table-layout:fixed;
+}
+.GridHeader
+{
+	font-size: 8pt;
+	background-color: #E0E0E0;
+	color: Black;
+	font-weight: bold;
+	border-color: Black;
+	vertical-align:bottom;
+	border:0pt;
+	border-width:0pt;
+	padding:0pt;
+	border-style:solid;
+	overflow:hidden;
+	table-layout:fixed;
+}
+
+.GridFixedHeader
+{
+	position: relative;
+	top: expression(this.offsetParent.scrollTop-1);
+	background-color: #e0e0e0;
+	font-size: 8pt;
+	font-weight: bold;
+	color: Black;
+	font-family: Verdana;
+	border-color:  Black ;
+	height : 1pt;
+	border-width:0pt;
+	vertical-align:bottom;
+	padding:0pt;
+	overflow:hidden;
+	table-layout:fixed;
+}
+
+.GridFooter
+{
+	color: DarkBlue;
+	background-color: White;
+}
+.GridFixedFooter
+{
+	position: relative;
+	top:expression(this.offsetParent.scrollTop+this.offsetParent.offsetHeight-this.offsetParent.scrollHeight);
+	background-color: #e0e0e0;
+	font-size: 8pt;
+	font-weight: bold;
+	color: Black;
+	font-family: Verdana;
+	border-color:  Black ;
+	height : 1pt;
+	
+}
+
+.GridSelectedItem
+{
+	color: Blue;
+	background-color: #FEFED8;
+	font-size: 8pt;
+	font-family: Verdana;
+}
+
+.GridAlternateItem
+{
+	background-color:WhiteSmoke;
+	color: Black;
+	font-size: 8pt;
+	cursor: hand;
+	font-family: Verdana;
+	border-color:Silver;
+	cursor: hand;
+}
+
+.GridItem
+{
+	cursor: hand;
+	font-size: 8pt;
+	color: black;
+	background-color: White;
+	border-color: silver ;
+} 
+
+.OddTableRow
+{
+	background-color: #f5f5f5;
+}
+
+.PlusImageCSS
+{
+	cursor:hand;
+}
+.SearchTxtBox
+{
+	background-color:#FFFFFF;
+	/*background-color:#FDFEDF;*/
+	border-color:#8FB3E6;
+	border-style:solid;
+    border-width:1px;
+    overflow:hidden;
+    table-layout:fixed;
+    padding-left:1px;
+}
+.SearchTxtBoxNoFocus
+{
+	background-color:#FDF0D0;
+	 border-color:Gray;
+	 border-style:solid;
+    border-width:1px;
+}
+
+.bgCSS
+{
+	background-color:#a4d0cf ; 
+}
+
+. HeaderTestMenu
+{
+   text-align:left;
+ background-color:#d7ebff;
+    border-style:solid;
+    border-width:1px;
+    border-color:Gray;
+    font-family:Verdana;
+    font-size:xx-small;
+    font-weight:normal;
+    height:15px;
+    color:Blue;
+}
+.celltext
+{
+	text-decoration:underline;
+	
+}
+.TitleLabel
+{
+	font-family:Verdana;
+	font-size:10pt;
+	font-weight:bold;
+	color:#FFFFFF;
+}
+
+.FieldLabel
+{
+	font-family:Verdana;
+	font-size:10px;
+	font-weight:bold;
+	color:Black;
+}
+
+.DataFieldLabel
+{
+	font-family:Verdana;
+	font-size:10px;
+	font-weight:bold;
+	color:#000000;
+}
+.DDLField
+{
+	font-family:Verdana;
+	font-size:10px;
+	color:Black;
+	background-color:White;
+}
+.DDLFieldFE
+{
+	font-family:Verdana;
+	font-size:10px;
+	color:Black;
+	background-color:#E3F0E1;
+}
+  .IonCalenderCSS
+{
+	text-align:left;
+	background-color:White;
+    
+    font-family:Verdana;
+    font-size:10px;
+   
+    color:Red;
+  }
+  
+  .TreeNodeCSS
+  {
+	font-weight:bold;
+	font-size :15px;
+	color:Black ;
+	font-family:Verdana;
+  }
+
+ .ModalProgressContainer
+    {
+        z-index: 10005;
+        position: fixed;
+        cursor: wait; 
+        top:0%; 
+        background-color: #ffffff; 
+        filter: alpha(opacity=50);
+        opacity: 0.5;
+        -moz-opacity: .5; 
+        height: 100%;
+        width: 100%;
+        text-align: center; 
+    	
+        } 
+    .ModalProgressContent
+    {
+        padding: 10px; 
+        border: solid 0px #000040; 
+        font-weight: bold; 
+        background-color:#ffffff;
+        margin-top:250px;
+    } 

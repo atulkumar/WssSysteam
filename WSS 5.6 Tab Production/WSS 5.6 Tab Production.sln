@@ -1,0 +1,82 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "IONCommonDAL", "IONCommonDAL\IONCommonDAL.vbproj", "{5ADE0741-AC95-4957-94AF-B66A653959D4}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WSSDAL", "DAL\WSSDAL\WSSDAL.vbproj", "{A86B1D45-9359-4E78-B0DB-7DE80BF94D4C}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WSSBLL", "BLL\WSSBLL\WSSBLL.vbproj", "{AD106669-9DC7-4DD5-83C0-0A7958B4863E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A86B1D45-9359-4E78-B0DB-7DE80BF94D4C} = {A86B1D45-9359-4E78-B0DB-7DE80BF94D4C}
+	EndProjectSection
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "WSS", "WSS", "{DE674754-AD4D-46B7-8C80-7C872D752E3F}"
+	ProjectSection(WebsiteProperties) = preProject
+		SccProjectName = ""$/WSS 2012 Systeam/WSS 5.6 Tab Production", RPZCAAAA"
+		SccAuxPath = ""
+		SccLocalPath = ".."
+		SccProvider = "MSSCCI:Microsoft Visual SourceSafe"
+		TargetFramework = "3.5"
+		ProjectReferences = "{5ADE0741-AC95-4957-94AF-B66A653959D4}|ION.Common.DAL.dll;{AD106669-9DC7-4DD5-83C0-0A7958B4863E}|WSSBLL.dll;{A86B1D45-9359-4E78-B0DB-7DE80BF94D4C}|WSSDAL.dll;"
+		Debug.AspNetCompiler.VirtualPath = "/WSS"
+		Debug.AspNetCompiler.PhysicalPath = "WSS\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\WSS\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/WSS"
+		Release.AspNetCompiler.PhysicalPath = "WSS\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\WSS\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "47192"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 5
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = IONCommonDAL\\IONCommonDAL.vbproj
+		SccLocalPath1 = .
+		SccProjectFilePathRelativizedFromConnection1 = IONCommonDAL\\
+		SccProjectUniqueName2 = DAL\\WSSDAL\\WSSDAL.vbproj
+		SccProjectName2 = \u0022$/WSS\u00202012\u0020Systeam/WSS\u00205.6\u0020Tab\u0020Production/DAL/WSSDAL\u0022,\u0020VQZCAAAA
+		SccLocalPath2 = DAL\\WSSDAL
+		SccProjectUniqueName3 = BLL\\WSSBLL\\WSSBLL.vbproj
+		SccProjectName3 = \u0022$/WSS\u00202012\u0020Systeam/WSS\u00205.6\u0020Tab\u0020Production/BLL/WSSBLL\u0022,\u0020VPZCAAAA
+		SccLocalPath3 = BLL\\WSSBLL
+		SccWebProject4 = true
+		SccProjectUniqueName4 = WSS
+		SccLocalPath4 = .
+		SccProjectFilePathRelativizedFromConnection4 = WSS\\
+		SccProjectEnlistmentChoice4 = 2
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5ADE0741-AC95-4957-94AF-B66A653959D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5ADE0741-AC95-4957-94AF-B66A653959D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5ADE0741-AC95-4957-94AF-B66A653959D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5ADE0741-AC95-4957-94AF-B66A653959D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A86B1D45-9359-4E78-B0DB-7DE80BF94D4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A86B1D45-9359-4E78-B0DB-7DE80BF94D4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A86B1D45-9359-4E78-B0DB-7DE80BF94D4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A86B1D45-9359-4E78-B0DB-7DE80BF94D4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD106669-9DC7-4DD5-83C0-0A7958B4863E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD106669-9DC7-4DD5-83C0-0A7958B4863E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD106669-9DC7-4DD5-83C0-0A7958B4863E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD106669-9DC7-4DD5-83C0-0A7958B4863E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE674754-AD4D-46B7-8C80-7C872D752E3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE674754-AD4D-46B7-8C80-7C872D752E3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE674754-AD4D-46B7-8C80-7C872D752E3F}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE674754-AD4D-46B7-8C80-7C872D752E3F}.Release|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

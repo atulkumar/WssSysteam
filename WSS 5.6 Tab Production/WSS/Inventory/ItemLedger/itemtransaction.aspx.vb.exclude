@@ -1,0 +1,988 @@
+﻿#Region "Refered Assemblies"
+
+Imports ION.Net
+Imports ION.Data
+Imports System.Data
+Imports System.Configuration
+Imports ION.Logging.EventLogging
+
+
+
+
+#End Region
+Namespace IONWSS
+    Partial Class Inventory_ItemLedger_itemtransaction
+        Inherits System.Web.UI.Page
+        Private intCheck As Integer = 1
+
+
+        Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+            Response.Write("<meta http-equiv=""refresh"" content=""" & Str(Val(HttpContext.Current.Session.Timeout) * 60) & ";Login.aspx"" />")
+            Response.CacheControl = "no-cache"
+            Response.AddHeader("Pragma", "no-cache")
+            Response.Expires = -1
+
+            txtCSS(Me.Page)
+
+            cpnlErrorPanel.Visible = False
+
+
+
+            ImgClose.Attributes.Add("onclick", "return SaveEdit('Close')")
+            imgReset.Attributes.Add("onclick", "return SaveEdit('Reset')")
+            imgSave.Attributes.Add("onclick", "return SaveEdit('Save')")
+            imgOk.Attributes.Add("onclick", "return SaveEdit('OK')")
+
+
+            Dim strhiddenImage As String
+            strhiddenImage = Request.Form("txthiddenImage")
+
+            If strhiddenImage <> "" Then
+
+                Select Case strhiddenImage
+                    Case "OK"
+                        If ValidateData() = True Then
+                            If SaveItemTransaction() = True Then
+                                Response.Redirect("ItemDetailsView.aspx", False)
+                            Else
+                                lstError.Items.Clear()
+                                lstError.Items.Add("Record Not Saved, Please Try Later...")
+                                ShowMsgPenel(cpnlErrorPanel, lstError, ImgError, mdlMain.MSG.msgWarning)
+                            End If
+                        End If
+                    Case "Save"
+                        If ValidateData() = True Then
+                            If SaveItemTransaction() = True Then
+                                lstError.Items.Clear()
+                                lstError.Items.Add("Record Saved Successfully...")
+                                ShowMsgPenel(cpnlErrorPanel, lstError, ImgError, mdlMain.MSG.msgOK)
+
+                                Call ClearTextBoxes()
+                                txtItemCount.Text = 5
+                                Call CreateDataSet()
+                                Call BindItemGrid()
+                            Else
+                                If lstError.Items.Count <= 0 Then
+                                    lstError.Items.Clear()
+                                    lstError.Items.Add("Record Not Saved, Please Try Later...")
+                                    ShowMsgPenel(cpnlErrorPanel, lstError, ImgError, mdlMain.MSG.msgWarning)
+                                End If
+                            End If
+                        End If
+                    Case "Logout"
+                        LogoutWSS()
+                    Case "Close"
+                        Response.Redirect("ItemDetailsView.aspx", False)
+                        Exit Sub
+                End Select
+
+            End If
+
+            intCheck = 1
+
+            If Not IsPostBack Then
+                txtItemCount.Text = 5
+
+                FillNonUDCDropDown(DDLItemCategory, "select Name, Name from UDC where UDCType='ICAT'")
+
+                If IsNothing(Request.QueryString("ItemCat")) = False Then
+                    Try
+                        DDLItemCategory.SelectedValue = Request.QueryString("ItemCat")
+                    Catch ex As Exception
+                    End Try
+                End If
+
+                FillNonUDCDropDown(DDLItems, "Select IM_NU9_Item_Master_ID_PK ItemID,IM_VC32_Item_Name ItemName From T240011 where IM_NU9_Leaf_Node=1 and IM_VC16_Item_Category='" & DDLItemCategory.SelectedValue & "' Order By ItemName")
+
+                If Val(Request.QueryString("ItemID")) > 0 Then
+                    Try
+                        DDLItems.SelectedValue = Val(Request.QueryString("ItemID"))
+                    Catch ex As Exception
+                    End Try
+                End If
+
+                Call CreateDataSet()
+
+                FillNonUDCDropDown(ddlCurrency, "select Name, Name From UDC where UDCType='CUR'", True)
+
+                FillNonUDCDropDown(ddlVendor, "select CI_NU8_Address_Number ID, CI_VC36_Name Name, CI_VC36_Address_Line_1 Description from T010011 where CI_VC8_Address_Book_Type='VN' and CI_VC8_Status='ENA' and CI_IN4_Business_Relation='" & Session("PropCompanyID") & "' order by Name", True)
+
+                FillNonUDCDropDown(ddlAMCVendor, "select CI_NU8_Address_Number ID, CI_VC36_Name Name, CI_VC36_Address_Line_1 Description from T010011 where CI_VC8_Address_Book_Type='VN' and CI_VC8_Status='ENA' and CI_IN4_Business_Relation='" & Session("PropCompanyID") & "' order by Name", True)
+
+                Call FillStatusDDL()
+
+                Call BindItemGrid()
+
+                If Val(DDLItems.SelectedValue) > 0 Then
+                    'Call BindAccessoryGrid()
+                    UpdateAccessoryGrid()
+                End If
+            Else
+                Call UpdateDataSet()
+
+            End If
+
+            Call GetAMCWarranty()
+            Call GetBalanceQty()
+
+            If Not IsPostBack Then
+                Dim intScrID As Integer = 977
+                Dim obj As New clsSecurityCache
+                If obj.ScreenAccess(intScrID) = False Then
+                    Response.Redirect("../../frm_NoAccess.aspx")
+                End If
+                obj.ControlSecurity(Me.Page, intScrID)
+            End If
+
+        End Sub
+
+
+#Region "Event Functions"
+
+
+        '**********************************************************************
+        ' Name                  : -  Control Events
+        ' Purpose              : - Control Events
+        ' Date		    		   Author						Modification Date					Description
+        ' 28/12/2007		   Harpreet 	                2/JAN/2008				            Modified
+        '
+        ' Notes: 
+        ' Code:
+        '**********************************************************************
+        Private Sub DDLItemCategory_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DDLItemCategory.SelectedIndexChanged
+
+            FillNonUDCDropDown(DDLItems, "Select IM_NU9_Item_Master_ID_PK ItemID,IM_VC32_Item_Name ItemName From T240011 where IM_NU9_Leaf_Node=1 and IM_VC16_Item_Category='" & DDLItemCategory.SelectedValue & "' Order By ItemName")
+
+            Call ddlItems_SelectedIndexChanged(Me, New EventArgs)
+
+        End Sub
+
+        Private Sub GrdItemTransaction_CancelCommand(ByVal source As Object, ByVal e As System.Web.UI.WebControls.DataGridCommandEventArgs) Handles GrdItemTransaction.CancelCommand
+            GrdItemTransaction.EditItemIndex = -1
+            GrdItemTransaction.SelectedIndex = GrdItemTransaction.EditItemIndex
+            BindItemGrid()
+        End Sub
+
+        Private Sub GrdItemTransaction_EditCommand(ByVal source As Object, ByVal e As System.Web.UI.WebControls.DataGridCommandEventArgs) Handles GrdItemTransaction.EditCommand
+            GrdItemTransaction.EditItemIndex = e.Item.ItemIndex
+            GrdItemTransaction.SelectedIndex = GrdItemTransaction.EditItemIndex
+            BindItemGrid()
+        End Sub
+
+        Private Sub GrdItemTransaction_UpdateCommand(ByVal source As Object, ByVal e As System.Web.UI.WebControls.DataGridCommandEventArgs) Handles GrdItemTransaction.UpdateCommand
+            Try
+                GrdItemTransaction.EditItemIndex = -1
+                GrdItemTransaction.SelectedIndex = e.Item.ItemIndex
+                BindItemGrid()
+            Catch ex As Exception
+
+            End Try
+        End Sub
+
+        Private Sub GrdItemTransaction_ItemCommand(ByVal source As Object, ByVal e As System.Web.UI.WebControls.DataGridCommandEventArgs) Handles GrdItemTransaction.ItemCommand
+            'GrdItemTransaction.EditItemIndex = -1
+            GrdItemTransaction.SelectedIndex = e.Item.ItemIndex
+            UpdateDataSet()
+            BindItemGrid()
+        End Sub
+
+        Private Sub GrdItemTransaction_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles GrdItemTransaction.SelectedIndexChanged
+            UpdateAccessoryGrid()
+        End Sub
+
+        Private Sub GrdItemTransaction_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.DataGridItemEventArgs) Handles GrdItemTransaction.ItemDataBound
+            If e.Item.ItemType = ListItemType.Item Or e.Item.ItemType = ListItemType.AlternatingItem Or e.Item.ItemType = ListItemType.SelectedItem Then
+                e.Item.Attributes.Add("onclick", "javascript:__doPostBack('cpnlItemTransaction$GrdItemTransaction$_ctl" & e.Item.ItemIndex + 2 & "$_ctl0','')")
+                e.Item.Attributes.Add("onmousedown", "KeyCheck(" & GrdItemTransaction.DataKeys(e.Item.ItemIndex) & ")")
+            End If
+        End Sub
+
+        Private Sub ddlItems_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DDLItems.SelectedIndexChanged
+            Call GetAMCWarranty()
+            Call CreateDataSet()
+            Call BindAccessoryGrid()
+
+        End Sub
+
+        Private Sub btnItemsCount_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnItemsCount.Click
+            CreateDataSet()
+            BindItemGrid()
+        End Sub
+
+#End Region
+
+#Region "User Defined Functions"
+
+        '**********************************************************************
+        ' Function Name     : -  GetBalanceQty
+        ' Purpose              : - GetBalanceQty
+        ' Date		    		   Author						Modification Date					Description
+        ' 28/12/2007		   Harpreet 	                2/JAN/2008				            Modified
+        '
+        ' Notes: 
+        ' Code:
+        '**********************************************************************
+
+        Private Function GetBalanceQty() As Boolean
+            Try
+                Dim strSQL As String
+                strSQL = "select count(IL_NU9_Item_Ledger_ID_PK) TotalItems from T240012 where IL_NU9_Item_ID_FK=" & Val(ddlItems.SelectedValue) & ";"
+                strSQL &= "select count(IL_NU9_Item_Ledger_ID_PK) AvailableItems from T240012 where IL_NU9_Item_ID_FK=" & Val(ddlItems.SelectedValue) & "  and IL_VC16_Item_Status IN ('NEW','RETURNED');"
+                strSQL &= "select count(IL_NU9_Item_Ledger_ID_PK) AssignedItems from T240012 where IL_NU9_Item_ID_FK=" & Val(ddlItems.SelectedValue) & "  and IL_VC16_Item_Status IN ('ASSIGNED')"
+
+                Dim dsCounts As New DataSet
+                If SQL.Search("T240012", "", "", strSQL, dsCounts, "", "") = True Then
+                    txtTotalItems.Text = dsCounts.Tables(0).Rows(0).Item("TotalItems")
+                    txtBalanceItems.Text = dsCounts.Tables(1).Rows(0).Item("AvailableItems")
+                    txtAssignedItems.Text = dsCounts.Tables(2).Rows(0).Item("AssignedItems")
+                End If
+
+
+            Catch ex As Exception
+                CreateLog("ItemTransaction", "GetBalanceQty-294", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString, HttpContext.Current.Session("PropUserID"), HttpContext.Current.Session("PropUserName"))
+            End Try
+        End Function
+
+        '**********************************************************************
+        ' Function Name     : -  BindItemGrid
+        ' Purpose              : - BindItemGrid
+        ' Date		    		   Author						Modification Date					Description
+        ' 28/12/2007		   Harpreet 	                2/JAN/2008				            Modified
+        '
+        ' Notes: 
+        ' Code:
+        '**********************************************************************
+        Private Function BindItemGrid() As Boolean
+            Try
+                GrdItemTransaction.DataSource = CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").DefaultView
+                GrdItemTransaction.DataBind()
+
+            Catch ex As Exception
+                CreateLog("ItemTransaction", "FillItemGrid", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString, HttpContext.Current.Session("PropUserID"), HttpContext.Current.Session("PropUserName"))
+            End Try
+        End Function
+
+        Private Sub FillStatusDDL()
+            Try
+                Dim strSQL As String = "select Name From UDC where UDCType='ITRS' "
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString")
+                Dim dsItemStatus As New DataSet
+
+
+
+                If SQL.Search("dtStatus", "", "", strSQL, dsItemStatus, "", "") = True Then
+                    Dim drTemp As DataRow = dsItemStatus.Tables(0).NewRow
+                    drTemp.Item("Name") = ""
+                    dsItemStatus.Tables(0).Rows.InsertAt(drTemp, 0)
+                    ViewState.Add("dsItemStatus", dsItemStatus)
+                    ddlStatus_M.DataSource = dsItemStatus.Tables(0)
+                    ddlStatus_M.DataValueField = "Name"
+                    ddlStatus_M.DataTextField = "Name"
+                    ddlStatus_M.DataBind()
+                End If
+            Catch ex As Exception
+                CreateLog("ItemTransaction", "FillStatusDDL-364", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString, HttpContext.Current.Session("PropUserID"), HttpContext.Current.Session("PropUserName"))
+            End Try
+        End Sub
+
+        Private Sub BindAccessoryGrid()
+            Try
+                Dim strSQL As String = "Select 0 ID_FK, AD_NU9_Accessory_ID_PK AccID, AD_NU9_Item_Master_ID_FK ItemMasterID, IM_VC32_Item_Name Accessory,1 as IssueStatus From T240014, T240011 where AD_NU9_Item_Master_ID_FK=IM_NU9_Item_Master_ID_PK and AD_NU9_Parent_Item_ID_FK=" & Val(DDLItems.SelectedValue)
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString")
+                Dim dsItemsView As New DataSet
+                SQL.Search("dtAccessory", "", "", strSQL, dsItemsView, "", "")
+                GrdAccessory.DataSource = dsItemsView.Tables("dtAccessory")
+                GrdAccessory.DataBind()
+
+            Catch ex As Exception
+                CreateLog("ItemTransaction", "BindAccessoryGrid-378", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString, HttpContext.Current.Session("PropUserID"), HttpContext.Current.Session("PropUserName"))
+            End Try
+        End Sub
+
+        '**********************************************************************
+        ' Function Name     : -  CreateDataSet
+        ' Purpose              : - CreateDataSet
+        ' Date		    		   Author						Modification Date					Description
+        ' 28/12/2007		   Harpreet 	                2/JAN/2008				            Modified
+        '
+        ' Notes: 
+        ' Code:
+        '**********************************************************************
+        Private Function CreateDataSet() As Boolean
+            Try
+                'dsItemTransaction = New DataSet
+                Viewstate.Add("dsItemTransaction", New DataSet)
+
+                Dim dtItemTxn As New DataTable
+                dtItemTxn.TableName = "ItemsTxn"
+
+                dtItemTxn.Columns.Add(New DataColumn("ID_PK", System.Type.GetType("System.Int32")))
+                dtItemTxn.Columns.Add(New DataColumn("Status", System.Type.GetType("System.String")))
+                dtItemTxn.Columns.Add(New DataColumn("SerialNo", System.Type.GetType("System.String")))
+                dtItemTxn.Columns.Add(New DataColumn("PurchaseDate", System.Type.GetType("System.String")))
+                dtItemTxn.Columns.Add(New DataColumn("ItemPrice", System.Type.GetType("System.Double")))
+
+                Dim arrDC(1) As DataColumn
+                arrDC(0) = dtItemTxn.Columns("ID_PK")
+                dtItemTxn.PrimaryKey = arrDC
+
+                Dim drItem As DataRow
+
+                For intI As Integer = 1 To Val(txtItemCount.Text.Trim)
+                    drItem = dtItemTxn.NewRow
+                    drItem.Item("ID_PK") = intI
+                    drItem.Item("Status") = ddlStatus_M.SelectedValue
+                    drItem.Item("SerialNo") = ""
+                    drItem.Item("PurchaseDate") = dtPurchaseDate.CalendarDate
+                    drItem.Item("ItemPrice") = Val(txtItem_Price.Text.Trim)
+                    dtItemTxn.Rows.Add(drItem)
+                Next
+
+                dtItemTxn.AcceptChanges()
+
+                CType(Viewstate("dsItemTransaction"), DataSet).Tables.Add(dtItemTxn)
+
+                Dim dtItemAcc As New DataTable
+                dtItemAcc.TableName = "ItemsAcc"
+
+                dtItemAcc.Columns.Add(New DataColumn("ID_FK", System.Type.GetType("System.Int32")))
+                dtItemAcc.Columns.Add(New DataColumn("AccID", System.Type.GetType("System.Int32")))
+                dtItemAcc.Columns.Add(New DataColumn("ItemMasterID", System.Type.GetType("System.Int32")))
+                dtItemAcc.Columns.Add(New DataColumn("Accessory", System.Type.GetType("System.String")))
+                dtItemAcc.Columns.Add(New DataColumn("IssueStatus", System.Type.GetType("System.Boolean")))
+
+                Dim arrDCAcc(2) As DataColumn
+                arrDCAcc(0) = dtItemAcc.Columns("ID_FK")
+                arrDCAcc(1) = dtItemAcc.Columns("AccID")
+                dtItemAcc.PrimaryKey = arrDCAcc
+
+                Dim strSQL As String = "Select 0 ID_FK, AD_NU9_Accessory_ID_PK AccID, AD_NU9_Item_Master_ID_FK ItemMasterID, IM_VC32_Item_Name Accessory,1 as IssueStatus From T240014, T240011 where AD_NU9_Item_Master_ID_FK=IM_NU9_Item_Master_ID_PK and AD_NU9_Parent_Item_ID_FK=" & Val(DDLItems.SelectedValue)
+
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString")
+                Dim dsTemp As New DataSet
+
+                If SQL.Search("dtAccessory", "", "", strSQL, dsTemp, "", "") = True Then
+                    Dim drTemp As DataRow
+                    For intI As Integer = 1 To Val(txtItemCount.Text.Trim)
+                        For intJ As Integer = 0 To dsTemp.Tables(0).Rows.Count - 1
+                            drTemp = dtItemAcc.NewRow
+                            drTemp.Item("ID_FK") = intI
+                            drTemp.Item("AccID") = dsTemp.Tables(0).Rows(intJ).Item("AccID")
+                            drTemp.Item("ItemMasterID") = dsTemp.Tables(0).Rows(intJ).Item("ItemMasterID")
+                            drTemp.Item("Accessory") = dsTemp.Tables(0).Rows(intJ).Item("Accessory")
+                            drTemp.Item("IssueStatus") = dsTemp.Tables(0).Rows(intJ).Item("IssueStatus")
+                            dtItemAcc.Rows.Add(drTemp)
+                        Next
+                    Next
+                    'cpnlAccessory.Text = "Accessory"
+                    'cpnlAccessory.TitleCSS = "test"
+                    'cpnlAccessory.Enabled = True
+                    'cpnlAccessory.State = CustomControls.Web.PanelState.Expanded
+                Else
+                    'cpnlAccessory.Text = "Accessory [Not Found]"
+                    'cpnlAccessory.TitleCSS = "test2"
+                    'cpnlAccessory.Enabled = False
+                    'cpnlAccessory.State = CustomControls.Web.PanelState.Collapsed
+                End If
+
+                dtItemAcc.AcceptChanges()
+
+                CType(Viewstate("dsItemTransaction"), DataSet).Tables.Add(dtItemAcc)
+
+                Dim drRelation As DataRelation
+                drRelation = New DataRelation("ItemAcc", dtItemTxn.Columns("ID_PK"), dtItemAcc.Columns("ID_FK"))
+
+                CType(Viewstate("dsItemTransaction"), DataSet).Relations.Add(drRelation)
+
+                CType(Viewstate("dsItemTransaction"), DataSet).AcceptChanges()
+
+            Catch ex As Exception
+                CreateLog("ItemTransaction", "CreateDataSet-251", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString, HttpContext.Current.Session("PropUserID"), HttpContext.Current.Session("PropUserName"))
+            End Try
+        End Function
+
+        '**********************************************************************
+        ' Function Name     : -  UpdateDataSet
+        ' Purpose              : - UpdateDataSet
+        ' Date		    		   Author						Modification Date					Description
+        ' 28/12/2007		   Harpreet 	                2/JAN/2008				            Modified
+        '
+        ' Notes: 
+        ' Code:
+        '**********************************************************************
+        Private Function UpdateDataSet() As Boolean
+            Try
+
+                For Each DGI As DataGridItem In GrdItemTransaction.Items
+                    If DGI.ItemIndex = GrdItemTransaction.EditItemIndex Then
+                        CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows.Find(Val(GrdItemTransaction.DataKeys(DGI.ItemIndex))).Item("Status") = CType(DGI.FindControl("ddlStatus"), DropDownList).SelectedValue
+                        CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows.Find(Val(GrdItemTransaction.DataKeys(DGI.ItemIndex))).Item("SerialNo") = CType(DGI.FindControl("txtSerialNo"), TextBox).Text.Trim
+                        CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows.Find(Val(GrdItemTransaction.DataKeys(DGI.ItemIndex))).Item("PurchaseDate") = CType(DGI.FindControl("dtGRDMfgDate"), DateSelector).CalendarDate
+                        CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows.Find(Val(GrdItemTransaction.DataKeys(DGI.ItemIndex))).Item("ItemPrice") = Val(CType(DGI.FindControl("txtItemPrice"), TextBox).Text.Trim)
+                    Else
+                        CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows.Find(Val(GrdItemTransaction.DataKeys(DGI.ItemIndex))).Item("Status") = CType(DGI.FindControl("lblStatus_IT"), Label).Text.Trim
+                        CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows.Find(Val(GrdItemTransaction.DataKeys(DGI.ItemIndex))).Item("SerialNo") = CType(DGI.FindControl("lblSerialNo_IT"), Label).Text.Trim
+                        CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows.Find(Val(GrdItemTransaction.DataKeys(DGI.ItemIndex))).Item("PurchaseDate") = CType(DGI.FindControl("lblMfgDate_IT"), Label).Text.Trim
+                        CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows.Find(Val(GrdItemTransaction.DataKeys(DGI.ItemIndex))).Item("ItemPrice") = Val(CType(DGI.FindControl("lblItemPrice_IT"), Label).Text.Trim)
+                    End If
+                Next
+                CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").AcceptChanges()
+                If GrdItemTransaction.SelectedIndex <> -1 Then
+                    If Val(CType(GrdItemTransaction.Items(GrdItemTransaction.SelectedIndex).Cells(0).FindControl("lblID_PK"), Label).Text) > 0 Then
+
+
+
+                        Dim arrDR As New ArrayList
+                        For Each DR As DataRow In CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsAcc").Rows
+                            If Val(DR.Item("ID_FK")) = Val(CType(GrdItemTransaction.Items(GrdItemTransaction.SelectedIndex).Cells(0).FindControl("lblID_PK"), Label).Text) Then
+                                arrDR.Add(DR)
+                            End If
+                        Next
+                        'For intI As Integer = 0 To arrDR.Count - 1
+                        '    dsItemTransaction.Tables("ItemsAcc").Rows.Remove(CType(arrDR(intI), DataRow))
+                        'Next
+
+                        Dim drTemp As DataRow
+                        If arrDR.Count > 0 Then
+                            If intCheck = 1 Then
+                                For Each AccDGI As DataGridItem In GrdAccessory.Items
+                                    Dim obj(1) As Object
+                                    obj(0) = Val(CType(GrdItemTransaction.Items(GrdItemTransaction.SelectedIndex).Cells(0).FindControl("lblID_PK"), Label).Text)
+                                    obj(1) = CType(AccDGI.FindControl("lblAccID"), Label).Text.Trim
+
+                                    CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsAcc").Rows.Find(obj).Item("Accessory") = CType(AccDGI.FindControl("lblAccessory"), Label).Text.Trim
+                                    CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsAcc").Rows.Find(obj).Item("IssueStatus") = CType(AccDGI.FindControl("chkIssueStatus"), CheckBox).Checked
+                                    intCheck = 2
+                                Next
+                            End If
+                        Else
+                            For Each AccDGI As DataGridItem In GrdAccessory.Items
+                                drTemp = CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsAcc").NewRow
+                                drTemp.Item("ID_FK") = Val(CType(GrdItemTransaction.Items(GrdItemTransaction.SelectedIndex).Cells(0).FindControl("lblID_PK"), Label).Text)
+                                drTemp.Item("AccID") = CType(AccDGI.FindControl("lblAccID"), Label).Text.Trim
+                                drTemp.Item("ItemMasterID") = CType(AccDGI.FindControl("lblItemMasterID"), Label).Text.Trim
+                                drTemp.Item("Accessory") = CType(AccDGI.FindControl("lblAccessory"), Label).Text.Trim
+                                drTemp.Item("IssueStatus") = CType(AccDGI.FindControl("chkIssueStatus"), CheckBox).Checked
+                                CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsAcc").Rows.Add(drTemp)
+                            Next
+                        End If
+
+                        CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsAcc").AcceptChanges()
+                    End If
+                End If
+                'grdTest.DataSource = dsItemTransaction.Tables("ItemsAcc").DefaultView
+                'grdTest.DataBind()
+            Catch ex As Exception
+                CreateLog("ItemTransaction", "UpdateItemGrid-251", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString, HttpContext.Current.Session("PropUserID"), HttpContext.Current.Session("PropUserName"))
+            End Try
+        End Function
+
+        '**********************************************************************
+        ' Function Name     : -  UpdateAccessoryGrid
+        ' Purpose              : - UpdateAccessoryGrid
+        ' Date		    		   Author						Modification Date					Description
+        ' 28/12/2007		   Harpreet 	                2/JAN/2008				            Modified
+        '
+        ' Notes: 
+        ' Code:
+        '**********************************************************************
+        Private Function UpdateAccessoryGrid() As Boolean
+            Try
+                Dim dtTemp As New DataTable
+                dtTemp = CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsAcc")
+                If Val(HIDIDPK.Value) = 0 Then
+                    GrdAccessory.DataSource = GetFilteredDataView(dtTemp.DefaultView, "ID_FK=1")
+                Else
+                    GrdAccessory.DataSource = GetFilteredDataView(dtTemp.DefaultView, "ID_FK=" & Val(HIDIDPK.Value))
+                End If
+                GrdAccessory.DataBind()
+
+            Catch ex As Exception
+                CreateLog("ItemTransaction", "FillAccessoryDataTable-251", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString, HttpContext.Current.Session("PropUserID"), HttpContext.Current.Session("PropUserName"))
+            End Try
+        End Function
+
+        '**********************************************************************
+        ' Function Name     : -  SaveItemTransaction
+        ' Purpose              : - SaveItemTransaction
+        ' Date		    		   Author						Modification Date					Description
+        ' 28/12/2007		   Harpreet 	                2/JAN/2008				            Modified
+        '
+        ' Notes: 
+        ' Code:
+        '**********************************************************************
+        Private Function SaveItemTransaction() As Boolean
+            Try
+
+
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString")
+
+                Dim arrColumns As New ArrayList
+                Dim arrRowData As New ArrayList
+                Dim arrLogCols As New ArrayList
+
+                arrColumns.Add("IL_NU9_Item_ID_FK")
+                arrColumns.Add("IL_NU9_Company_ID_FK")
+                arrColumns.Add("IL_NU9_Location_ID_FK")
+                arrColumns.Add("IL_VC50_Item_ION_Code")
+                arrColumns.Add("IL_VC16_Item_Status")
+                arrColumns.Add("IL_DT8_Purchasing_Date")
+                arrColumns.Add("IL_VC20_Purchase_Order_No")
+                arrColumns.Add("IL_DT8_Transaction_Date")
+                arrColumns.Add("IL_VC50_Item_Part_No")
+                arrColumns.Add("IL_VC50_Item_Serial_No")
+                arrColumns.Add("IL_FL8_Item_Price")
+                arrColumns.Add("IL_VC16_Price_Currency")
+                arrColumns.Add("IL_DT8_Inserted_On")
+                arrColumns.Add("IL_DT8_Updated_On")
+                arrColumns.Add("IL_VC32_Inserted_From")
+                arrColumns.Add("IL_VC32_Updated_From")
+                arrColumns.Add("IL_NU9_InsertedBy_ID_FK")
+                arrColumns.Add("IL_NU9_Last_UpdatedBy_ID_FK")
+
+                arrColumns.Add("IL_VC16_Transaction_Type")
+
+                arrColumns.Add("IL_NU9_Warranty_Period")
+                arrColumns.Add("IL_VC32_Warranty_IN")
+                arrColumns.Add("IL_NU9_AMCVendor_ID_FK")
+                arrColumns.Add("IL_DT8_AMCExpire_ON")
+                arrColumns.Add("IL_VC200_AMCComments")
+                arrColumns.Add("IL_NU9_AMCAdvance_Alert_Days")
+                arrColumns.Add("IL_NU9_Vendor_ID_FK")
+
+                arrLogCols.Add("ITL_NU9_Item_Ledger_ID_FK")
+                arrLogCols.Add("ITL_NU9_Company_ID_FK")
+                arrLogCols.Add("ITL_NU9_Location_ID_FK")
+                arrLogCols.Add("ITL_NU9_Issue_To_ID")
+                arrLogCols.Add("ITL_VC8_Assign_Type")
+                arrLogCols.Add("ITL_VC1024_Return_Comments")
+                arrLogCols.Add("ITL_VC16_Transaction_Type")
+                arrLogCols.Add("ITL_VC16_Item_Status")
+                arrLogCols.Add("ITL_DT8_Transaction_Date")
+                arrLogCols.Add("ITL_DT8_Inserted_On")
+                arrLogCols.Add("ITL_DT8_Updated_On")
+                arrLogCols.Add("ITL_VC32_Inserted_From")
+                arrLogCols.Add("ITL_VC32_Updated_From")
+                arrLogCols.Add("ITL_NU9_InsertedBy_ID_FK")
+                arrLogCols.Add("ITL_NU9_Last_UpdatedBy_ID_FK")
+
+                Dim strIONCode As String
+
+                For intI As Integer = 0 To CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows.Count - 1
+                    arrRowData.Clear()
+                    arrRowData.Add(Val(ddlItems.SelectedValue))
+                    arrRowData.Add(Val(Session("PropCompanyID")))
+                    arrRowData.Add(0)
+                    If IsNothing(ViewState("INFIX")) Then
+                        strIONCode = GetIONCode(Val(Session("PropCompanyID")), "ION/ITM")
+                    Else
+                        strIONCode = GetIONCode(Val(Session("PropCompanyID")), ViewState("INFIX"))
+                    End If
+                    arrRowData.Add(strIONCode)
+                    arrRowData.Add(CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows(intI).Item("Status"))
+                    arrRowData.Add(CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows(intI).Item("PurchaseDate"))
+                    arrRowData.Add(txtPONumber.Text.Trim)
+                    arrRowData.Add(Now)
+                    arrRowData.Add(txtPartNo_M.Text.Trim)
+                    arrRowData.Add(CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows(intI).Item("SerialNo"))
+                    arrRowData.Add(CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows(intI).Item("ItemPrice"))
+                    arrRowData.Add(ddlCurrency.SelectedValue)
+                    arrRowData.Add(Now)
+                    arrRowData.Add(Now)
+                    arrRowData.Add(Request.UserHostAddress)
+                    arrRowData.Add(Request.UserHostAddress)
+                    arrRowData.Add(Val(Session("PropUserID")))
+                    arrRowData.Add(Val(Session("PropUserID")))
+
+                    If txtTxnType.Text.Equals("Item Txn") Then
+                        arrRowData.Add("ITEM")
+                    Else
+                        arrRowData.Add("ACCESSORY")
+                    End If
+
+
+                    arrRowData.Add(Val(txtWarrenty.Text.Trim))
+                    arrRowData.Add(ddlwarrantyIn.SelectedValue)
+                    arrRowData.Add(Val(ddlAMCVendor.SelectedValue))
+                    If dtAmcExpireon.CalendarDate.Equals("") Then
+                        arrRowData.Add(System.DBNull.Value)
+                    Else
+                        arrRowData.Add(dtAmcExpireon.CalendarDate)
+                    End If
+                    arrRowData.Add(txtAMCComments.Text.Trim)
+                    arrRowData.Add(Val(txtAMCalertDays.Text.Trim))
+                    arrRowData.Add(Val(ddlVendor.SelectedValue))
+
+                    SQL.Save("T240012", "", "", arrColumns, arrRowData)
+
+                    Dim intItemIDPK As Integer = SQL.Search("", "", "select IL_NU9_Item_Ledger_ID_PK from T240012 where IL_VC50_Item_ION_Code='" & strIONCode & "' ")
+                    arrRowData.Clear()
+                    arrRowData.Add(intItemIDPK)
+                    arrRowData.Add(Val(Session("PropCompanyID")))
+                    arrRowData.Add(System.DBNull.Value)
+                    arrRowData.Add(System.DBNull.Value)
+                    arrRowData.Add(System.DBNull.Value)
+                    arrRowData.Add("")
+                    If txtTxnType.Text.Equals("Item Txn") Then
+                        arrRowData.Add("ITEM")
+                    Else
+                        arrRowData.Add("ACCESSORY")
+                    End If
+                    arrRowData.Add(CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows(intI).Item("Status"))
+                    arrRowData.Add(Now)
+                    arrRowData.Add(Now)
+                    arrRowData.Add(Now)
+                    arrRowData.Add(Request.UserHostAddress)
+                    arrRowData.Add(Request.UserHostAddress)
+                    arrRowData.Add(Val(Session("PropUserID")))
+                    arrRowData.Add(Val(Session("PropUserID")))
+
+                    SQL.Save("T240015", "", "", arrLogCols, arrRowData)
+
+                    If dtPurchaseDate.CalendarDate > Now.Date Then
+                        lstError.Items.Clear()
+                        lstError.Items.Add("Purchase Date Can Not be Greater than current Date.....")
+                        ShowMsgPenel(cpnlErrorPanel, lstError, ImgError, mdlMain.MSG.msgError)
+                        Exit Function
+                    End If
+
+                    If txtTxnType.Text.Equals("Item Txn") Then
+
+                        Dim dtTemp As New DataTable
+                        dtTemp = CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsAcc")
+                        dtTemp = GetFilteredDataView(dtTemp.DefaultView, "ID_FK=" & CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows(intI).Item("ID_PK")).Table
+
+                        For intJ As Integer = 0 To dtTemp.Rows.Count - 1
+                            If dtTemp.Rows(intJ).Item("IssueStatus") = True Then
+                                Call SaveAccessory(intItemIDPK, dtTemp.Rows(intJ).Item("ItemMasterID"), CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows(intI).Item("PurchaseDate"))
+                                Call SaveAccessoryTransaction(dtTemp.Rows(intJ).Item("ItemMasterID"), CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows(intI).Item("Status"), CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows(intI).Item("PurchaseDate"))
+                            End If
+                        Next
+
+                    End If
+
+                Next
+
+                Call ClearTextBoxes()
+                Return True
+            Catch ex As Exception
+                CreateLog("ItemTransaction", "SaveItemTransaction-251", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString, HttpContext.Current.Session("PropUserID"), HttpContext.Current.Session("PropUserName"))
+            End Try
+        End Function
+
+        '**********************************************************************
+        ' Function Name     : -  SaveAccessory
+        ' Purpose              : - SaveAccessory
+        ' Date		    		   Author						Modification Date					Description
+        ' 28/12/2007		   Harpreet 	                2/JAN/2008				            Modified
+        '
+        ' Notes: 
+        ' Code:
+        '**********************************************************************
+        Private Function SaveAccessory(ByVal ItemIDFK As Integer, ByVal ItemMasterID As Integer, ByVal PurchaseDate As String) As Boolean
+
+            Try
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString")
+
+                Dim arrColumns As New ArrayList
+                Dim arrRowData As New ArrayList
+
+                arrColumns.Add("IA_NU9_Location_ID_FK")
+                arrColumns.Add("IA_NU9_Item_Ledger_ID_FK")
+                arrColumns.Add("IA_DT8_Manufacturing_Date")
+                arrColumns.Add("IA_NU9_Item_Master_ID_FK")
+
+                arrColumns.Add("IA_DT8_Inserted_On")
+                arrColumns.Add("IA_DT8_Updated_On")
+                arrColumns.Add("IA_VC32_Inserted_From")
+                arrColumns.Add("IA_VC32_Updated_From")
+                arrColumns.Add("IA_NU9_InsertedBy_ID_FK")
+                arrColumns.Add("IA_NU9_Last_UpdatedBy_ID_FK")
+
+                arrRowData.Add(0)
+                arrRowData.Add(ItemIDFK)
+                arrRowData.Add(PurchaseDate)
+                arrRowData.Add(ItemMasterID)
+
+                arrRowData.Add(Now)
+                arrRowData.Add(Now)
+                arrRowData.Add(Request.UserHostAddress)
+                arrRowData.Add(Request.UserHostAddress)
+                arrRowData.Add(Val(Session("PropUserID")))
+                arrRowData.Add(Val(Session("PropUserID")))
+
+                SQL.Save("T240013", "", "", arrColumns, arrRowData)
+
+
+
+            Catch ex As Exception
+                CreateLog("ItemTransaction", "SaveAccessory-548", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString, HttpContext.Current.Session("PropUserID"), HttpContext.Current.Session("PropUserName"))
+            End Try
+
+        End Function
+
+
+        '**********************************************************************
+        ' Function Name     : -  SaveAccessoryTransaction
+        ' Purpose              : - SaveAccessoryTransaction
+        ' Date		    		   Author						Modification Date					Description
+        ' 28/12/2007		   Harpreet 	                2/JAN/2008				            Modified
+        '
+        ' Notes: 
+        ' Code:
+        '**********************************************************************
+        Private Function SaveAccessoryTransaction(ByVal ItemMasterID As Integer, ByVal AccStatus As String, ByVal PurchaseDate As String) As Boolean
+            Try
+
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString")
+
+                Dim arrColumns As New ArrayList
+                Dim arrRowData As New ArrayList
+
+                arrColumns.Add("IL_NU9_Item_ID_FK")
+                arrColumns.Add("IL_NU9_Company_ID_FK")
+                arrColumns.Add("IL_NU9_Location_ID_FK")
+                arrColumns.Add("IL_VC50_Item_ION_Code")
+                arrColumns.Add("IL_VC16_Item_Status")
+                arrColumns.Add("IL_DT8_Purchasing_Date")
+                arrColumns.Add("IL_VC20_Purchase_Order_No")
+                arrColumns.Add("IL_DT8_Transaction_Date")
+                arrColumns.Add("IL_VC50_Item_Part_No")
+                arrColumns.Add("IL_VC50_Item_Serial_No")
+                arrColumns.Add("IL_FL8_Item_Price")
+                arrColumns.Add("IL_VC16_Price_Currency")
+                arrColumns.Add("IL_DT8_Inserted_On")
+                arrColumns.Add("IL_DT8_Updated_On")
+                arrColumns.Add("IL_VC32_Inserted_From")
+                arrColumns.Add("IL_VC32_Updated_From")
+                arrColumns.Add("IL_NU9_InsertedBy_ID_FK")
+                arrColumns.Add("IL_NU9_Last_UpdatedBy_ID_FK")
+
+                arrColumns.Add("IL_VC16_Transaction_Type")
+
+                'arrColumns.Add("IL_NU9_Warranty_Period")
+                'arrColumns.Add("IL_VC32_Warranty_IN")
+                'arrColumns.Add("IL_NU9_AMCVendor_ID_FK")
+                'arrColumns.Add("IL_DT8_AMCExpire_ON")
+                'arrColumns.Add("IL_VC200_AMCComments")
+                'arrColumns.Add("IL_NU9_AMCAdvance_Alert_Days")
+                'arrColumns.Add("IL_NU9_Vendor_ID_FK")
+
+
+                Dim strIONCode As String
+
+
+                arrRowData.Add(ItemMasterID)
+                arrRowData.Add(Val(Session("PropCompanyID")))
+                arrRowData.Add(0)
+                Dim strInFix As String = SQL.Search("", "", "select isnull(IM_VC7_IONCode_Infix,'') from T240011 where IM_NU9_Item_Master_ID_PK=" & ItemMasterID)
+
+                If IsNothing(strInFix) Then
+                    strIONCode = GetIONCode(Val(Session("PropCompanyID")), "ION/ITM")
+                Else
+                    If strInFix.Equals("") Then
+                        strIONCode = GetIONCode(Val(Session("PropCompanyID")), "ION/ITM")
+                    Else
+                        strIONCode = GetIONCode(Val(Session("PropCompanyID")), strInFix)
+                    End If
+
+                End If
+                arrRowData.Add(strIONCode)
+                arrRowData.Add(AccStatus)
+                arrRowData.Add(PurchaseDate)
+                arrRowData.Add(txtPONumber.Text.Trim)
+                arrRowData.Add(Now)
+                arrRowData.Add(txtPartNo_M.Text.Trim)
+                arrRowData.Add("")
+                arrRowData.Add(System.DBNull.Value)
+                arrRowData.Add("")
+                arrRowData.Add(Now)
+                arrRowData.Add(Now)
+                arrRowData.Add(Request.UserHostAddress)
+                arrRowData.Add(Request.UserHostAddress)
+                arrRowData.Add(Val(Session("PropUserID")))
+                arrRowData.Add(Val(Session("PropUserID")))
+                arrRowData.Add("ACCESSORY")
+
+                'arrRowData.Add(Val(txtWarrenty.Text.Trim))
+                'arrRowData.Add(ddlwarrantyIn.SelectedValue)
+                'arrRowData.Add(Val(ddlAMCVendor.SelectedValue))
+                'If dtAmcExpireon.CalendarDate.Equals("") Then
+                '    arrRowData.Add(System.DBNull.Value)
+                'Else
+                '    arrRowData.Add(dtAmcExpireon.CalendarDate)
+                'End If
+                'arrRowData.Add(txtAMCComments.Text.Trim)
+                'arrRowData.Add(Val(txtAMCalertDays.Text.Trim))
+                'arrRowData.Add(Val(ddlVendor.SelectedValue))
+
+
+                SQL.Save("T240012", "", "", arrColumns, arrRowData)
+
+            Catch ex As Exception
+                CreateLog("ItemTransaction", "SaveAccessoryTransaction-548", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString, HttpContext.Current.Session("PropUserID"), HttpContext.Current.Session("PropUserName"))
+            End Try
+        End Function
+
+
+
+        '**********************************************************************
+        ' Function Name     : -  ValidateData
+        ' Purpose              : - ValidateData
+        ' Date		    		   Author						Modification Date					Description
+        ' 28/12/2007		   Harpreet 	                2/JAN/2008				            Modified
+        '
+        ' Notes: 
+        ' Code:
+        '**********************************************************************
+        Private Function ValidateData() As Boolean
+            Try
+
+                lstError.Items.Clear()
+
+                Dim shFlag As Short
+                shFlag = 0
+
+                If ddlVendor.SelectedValue.Equals("") Then
+                    shFlag = 1
+                    lstError.Items.Add("Item Vender cannot be blank...")
+                End If
+                If ddlwarrantyIn.SelectedValue.Equals("") Then
+                    shFlag = 1
+                    lstError.Items.Add("Warranty In cannot be blank...")
+                End If
+                If txtWarrenty.Text.Trim.Equals("") Then
+                    shFlag = 1
+                    lstError.Items.Add("Warranty Period cannot be blank...")
+                End If
+                If txtAMCalertDays.Text.Trim.Equals("") Then
+                    shFlag = 1
+                    lstError.Items.Add("AMC Advance Alert Days cannot be blank...")
+                End If
+                If txtAMCComments.Text.Trim.Equals("") Then
+                    shFlag = 1
+                    lstError.Items.Add("AMC Comments cannot be blank...")
+                End If
+                If txtPONumber.Text.Trim.Equals("") Then
+                    shFlag = 1
+                    lstError.Items.Add("Purchase order cannot be blank...")
+                End If
+                If ddlCurrency.SelectedValue.Equals("") Then
+                    shFlag = 1
+                    lstError.Items.Add("Price currency cannot be blank...")
+                End If
+                If ddlAMCVendor.SelectedValue.Trim.Equals("") Then
+                    shFlag = 1
+                    lstError.Items.Add("AMC With cannot be blank...")
+                End If
+
+                For intI As Integer = 0 To CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows.Count - 1
+                    If CStr(CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows(intI).Item("Status")).Equals("") Then
+                        shFlag = 1
+                        lstError.Items.Add("Item status cannot be blank...")
+                        Exit For
+                    End If
+                Next
+                For intI As Integer = 0 To CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows.Count - 1
+                    If Val(CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows(intI).Item("ItemPrice")) = 0 Then
+                        shFlag = 1
+                        lstError.Items.Add("Item Price cannot be zero...")
+                        Exit For
+                    End If
+                Next
+                For intI As Integer = 0 To CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows.Count - 1
+                    If CStr(CType(Viewstate("dsItemTransaction"), DataSet).Tables("ItemsTxn").Rows(intI).Item("PurchaseDate")).Equals("") Then
+                        shFlag = 1
+                        lstError.Items.Add("Item Purchase date cannot be blank...")
+                        Exit For
+                    End If
+                Next
+
+                If shFlag = 1 Then
+                    ShowMsgPenel(cpnlErrorPanel, lstError, ImgError, mdlMain.MSG.msgInfo)
+                    Return False
+                Else
+                    Return True
+                End If
+
+            Catch ex As Exception
+                CreateLog("ItemTransaction", "ValidateData-562", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString, HttpContext.Current.Session("PropUserID"), HttpContext.Current.Session("PropUserName"))
+            End Try
+        End Function
+
+        '**********************************************************************
+        ' Function Name     : -  GetAMCWarranty
+        ' Purpose              : - GetAMCWarranty
+        ' Date		    		   Author						Modification Date					Description
+        ' 28/12/2007		   Harpreet 	                2/JAN/2008				            Modified
+        '
+        ' Notes: 
+        ' Code:
+        '**********************************************************************
+        Private Function GetAMCWarranty() As Boolean
+            Try
+
+                Dim dsAMC As New DataSet
+
+                Dim strSQL As String
+                strSQL = "select IM_VC8_Item_Type ItemType, IM_VC7_IONCode_Infix Infix, IM_NU9_Warranty_Period WarrantyPeriod, IM_VC32_Warranty_IN WarrantyIN, IM_NU9_AMCVendor_ID_FK AMCWith, IM_DT8_AMCExpire_ON ExpiresON, IM_VC200_AMCComments AMCComments, IM_NU9_AMCAdvance_Alert_Days AlertDays, IM_NU9_Vendor_ID_FK VenderID from T240011 where IM_NU9_Item_Master_ID_PK=" & Val(DDLItems.SelectedValue)
+
+                SQL.DBConnection = SQL.GetConncetionString("ConnectionString")
+                If SQL.Search("T240011", "", "", strSQL, dsAMC, "", "") = True Then
+                    txtWarrenty.Text = IIf(IsDBNull(dsAMC.Tables(0).Rows(0).Item("WarrantyPeriod")), "", dsAMC.Tables(0).Rows(0).Item("WarrantyPeriod"))
+                    ddlwarrantyIn.SelectedValue = IIf(IsDBNull(dsAMC.Tables(0).Rows(0).Item("WarrantyIN")), "", dsAMC.Tables(0).Rows(0).Item("WarrantyIN"))
+                    ddlAMCVendor.SelectedValue = IIf(IsDBNull(dsAMC.Tables(0).Rows(0).Item("AMCWith")), "", dsAMC.Tables(0).Rows(0).Item("AMCWith"))
+                    dtAmcExpireon.CalendarDate = SetDateFormat(IIf(IsDBNull(dsAMC.Tables(0).Rows(0).Item("ExpiresON")), "", dsAMC.Tables(0).Rows(0).Item("ExpiresON")), mdlMain.IsTime.DateOnly)
+                    txtAMCComments.Text = IIf(IsDBNull(dsAMC.Tables(0).Rows(0).Item("AMCComments")), "", dsAMC.Tables(0).Rows(0).Item("AMCComments"))
+                    txtAMCalertDays.Text = IIf(IsDBNull(dsAMC.Tables(0).Rows(0).Item("AlertDays")), "", dsAMC.Tables(0).Rows(0).Item("AlertDays"))
+                    ddlVendor.SelectedValue = IIf(IsDBNull(dsAMC.Tables(0).Rows(0).Item("VenderID")), "", dsAMC.Tables(0).Rows(0).Item("VenderID"))
+                    ViewState("INFIX") = IIf(IsDBNull(dsAMC.Tables(0).Rows(0).Item("Infix")), "", dsAMC.Tables(0).Rows(0).Item("Infix"))
+                    If IIf(IsDBNull(dsAMC.Tables(0).Rows(0).Item("ItemType")), "", dsAMC.Tables(0).Rows(0).Item("ItemType")) = "Accessry" Then
+                        txtTxnType.Text = "Accessory Txn"
+                        cpnlAccessory.State = CustomControls.Web.PanelState.Collapsed
+                        cpnlAccessory.Enabled = False
+                        cpnlAccessory.TitleCSS = "test2"
+                    Else
+                        txtTxnType.Text = "Item Txn"
+                        cpnlAccessory.State = CustomControls.Web.PanelState.Expanded
+                        cpnlAccessory.Enabled = True
+                        cpnlAccessory.TitleCSS = "test"
+                    End If
+
+
+                End If
+
+            Catch ex As Exception
+                CreateLog("ItemTransaction", "GetAMCWarranty-562", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString, HttpContext.Current.Session("PropUserID"), HttpContext.Current.Session("PropUserName"))
+            End Try
+        End Function
+
+        '**********************************************************************
+        ' Function Name     : -  ClearTextBoxes
+        ' Purpose              : - ClearTextBoxes
+        ' Date		    		   Author						Modification Date					Description
+        ' 28/12/2007		   Harpreet 	                2/JAN/2008				            Modified
+        '
+        ' Notes: 
+        ' Code:
+        '**********************************************************************
+        Private Function ClearTextBoxes() As Boolean
+            Try
+
+                txtPONumber.Text = ""
+                txtPartNo_M.Text = ""
+                txtItem_Price.Text = ""
+                dtPurchaseDate.CalendarDate = ""
+
+            Catch ex As Exception
+                CreateLog("ItemTransaction", "ClearTextBoxes-562", LogType.Application, LogSubType.Exception, ex.TargetSite.Attributes, ex.ToString, HttpContext.Current.Session("PropUserID"), HttpContext.Current.Session("PropUserName"))
+            End Try
+        End Function
+
+
+#End Region
+
+    End Class
+End Namespace
+
+

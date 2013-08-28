@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DSSecurityPermission" targetNamespace="http://tempuri.org/DSSecurityPermission.xsd" xmlns:mstns="http://tempuri.org/DSSecurityPermission.xsd" xmlns="http://tempuri.org/DSSecurityPermission.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+        </Connections>
+        <Tables>
+        </Tables>
+        <Sources>
+        </Sources>
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DSSecurityPermission" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="SecPermission">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CompName" type="xs:string" minOccurs="0" />
+              <xs:element name="UserName" type="xs:string" minOccurs="0" />
+              <xs:element name="RoleID" type="xs:integer" minOccurs="0" />
+              <xs:element name="RoleName" type="xs:string" minOccurs="0" />
+              <xs:element name="MenuObjectType" type="xs:string" minOccurs="0" />
+              <xs:element name="MenuName" type="xs:integer" minOccurs="0" />
+              <xs:element name="ScreenID" type="xs:integer" />
+              <xs:element name="ScreenType" type="xs:string" minOccurs="0" />
+              <xs:element name="ScreenName" type="xs:string" minOccurs="0" />
+              <xs:element name="ObjectType" type="xs:string" minOccurs="0" />
+              <xs:element name="ObjectID" type="xs:integer" minOccurs="0" />
+              <xs:element name="ObjectName" type="xs:string" minOccurs="0" />
+              <xs:element name="ViewHide" type="xs:string" minOccurs="0" />
+              <xs:element name="MenuViewHide" type="xs:string" minOccurs="0" />
+              <xs:element name="ScreenViewHide" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="UserNames">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="RoleID" type="xs:integer" minOccurs="0" />
+              <xs:element name="UserID" type="xs:integer" minOccurs="0" />
+              <xs:element name="UserName" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

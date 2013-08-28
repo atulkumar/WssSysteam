@@ -1,0 +1,110 @@
+﻿Imports ION.Logging.EventLogging
+Imports ION.Data
+Imports System.Data.SqlClient
+Imports Microsoft.Web.UI.WebControls
+Imports System.Text
+Imports Microsoft.Win32
+Imports ION.Net
+Imports System.Web.Security
+Imports System.Security.Cryptography
+Imports System.Drawing
+Imports System.Data
+Imports System.Configuration
+Imports System.Data.Common
+
+Namespace IONWSS
+    Partial Class Inventory_Location_locationhierarchic
+        Inherits System.Web.UI.Page
+        Private mobjParentNode As TreeNode    ' This will be the Parent node in the Menu
+        Private mobjChildNode As TreeNode       ' Child node under parent node
+        Private txthiddenImage As String          ' Stored clicked button's cation
+        Private dsMainMainSkill As New DataSet
+        Private dvMainSkill As New DataView
+        Private dvMainSCR As DataView
+        Private dsMain As New DataSet
+        Private mdvtable As DataView = New DataView
+
+
+        Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+            'Put user code to initialize the page here
+
+            imgClose.Attributes.Add(" OnClick", "javascript:window.close();")
+
+            If Not IsPostBack Then
+                CreateMainSkillMenu(mobjTreeMenu)
+            End If
+        End Sub
+
+        Public Sub CreateMainSkillMenu(ByVal mobjTreeMenu As TreeView)
+            Try
+                Dim sqlQuery As String = "select LM_NU9_Location_ID_PK,LM_VC32_Location_Name,LM_NU9_Location_Parent_ID as ParentID, LM_BT1_Is_Leaf_Node ,CI_VC36_Name from T240031,T010011 where LM_NU9_Responsible_Person_ID_FK=CI_NU8_Address_Number"
+                If SQL.Search("T240031", "", "", sqlQuery, dsMain, "", "") = True Then
+                    CreateMainSkillTreeMenu(mobjTreeMenu)
+                End If
+            Catch ex As Exception
+            End Try
+        End Sub
+        Private Function CreateMainSkillTreeMenu(ByVal mobjTreeMenu As TreeView) As Boolean
+            Try
+
+                mobjTreeMenu.Nodes.Clear()
+                Dim trParentNode As New TreeNode
+                mobjTreeMenu.ShowLines = True
+                mobjTreeMenu.ShowPlus = True
+                mobjTreeMenu.SelectExpands = True
+                mobjTreeMenu.AutoSelect = True
+
+                dsMainMainSkill = dsMain
+                dvMainSkill = GetFilteredDataView(dsMainMainSkill.Tables(0).DefaultView, "ParentID is null or ParentID =0")
+                For intI As Integer = 0 To dvMainSkill.Table.Rows.Count - 1
+                    dvMainSCR = New DataView
+                    dvMainSCR = GetFilteredDataView(dsMainMainSkill.Tables(0).DefaultView, "ParentID=" & dvMainSkill.Table.Rows(intI).Item("LM_NU9_Location_ID_PK"))
+                    trParentNode = New TreeNode
+                    trParentNode.Text = dvMainSkill.Table.Rows(intI).Item("LM_VC32_Location_Name")
+                    trParentNode.Text &= "(" & dvMainSkill.Table.Rows(intI).Item("CI_VC36_Name") & ")"
+
+                    trParentNode.ID = dvMainSkill.Table.Rows(intI).Item("LM_NU9_Location_ID_PK")
+                    trParentNode.Text = "<font Size=""1""   face=""verdana""><b>" & dvMainSkill.Table.Rows(intI).Item("LM_VC32_Location_Name") & "</b></font>"
+                    Dim dvTemp As New DataView
+                    dvTemp = GetFilteredDataView(dsMain.Tables(0).DefaultView, "ParentID =" & dvMainSkill.Table.Rows(intI).Item("LM_NU9_Location_ID_PK"))
+                    If dvTemp.Table.Rows.Count = 0 Then
+                        'trParentNode.SelectAction = TreeNodeSelectAction.SelectExpand
+                        trParentNode.Expandable = ExpandableValue.Always
+                    End If
+                    'trParentNode.Value = dvMainSkill.Table.Rows(intI).Item("SKM_NU9_SkillID_PK")
+                    AddsMainkill(trParentNode, dvMainSkill.Table.Rows(intI).Item("LM_NU9_Location_ID_PK"), dsMainMainSkill.Tables(0).DefaultView)
+                    mobjTreeMenu.Nodes.Add(trParentNode)
+                Next
+                mobjTreeMenu.ExpandLevel = 5
+            Catch ex As Exception
+            End Try
+        End Function
+
+        Private Sub AddsMainkill(ByRef trvParentNode As TreeNode, ByVal ParentID As Integer, ByVal dvChildsMain As DataView)
+            Dim trvChildNode As New TreeNode
+            Dim dvLast As DataView
+            Dim intL As Integer
+            Try
+                dvLast = GetFilteredDataView(dvChildsMain, "ParentID=" & ParentID)
+                For intL = 0 To dvLast.Table.Rows.Count - 1
+                    trvChildNode = New TreeNode
+                    trvChildNode.Text = dvLast.Table.Rows(intL).Item("LM_VC32_Location_Name")
+                    trvChildNode.Text &= "<font Size=""1""   face=""verdana"">&nbsp;&nbsp;&nbsp;<b>" & "(" & dvLast.Table.Rows(intL).Item("CI_VC36_Name") & ")" & "</b></font>"
+
+                    'trvChildNode.NavigateUrl = dvLast.Table.Rows(intL).Item("LM_NU9_Location_ID_PK")
+                    trvChildNode.ID = dvLast.Table.Rows(intL).Item("LM_NU9_Location_ID_PK")
+                    Dim dvTemp As New DataView
+                    dvTemp = GetFilteredDataView(dsMain.Tables(0).DefaultView, "ParentID =" & dvLast.Table.Rows(intL).Item("LM_NU9_Location_ID_PK"))
+                    'If dvTemp.Table.Rows.Count = 0 Then
+                    '    trvChildNode.SelectAction = TreeNodeSelectAction.SelectExpand
+                    'Else
+                    '    trvChildNode.SelectAction = TreeNodeSelectAction.Select
+                    'End If
+                    AddsMainkill(trvChildNode, dvLast.Table.Rows(intL).Item("LM_NU9_Location_ID_PK"), dsMainMainSkill.Tables(0).DefaultView)
+                    trvParentNode.Nodes.Add(trvChildNode)
+                Next
+            Catch ex As Exception
+            End Try
+        End Sub
+    End Class
+End Namespace

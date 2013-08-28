@@ -1,0 +1,269 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+WSSDAL
+</name>
+</assembly>
+<members>
+<member name="M:WSSDAL.ForgotPassword.GetUserID(System.String)">
+	<summary>
+ This Function is used to get the Finanical Year
+ </summary>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.clsCommonFunctionsDAL.fillRadCallTypeDDL(System.String)">
+	<summary>
+ This function will return the dataset to bind the Call Type RadDropdown
+ to fill call type DDL, one parameter is required.. i.e. Session("PropCAComp")
+ </summary>
+	<returns>dataset</returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.clsCommonFunctionsDAL.FillRadTaskType(System.Int32)">
+	<summary>
+	</summary>
+	<param name="CompanyID"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.clsCommonFunctionsDAL.fillRadRequestedByDDL(System.String)">
+	<summary>
+ This function will return the dataset to bind the Requested By User RadDropdown
+ to fill call type DDL, one parameter is required.. i.e. Session("PropCAComp")
+ </summary>
+	<returns>dataset</returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.clsCommonFunctionsDAL.FillRadTaskOwner(System.Int32,System.Int32)">
+	<summary>
+	</summary>
+	<param name="CompanyID"></param>
+	<param name="ProjectID"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.clsCommonFunctionsDAL.FillRadTaskPriority(System.Int32)">
+	<summary>
+	</summary>
+	<param name="CompanyID"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.clsCommonFunctionsDAL.FillRadStatus(System.Int32)">
+	<summary>
+	</summary>
+	<param name="CompanyID"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.GetReimburstmentType(System.Int32,System.String)">
+	<summary>
+ Function to fill Reimburstment Type  according to EMPID
+ </summary>
+	<param name="EmpID"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.GetReimburstmentName">
+	<summary>
+ Function to fill Reimburstment Type Combo
+ </summary>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.GetEmployeesName">
+	<summary>
+ Function To Get Name of Employee To Fill the Employee DropDown
+ </summary>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.GetFinacialYear">
+	<summary>
+ This Function is used to get the Finanical Year
+ </summary>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.sav_rec(System.Collections.ArrayList)">
+	<summary>
+  Function To save Bill submission Information
+ </summary>
+	<param name="arValues"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.GetInsertedBill(System.Int32,System.String,System.Int32)">
+	<summary>
+ Function to get  sum of Bill Amount which has been submitted
+ </summary>
+	<param name="EmployeeID"></param>
+	<param name="Year"></param>
+	<param name="RBM_Type"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.GetAmtRBMAllowed(System.Int32,System.Int32)">
+	<summary>
+ Function to check Allowed Reimbursement Amount for particular User
+ </summary>
+	<param name="EmployeeID"></param>
+	<param name="RBM_Type"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.GetBillDateSubmission">
+	<summary>
+ This Function is used to get the Bill submission Detail
+ </summary>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.GetEmpYearlyBillDetail(System.Int32,System.Int32,System.Int32,System.String)">
+	<summary>
+ This Function is used to Fill the Employee Yearly Bill Detail
+ </summary>
+	<param name="EmpID"></param>
+	<param name="Month"></param>
+	<param name="BillYear"></param>
+	<param name="FinanicalYear"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.GetEmpMonthlyBillDetails(System.Int32,System.Int32,System.Int32,System.String)">
+	<summary>
+ This Function is used to Fill the Employee Monthly Bill Detail
+ </summary>
+	<param name="EmpID"></param>
+	<param name="Month"></param>
+	<param name="BillYear"></param>
+	<param name="FinanicalYear"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.GetEmpBillSubmitted(System.Int32,System.Int32,System.String,System.Int32)">
+	<summary>
+ This Function is used to get the Detail of Bill submitted by User
+ </summary>
+	<param name="EmpID"></param>
+	<param name="Month"></param>
+	<param name="FinanicalYear"></param>
+	<param name="ApprovedFlag"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.SaveVeriFiedBillSubmitted(System.Collections.ArrayList)">
+	<summary>
+ This Function is used to save the Verified Fills
+ </summary>
+	<param name="arValues"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.GetRBMPaid(System.Collections.ArrayList)">
+	<summary>
+ This Function is used to get the Detail of Reimburstment Paid To particular Employee
+ </summary>
+	<param name="arValues"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.GetNameEmployees(System.String)">
+	<summary>
+ Function to get name of all employee's 
+ </summary>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.SaveInto_Emp_Reimbursement_Detail(System.Int32,System.Int32,System.String,System.String,System.String,System.Int32,System.Int32)">
+	<summary>
+ This Function is used To save the records in Emp_Reimbursement_Detail where user set the RBM for user
+ </summary>
+	<param name="RBM_ID"></param>
+	<param name="Emp_Id"></param>
+	<param name="arrYearly"></param>
+	<param name="arrMonthly"></param>
+	<param name="strFinancialYear"></param>
+	<param name="BillYear"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.InsertBillSubmissionDate(System.Int32,System.Int32,System.Int32,System.String)">
+	<summary>
+ This Function is used to insert the Bill Submission Date Detail
+ </summary>
+	<param name="intSubmissionID"></param>
+	<param name="intStartDate"></param>
+	<param name="intEndDate"></param>
+	<param name="strFinancialYear"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.InsertDefaultValues(System.Int32,System.Int32,System.Int32,System.Int32,System.String,System.Int32)">
+	<summary>
+ This function is used to insert the Defaut values in Bill detail Table of employess for which we set the Reimbrusement(like medical amount,Telephone etc)
+ </summary>
+	<param name="intFromMonth"></param>
+	<param name="intToMonth"></param>
+	<param name="intFromYear"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.GetRBMDetail(System.String,System.Int32,System.String)">
+	<summary>
+ This function is used to get the Reimbrusement Detail according to the filter 
+ </summary>
+	<param name="Finanicalyear"></param>
+	<param name="Month"></param>
+	<param name="strWhere"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.DeleteBillSubmissionDate(System.Int32)">
+	<summary>
+ This Function is used to delete the record before Updation
+ </summary>
+	<param name="Submission_ID"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.DeleteRBMAmt(System.Int32,System.String)">
+	<summary>
+ This function is used to delete the records from  Emp_Reimbursement_Detail before Update
+ </summary>
+	<param name="Emp_ID"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.AdjustBills(System.Collections.ArrayList)">
+	<summary>
+ This function is used to adust the Advance or Bill Bue in next Month after verification
+ </summary>
+	<param name="arValues"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.DeleteBill(System.Int32)">
+	<summary>
+ This function is used to delete the records from  Emp_Reimbursement_Detail before Update
+ </summary>
+	<param name="BillID"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.UpdateBill(System.Int32,System.String,System.String,System.String)">
+	<summary>
+ This function is used to update the records 
+ </summary>
+	<param name="BillID"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.SearchExistingBills(System.Int32)">
+	<summary>
+ This Function is used to Search the Bills 
+ </summary>
+	<param name="BillID"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.GetRBMSummary(System.String,System.Int32,System.String)">
+	<summary>
+ This function is used to get the Reimbrusement Detail according to the filter 
+ </summary>
+	<param name="Finanicalyear"></param>
+	<param name="Month"></param>
+	<param name="strWhere"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.GetEmpDisapprovedBill(System.Int32,System.Int32,System.String,System.Int32)">
+	<summary>
+ This Function is used to get the Details of Disaaproved Bills
+ </summary>
+	<param name="EmpID"></param>
+	<param name="Month"></param>
+	<param name="FinanicalYear"></param>
+	<param name="DispprovedFlag"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WSSDAL.ReimburstmentDAL.SetDisapprovedBillsStatus(System.Collections.ArrayList)">
+	<summary>
+ This Function is used to set the Status for dissaproval Bills that is BillStatus=1 
+ </summary>
+	<param name="arValues"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member>
+</members>
+</doc>

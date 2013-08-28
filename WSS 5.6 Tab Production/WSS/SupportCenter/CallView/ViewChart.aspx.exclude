@@ -1,0 +1,63 @@
+﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="ViewChart.aspx.vb" Inherits="SupportCenter_CallView_ViewChart" %>
+
+<%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
+<%@ Register TagPrefix="telerik1" Namespace="Telerik.Charting" Assembly="Telerik.Web.UI" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Untitled Page</title>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+    
+    <telerik:RadChart ID="RadChart2" runat="server" Width="1200px" 
+            DataGroupColumn="Name" AutoTextWrap="true" Skin="LightBlue">
+            <Legend>
+                <Appearance GroupNameFormat="#VALUE" Visible="false">
+                </Appearance>
+            </Legend>
+            <PlotArea>
+              <YAxis Step="20">
+                </YAxis>
+                <YAxis2 MaxValue="7" MinValue="1" Step="1">
+                </YAxis2>
+                <XAxis MaxValue="7" MinValue="1" Step="1">
+                </XAxis>
+
+            </PlotArea>
+        </telerik:RadChart>
+
+    
+       <%-- <telerik:RadChart ID="RadChart2" runat="server" Height="333px" Skin="Vista" Width="900px"
+            AutoLayout="true" AutoTextWrap="true" DataGroupColumn="TM_VC8_task_type" >
+            <Legend>
+                <Appearance GroupNameFormat="#VALUE">
+                </Appearance>
+            </Legend>
+           
+            <PlotArea>
+                <XAxis DataLabelsColumn="TM_VC8_task_type">
+                </XAxis>
+            </PlotArea>
+
+             
+
+        </telerik:RadChart>--%>
+        <%--<telerik:RadChart ID="RadChart2" runat="server" Height="333px" Skin="Vista" Width="700px"
+            AutoLayout="true" AutoTextWrap="true">
+            <PlotArea>
+                <YAxis MaxValue="60" MinValue="-100" Step="20">
+                </YAxis>
+                <YAxis2 MaxValue="5" MinValue="1" Step="1">
+                </YAxis2>
+                <XAxis MaxValue="5" MinValue="1" Step="1">
+                </XAxis>
+            </PlotArea>
+           
+        </telerik:RadChart>
+--%>
+    </div>
+    </form>
+</body>
+</html>

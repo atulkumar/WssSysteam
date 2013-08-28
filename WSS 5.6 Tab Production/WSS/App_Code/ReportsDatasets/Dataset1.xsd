@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="Dataset1" targetNamespace="http://tempuri.org/Dataset1.xsd" xmlns:mstns="http://tempuri.org/Dataset1.xsd" xmlns="http://tempuri.org/Dataset1.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+        </Connections>
+        <Tables>
+        </Tables>
+        <Sources>
+        </Sources>
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="Dataset1" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Table4">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="am_nu9_call_number" type="xs:integer" minOccurs="0" />
+              <xs:element name="am_nu9_comp_id_fk" type="xs:integer" minOccurs="0" />
+              <xs:element name="ProjectID" type="xs:integer" minOccurs="0" />
+              <xs:element name="am_vc8_supp_owner" type="xs:integer" minOccurs="0" />
+              <xs:element name="ActionDate" type="xs:string" minOccurs="0" />
+              <xs:element name="TotalHrs" type="xs:float" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+         </xs:element>
+        <xs:element name="Table1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CI_NU8_Address_Number" type="xs:integer" minOccurs="0" />
+              <xs:element name="CI_VC8_Status" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC8_Address_Book_Type" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC36_Address_Line_1" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC36_Address_Line_2" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC36_Address_Line_3" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC8_City" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC8_Province" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC36_Postal_Code" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC8_Country" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_IN4_Business_Relation" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC36_Name" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Table">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CM_NU9_Call_No_PK" type="xs:integer" minOccurs="0" />
+              <xs:element name="CM_NU9_Comp_Id_FK" type="xs:integer" minOccurs="0" />
+              <xs:element name="CM_VC8_Call_Type" type="xs:string" minOccurs="0" />
+              <xs:element name="CM_VC2000_Call_Desc" type="xs:string" minOccurs="0" />
+              <xs:element name="CN_VC20_Call_Status" type="xs:string" minOccurs="0" />
+              <xs:element name="CM_DT8_Request_Date" type="xs:string" minOccurs="0" />
+              <xs:element name="CM_NU9_Call_Owner" type="xs:integer" minOccurs="0" />
+              <xs:element name="PR_NU9_Project_ID_Pk" type="xs:integer" minOccurs="0" />
+              <xs:element name="PR_VC20_Name" type="xs:string" minOccurs="0" />
+              <xs:element name="PR_NU9_Comp_ID_FK" type="xs:integer" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Table2">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CI_NU8_Address_Number" type="xs:integer" minOccurs="0" />
+              <xs:element name="CI_VC8_Status" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC8_Address_Book_Type" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC36_Address_Line_1" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC36_Address_Line_2" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC36_Address_Line_3" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC8_City" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC8_Province" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC36_Postal_Code" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC8_Country" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_IN4_Business_Relation" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC36_Name" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Table3">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CI_NU8_Address_Number" type="xs:integer" minOccurs="0" />
+              <xs:element name="CI_VC8_Status" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC8_Address_Book_Type" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC36_Address_Line_1" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC36_Address_Line_2" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC36_Address_Line_3" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC8_City" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC8_Province" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC36_Postal_Code" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC8_Country" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_IN4_Business_Relation" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_VC36_Name" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        
+        
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,224 @@
+﻿Imports ION.Data
+Imports ION.Logging.EventLogging
+Imports System.Data
+Imports System.Data.SqlClient
+Imports System.Text
+
+Imports Telerik.Web.UI
+Imports Telerik.Charting
+Imports System
+Imports System.Collections
+Imports System.ComponentModel
+
+Imports System.Drawing
+Imports System.Web
+Imports System.Web.SessionState
+Imports System.Web.UI
+Imports System.Web.UI.WebControls
+Imports System.Web.UI.HtmlControls
+Imports Telerik.Charting.Styles
+
+Partial Class SupportCenter_CallView_ViewChart
+    Inherits System.Web.UI.Page
+
+
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        InitRadChart2()
+    End Sub
+    Protected Sub HideLabels(ByVal radChart As Telerik.Web.UI.RadChart)
+        For Each series As ChartSeries In radChart.Series
+            series.Appearance.LabelAppearance.Visible = False
+        Next
+    End Sub
+
+    'Protected Sub RadChart2_DataBound(ByVal sender As Object, ByVal e As System.EventArgs) Handles RadChart2.DataBound
+    '    GetTask()
+    '    HideLabels(RadChart2)
+    'End Sub
+    Private Sub InitRadChart2()
+        SQL.DBConnection = System.Configuration.ConfigurationManager.ConnectionStrings("ConnectionString").ToString.ToString
+        SQL.DBTracing = False
+        'RadChart2.Appearance.BarOverlapPercent = 40
+        'RadChart2.Appearance.BarWidthPercent = 80
+        'RadChart2.PlotArea.Appearance.Dimensions.Margins.Left = Telerik.Charting.Styles.Unit.Percentage(10)
+        'RadChart2.PlotArea.Appearance.Dimensions.Margins.Bottom = Telerik.Charting.Styles.Unit.Percentage(40)
+        'RadChart2.PlotArea.Appearance.Dimensions.Margins.Right = Telerik.Charting.Styles.Unit.Percentage(2)
+        'RadChart2.PlotArea.XAxis.Appearance.MajorGridLines.Visible = False
+        'RadChart2.PlotArea.YAxis.Appearance.MajorGridLines.Visible = True
+
+        ' Loading all different years and initializing X axis items.
+        'Dim adapter As New SqlDataAdapter("Select TM_VC8_task_type,sum(TM_FL8_Est_Hr)as Value from T040021 where TM_NU9_Call_No_FK in(1,2,3) group by TM_VC8_task_type", dbCon)
+        'Dim ds As New DataSet()
+        'adapter.Fill(ds)
+        Dim ds As New DataSet
+        Dim sqstr As String
+        Dim currentSeries As ChartSeries = Nothing
+
+        sqstr = "Select TM_VC8_task_type,sum(TM_FL8_Est_Hr)as Value from T040021 where TM_NU9_Call_No_FK in(1,2,3) group by TM_VC8_task_type "
+        If SQL.Search("T130011", "ViewChart", "GetTask", sqstr, ds, "", "") = True Then
+            'RadChart2.Series(0).DataYColumn = "Value"
+            RadChart2.PlotArea.XAxis.DataLabelsColumn = "TM_VC8_task_type"
+            ' assign appearance related properties
+            RadChart2.PlotArea.XAxis.Appearance.LabelAppearance.RotationAngle = 300
+            RadChart2.PlotArea.XAxis.Appearance.TextAppearance.TextProperties.Color = System.Drawing.Color.BlueViolet
+            RadChart2.PlotArea.Appearance.Dimensions.Margins.Bottom = Telerik.Charting.Styles.Unit.Percentage(30)
+            ' assign the chart data source and bind it
+            RadChart2.DataSource = ds.Tables(0)
+            RadChart2.DataBind()
+
+
+            'RadChart2.PlotArea.XAxis.Clear()
+            'RadChart2.PlotArea.XAxis.AutoScale = False
+
+
+            'Dim dbRow As DataRow
+
+            ''
+            'For Each dbRow In ds.Tables(0).Rows
+            '    RadChart2.PlotArea.XAxis.AddItem(CStr(dbRow("TM_VC8_task_type")).ToString())
+            '    currentSeries = RadChart2.CreateSeries(CStr(dbRow("TM_VC8_task_type")), Color.Empty, Color.Empty, ChartSeriesType.Bar)
+            '    currentSeries.Appearance.Border.Color = Color.Black
+
+            '    currentSeries.Appearance.ShowLabels = False
+            '    If Not (currentSeries Is Nothing) Then
+            '        currentSeries.AddItem(CDbl(dbRow("Value")))
+            '    End If
+
+            'Next dbRow
+        End If
+        RadChart2.DataBind()
+
+        'UpdateRadChart2(dbCon)
+    End Sub 'InitRadChart2
+
+    Private Sub GetTask()
+        RadChart2.Series.Clear()
+
+        SQL.DBConnection = System.Configuration.ConfigurationManager.ConnectionStrings("ConnectionString").ToString.ToString
+        SQL.DBTracing = False
+        Dim ds As New DataSet
+        Dim sqstr As String
+        ' This function will fetch data from t130022  against process and a company
+        sqstr = "Select TM_VC8_task_type,sum(TM_FL8_Est_Hr)as Value from T040021 where TM_NU9_Call_No_FK in(1,2,3) group by TM_VC8_task_type "
+        If SQL.Search("T130011", "ViewChart", "GetTask", sqstr, ds, "", "") = True Then
+            'Dim oldsubcategory_id As String = ""
+            'Dim subcategory_id As String
+            'Dim currentSeries As ChartSeries = Nothing
+            RadChart2.DataSource = ds
+            Dim seriesItem As ChartSeries
+            Dim seriesItem1 As New ChartSeriesItem
+
+            For Each dbRow As DataRow In ds.Tables(0).Rows
+
+                seriesItem = RadChart2.CreateSeries(CStr(dbRow("TM_VC8_task_type")), Color.Empty, Color.Empty, ChartSeriesType.Bar)
+
+                'seriesItem.XValue = CStr(dbRow("TM_VC8_task_type"))
+
+                seriesItem1.YValue = CDbl(dbRow("Value"))
+            Next
+            RadChart2.DataBind()
+
+            'Dim dbRow As DataRow
+            'For Each dbRow In ds.Tables(0).Rows
+            '    '    'subcategory_id = CStr(dbRow("TM_VC8_task_type"))
+
+            '    '    'If subcategory_id <> oldsubcategory_id Then
+            '    '    currentSeries = RadChart2.CreateSeries(CStr(dbRow("TM_VC8_task_type")), Color.Empty, Color.Empty, ChartSeriesType.Bar)
+            '    '    '    'currentSeries.Appearance.Border.Color = Color.Black
+
+            '    '    '    'currentSeries.Appearance.ShowLabels = False
+            '    '    '    'oldsubcategory_id = subcategory_id
+            '    '    'End If
+
+            '    '    'If Not (currentSeries Is Nothing) Then
+            '    '    currentSeries.AddItem(CDbl(dbRow("Value")))
+            '    '    'End If
+            '    'Next dbRow
+
+            '    Dim salesDataSeries As ChartSeries = RadChart2.CreateSeries(CStr(dbRow("TM_VC8_task_type")), Color.Empty, Color.Empty, ChartSeriesType.Bar)
+
+            '    If Not (salesDataSeries Is Nothing) Then
+            '        'Dim r As New Random()
+
+            '        If salesDataSeries.Items.Count > 0 Then
+            '            Dim seriesItem As ChartSeriesItem
+            '            For Each seriesItem In salesDataSeries.Items
+            '                seriesItem.YValue = CDbl(dbRow("Value"))
+            '            Next seriesItem
+            '        Else
+
+
+            '            salesDataSeries.AddItem(CDbl(dbRow("Value")))
+
+            '        End If
+
+            '    End If
+            'Next dbRow
+
+        End If
+    End Sub
+    'Private Sub InitRadChart2()
+
+    '    RadChart2.Chart.Series.Clear()
+    '    RadChart2.PlotArea.XAxis.Appearance.TextAppearance.TextProperties.Font = New Font("Arial", 10)
+    '    RadChart2.PlotArea.XAxis.Appearance.TextAppearance.TextProperties.Color = Color.Black
+    '    RadChart2.PlotArea.XAxis.AutoScale = False
+    '    'RadChart2.PlotArea.XAxis.AddItem("Q1")
+    '    'RadChart2.PlotArea.XAxis.AddItem("Q2")
+    '    'RadChart2.PlotArea.XAxis.AddItem("Q3")
+    '    'RadChart2.PlotArea.XAxis.AddItem("Q4")
+    '    RadChart2.PlotArea.XAxis.LayoutMode = Styles.ChartAxisLayoutMode.Between
+
+    '    Dim salesSeries As ChartSeries = New ChartSeries("SALES", ChartSeriesType.Bar)
+    '    RadChart2.AddChartSeries(salesSeries)
+
+    '    salesSeries.Appearance.Border.Color = Color.Black
+    '    salesSeries.Appearance.ShowLabels = False
+
+    '    Dim profitSeries As ChartSeries = New ChartSeries("Profit", ChartSeriesType.Line)
+    '    RadChart2.AddChartSeries(profitSeries)
+
+    '    profitSeries.Appearance.FillStyle.FillType = FillType.Solid
+    '    profitSeries.Appearance.TextAppearance.TextProperties.Font = New Font("Verdana", 6)
+    '    profitSeries.Appearance.TextAppearance.TextProperties.Color = Color.Black
+    '    profitSeries.Appearance.LabelAppearance.Border.Color = Color.Black
+    '    profitSeries.Appearance.LabelAppearance.FillStyle.MainColor = Color.FromArgb(200, 255, 255, 255)
+    '    profitSeries.Appearance.LabelAppearance.FillStyle.FillType = FillType.Solid
+    '    profitSeries.DefaultLabelValue = "#Y{N2}"
+    '    profitSeries.Appearance.PointMark.Dimensions.SetDimensions(4, 4)
+
+    '    'Dim ds As New DataSet
+    '    'SQL.DBConnection = System.Configuration.ConfigurationManager.ConnectionStrings("ConnectionString").ToString.ToString
+    '    'SQL.DBTracing = False
+    '    'RadChart2.Appearance.BarOverlapPercent = 40
+    '    'RadChart2.Appearance.BarWidthPercent = 80
+    '    'RadChart2.PlotArea.Appearance.Dimensions.Margins.Left = Telerik.Charting.Styles.Unit.Percentage(10)
+    '    'RadChart2.PlotArea.Appearance.Dimensions.Margins.Bottom = Telerik.Charting.Styles.Unit.Percentage(40)
+    '    'RadChart2.PlotArea.Appearance.Dimensions.Margins.Right = Telerik.Charting.Styles.Unit.Percentage(2)
+    '    'RadChart2.PlotArea.XAxis.Appearance.MajorGridLines.Visible = False
+    '    'RadChart2.PlotArea.YAxis.Appearance.MajorGridLines.Visible = True
+
+    '    'Dim salesSeries As ChartSeries = New ChartSeries("SALES", ChartSeriesType.Bar)
+    '    'RadChart2.AddChartSeries(salesSeries)
+
+    '    'salesSeries.Appearance.Border.Color = Color.Black
+    '    'salesSeries.Appearance.ShowLabels = False
+
+    '    'Dim profitSeries As ChartSeries = New ChartSeries("Profit", ChartSeriesType.Line)
+    '    'RadChart2.AddChartSeries(profitSeries)
+    '    'If SQL.Search("T130011", "ViewChart", "GetTask", "SELECT Distinct(TM_VC8_task_type) Task FROM T040021 where TM_NU9_Call_No_FK in(1,2,3)", ds, "", "") = True Then
+
+    '    'End If
+    '    '' Loading all different years and initializing X axis items.
+    '    'RadChart2.PlotArea.XAxis.Clear()
+    '    'RadChart2.PlotArea.XAxis.AutoScale = False
+    '    'Dim dbRow As DataRow
+    '    'For Each dbRow In ds.Tables(0).Rows
+    '    '    RadChart2.PlotArea.XAxis.AddItem(CStr(dbRow("Task")).ToString())
+    '    'Next dbRow
+
+    '    GetTask()
+    'End Sub 'InitRadChart2
+
+End Class

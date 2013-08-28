@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema id="DS_SAL" targetNamespace="http://tempuri.org/DS_SAL.xsd" elementFormDefault="qualified"
+	attributeFormDefault="qualified" xmlns="http://tempuri.org/DS_SAL.xsd" xmlns:mstns="http://tempuri.org/DS_SAL.xsd"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+	<xs:element name="DS_SAL" msdata:IsDataSet="true">
+		<xs:complexType>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="SALTable">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="CallNo" type="xs:integer" minOccurs="0" />
+							<xs:element name="CallType" type="xs:string" minOccurs="0" />
+							<xs:element name="Priority" type="xs:string" minOccurs="0" />
+							<xs:element name="CallDescription" type="xs:string" minOccurs="0" />
+							<xs:element name="TaskNo" type="xs:integer" minOccurs="0" />
+							<xs:element name="TaskType" type="xs:string" minOccurs="0" />
+							<xs:element name="TaskDesc" type="xs:string" minOccurs="0" />
+							<xs:element name="TaskAssTime" type="xs:dateTime" minOccurs="0" />
+							<xs:element name="EstimatedTime" type="xs:string" minOccurs="0" />
+							<xs:element name="TaskStartTime" type="xs:dateTime" minOccurs="0" />
+							<xs:element name="ResponseTime" type="xs:string" minOccurs="0" />
+							<xs:element name="CloseTime" type="xs:dateTime" minOccurs="0" />
+							<xs:element name="TotalTimeTaken" type="xs:string" minOccurs="0" />
+							<xs:element name="TaskStatus" type="xs:string" minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

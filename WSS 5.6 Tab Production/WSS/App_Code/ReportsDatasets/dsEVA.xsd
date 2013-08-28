@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="dsEVA" targetNamespace="http://tempuri.org/dsEVA.xsd" xmlns:mstns="http://tempuri.org/dsEVA.xsd" xmlns="http://tempuri.org/dsEVA.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dsEVA" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="dsEVA" msprop:Generator_DataSetName="dsEVA">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="EVA" msprop:Generator_UserTableName="EVA" msprop:Generator_RowDeletedName="EVARowDeleted" msprop:Generator_TableClassName="EVADataTable" msprop:Generator_RowChangedName="EVARowChanged" msprop:Generator_RowClassName="EVARow" msprop:Generator_RowChangingName="EVARowChanging" msprop:Generator_RowEvArgName="EVARowChangeEvent" msprop:Generator_RowEvHandlerName="EVARowChangeEventHandler" msprop:Generator_TablePropName="EVA" msprop:Generator_TableVarName="tableEVA" msprop:Generator_RowDeletingName="EVARowDeleting">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Week" msprop:Generator_UserColumnName="Week" msprop:Generator_ColumnPropNameInRow="Week" msprop:Generator_ColumnVarNameInTable="columnWeek" msprop:Generator_ColumnPropNameInTable="WeekColumn" type="xs:short" minOccurs="0" />
+              <xs:element name="WorkDone" msprop:Generator_UserColumnName="WorkDone" msprop:Generator_ColumnPropNameInRow="WorkDone" msprop:Generator_ColumnVarNameInTable="columnWorkDone" msprop:Generator_ColumnPropNameInTable="WorkDoneColumn" type="xs:double" minOccurs="0" />
+              <xs:element name="EstimateHrs" msprop:Generator_UserColumnName="EstimateHrs" msprop:Generator_ColumnPropNameInRow="EstimateHrs" msprop:Generator_ColumnVarNameInTable="columnEstimateHrs" msprop:Generator_ColumnPropNameInTable="EstimateHrsColumn" type="xs:double" minOccurs="0" />
+              <xs:element name="ETCHr" msprop:Generator_UserColumnName="ETCHr" msprop:Generator_ColumnPropNameInRow="ETCHr" msprop:Generator_ColumnVarNameInTable="columnETCHr" msprop:Generator_ColumnPropNameInTable="ETCHrColumn" type="xs:double" minOccurs="0" />
+              <xs:element name="Prognosis" msprop:Generator_UserColumnName="Prognosis" msprop:Generator_ColumnPropNameInRow="Prognosis" msprop:Generator_ColumnVarNameInTable="columnPrognosis" msprop:Generator_ColumnPropNameInTable="PrognosisColumn" type="xs:double" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

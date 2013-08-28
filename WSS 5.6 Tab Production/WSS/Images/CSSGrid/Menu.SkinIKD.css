@@ -1,0 +1,280 @@
+/* <RadMenu / Vista> */
+
+.RadMenu_SkinIKD .rmRootGroup,
+.RadMenu_SkinIKD .rmFirst,
+.RadMenu_SkinIKD .rmLink,
+.RadMenu_SkinIKD .rmText,
+.RadMenu_SkinIKD .rmLeftArrow,
+.RadMenu_SkinIKD .rmRightArrow,
+.RadMenu_SkinIKD .rmTopArrow,
+.RadMenu_SkinIKD .rmBottomArrow
+{
+	background-image: url('Menu/rmSprite.png');
+	background-color: transparent;
+}
+
+.RadMenu_SkinIKD .rmRootGroup
+{
+	border: 1px solid #b7bdcd;
+	background-repeat: repeat-x;
+	background-position: 0 -408px;
+	background-color: #e0e5f5;
+}
+
+.RadMenu_SkinIKD .rmFirst
+{
+	background-position: 0 -24px;
+	padding-left: 3px;
+}
+
+.RadMenu_SkinIKD .rmLast
+{
+	padding-right: 3px;
+}
+
+.RadMenu_SkinIKD .rmVertical .rmFirst,
+.RadMenu_SkinIKD .rmVertical .rmLast
+{
+	background: none;
+	padding: 0;
+}
+
+/* <Root items> */
+
+.RadMenu_SkinIKD,
+.RadMenu_SkinIKD .rmLink
+{
+	font: normal 12px/23px "Segoe UI", Arial, sans-serif;
+	color: #000;
+	text-decoration: none;
+}
+
+.RadMenu_SkinIKD .rmLink,
+.RadMenu_SkinIKD .rmText
+{
+	background-position: 0 1050px;
+	background-repeat: no-repeat;
+}
+
+.RadMenu_SkinIKD .rmLink:hover,
+.RadMenu_SkinIKD .rmFocused
+{
+	background-position: 0 -72px;
+}
+
+.RadMenu_SkinIKD .rmLink:hover .rmText,
+.RadMenu_SkinIKD .rmFocused .rmText
+{
+	background-position: 100% -96px;
+}
+
+.RadMenu_SkinIKD .rmExpanded,
+.RadMenu_SkinIKD .rmExpanded:hover
+{
+	background-position: 0 -120px;
+}
+
+.RadMenu_SkinIKD .rmExpanded .rmText,
+.RadMenu_SkinIKD .rmExpanded:hover .rmText
+{
+	background-position: 100% -144px;
+}
+
+.RadMenu_SkinIKD .rmDisabled,
+.RadMenu_SkinIKD .rmDisabled:hover
+{
+	color: #7d7d7d;
+}
+
+.RadMenu_SkinIKD .rmDisabled:hover,
+.RadMenu_SkinIKD .rmDisabled:hover .rmText
+{
+	background: none;
+}
+
+/* </Root items> */
+
+
+/* <Submenu items> */
+
+.RadMenu_SkinIKD .rmGroup,
+.RadMenu_SkinIKD .rmGroup .rmVertical
+{
+	border: 1px solid #979797;
+	background: #f0f0f0 url('Menu/rmVSprite.png') repeat-y 0 0;
+}
+
+.RadMenu_SkinIKD .rmSlide .rmScrollWrap
+{
+	background-image: none;
+}
+
+.RadMenu_SkinIKD_rtl .rmGroup,
+.RadMenu_SkinIKD_rtl .rmGroup .rmVertical
+{
+	background-position: 100% 0;
+}
+
+.RadMenu_SkinIKD .rmRootGroup .rmHorizontal
+{
+	background-image: none;
+}
+
+.RadMenu_SkinIKD .rmScrollWrap .rmVertical
+{
+	border: 0;
+}
+
+.RadMenu_SkinIKD .rmGroup .rmFirst,
+.RadMenu_SkinIKD .rmGroup .rmLast
+{
+	background: none;
+}
+
+.RadMenu_SkinIKD .rmGroup .rmLast
+{
+	padding-bottom: 1px;
+}
+
+.RadMenu_SkinIKD .rmGroup .rmLink:hover,
+.RadMenu_SkinIKD .rmGroup .rmFocused,
+.RadMenu_SkinIKD .rmGroup .rmExpanded
+{
+	background-position: 0 -168px;
+}
+
+.RadMenu_SkinIKD .rmGroup .rmLink:hover .rmText,
+.RadMenu_SkinIKD .rmGroup .rmFocused .rmText,
+.RadMenu_SkinIKD .rmGroup .rmExpanded .rmText
+{
+	background-position: 100% -192px;
+}
+
+/* <expand arrows> */
+
+.RadMenu_SkinIKD .rmGroup .rmExpandRight,
+.RadMenu_SkinIKD .rmGroup .rmExpandDown
+{
+	background-position: 100% -216px;
+}
+
+.RadMenu_SkinIKD .rmGroup .rmLink:hover .rmExpandRight,
+.RadMenu_SkinIKD .rmGroup .rmFocused .rmExpandRight,
+.RadMenu_SkinIKD .rmGroup .rmExpanded .rmExpandRight,
+.RadMenu_SkinIKD .rmGroup .rmLink:hover .rmExpandDown,
+.RadMenu_SkinIKD .rmGroup .rmFocused .rmExpandDown,
+.RadMenu_SkinIKD .rmGroup .rmExpanded .rmExpandDown
+{
+	background-position: 100% -240px;
+}
+
+.RadMenu_SkinIKD .rmGroup .rmDisabled:hover .rmExpandRight,
+.RadMenu_SkinIKD .rmGroup .rmDisabled:hover .rmExpandDown
+{
+	background-image: url('Menu/rmSprite.png');
+	background-position: 100% -216px;
+}
+
+/* </expand arrows> */
+
+/* <rtl> */
+
+.RadMenu_SkinIKD_rtl .rmGroup .rmLink:hover,
+.RadMenu_SkinIKD_rtl .rmGroup .rmFocused,
+.RadMenu_SkinIKD_rtl .rmGroup .rmExpanded
+{
+	background-position: 100% -264px;
+}
+
+.RadMenu_SkinIKD_rtl .rmGroup .rmLink:hover .rmText,
+.RadMenu_SkinIKD_rtl .rmGroup .rmFocused .rmText,
+.RadMenu_SkinIKD_rtl .rmGroup .rmExpanded .rmText
+{
+	background-position: 0 -288px;
+}
+
+.RadMenu_SkinIKD_rtl .rmGroup .rmExpandLeft
+{
+	background-position: 0 -312px;
+}
+
+.RadMenu_SkinIKD_rtl .rmGroup .rmLink:hover .rmExpandLeft,
+.RadMenu_SkinIKD_rtl .rmGroup .rmFocused .rmExpandLeft,
+.RadMenu_SkinIKD_rtl .rmGroup .rmExpanded .rmExpandLeft
+{
+	background-position: 0 -336px;
+}
+
+/* </rtl> */
+
+/* </Submenu items> */
+
+/* <Submenu offsets (Vista - specific, overlapping submenus)> */
+
+.RadMenu_SkinIKD .rmSlide
+{
+	margin: -3px 0 0 3px;
+}
+
+.RadMenu_SkinIKD .rmVertical .rmSlide,
+.RadMenu_SkinIKD .rmSlide .rmSlide,
+.RadMenu_SkinIKD_Context .rmGroup .rmSlide
+{
+	margin: 0 0 0 -5px;
+}
+
+.RadMenu_SkinIKD_rtl .rmSlide
+{
+	margin: -3px 0 0 -3px;
+}
+
+.RadMenu_SkinIKD_rtl .rmVertical .rmSlide,
+.RadMenu_SkinIKD_rtl .rmSlide .rmSlide,
+.RadMenu_SkinIKD_Context_rtl .rmGroup .rmSlide
+{
+	margin: 0 0 0 5px;
+}
+
+/* </Submenu offsets> */
+
+/* <Scrolling arrows> */
+
+.RadMenu_SkinIKD .rmLeftArrow,
+.RadMenu_SkinIKD .rmRightArrow
+{
+	background-color: #E0E5F5;
+}
+
+.RadMenu_SkinIKD .rmLeftArrow { background-position: -8px -312px; border-right: 1px solid #B7BDCD; }
+.RadMenu_SkinIKD .rmRightArrow { background-position: -482px -216px; border-left: 1px solid #B7BDCD; }
+
+.RadMenu_SkinIKD .rmTopArrow,
+.RadMenu_SkinIKD .rmBottomArrow,
+.RadMenu_SkinIKD .rmGroup .rmLeftArrow,
+.RadMenu_SkinIKD .rmGroup .rmRightArrow
+{
+	background-color: #f0f0f0;
+}
+
+.RadMenu_SkinIKD .rmTopArrow { background-position: 50% -367px; border-bottom: 1px solid #B7BDCD; }
+.RadMenu_SkinIKD .rmBottomArrow { background-position: 50% -391px; border-top: 1px solid #B7BDCD; }
+
+/* </Scrolling arrows> */
+
+/* <Separators> */
+
+.RadMenu_SkinIKD .rmVertical .rmSeparator .rmText,
+.RadMenu_SkinIKD .rmHorizontal .rmVertical .rmSeparator .rmText
+{
+	background-position: 0 -406px;
+}
+
+.RadMenu_SkinIKD .rmHorizontal .rmSeparator .rmText,
+.RadMenu_SkinIKD .rmVertical .rmHorizontal .rmSeparator .rmText
+{
+	background-position: 0 -386px;
+}
+
+/* </Separators> */
+
+/* </RadMenu / Vista> */

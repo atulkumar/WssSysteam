@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DSAddressBook" targetNamespace="http://tempuri.org/DSAddressBook.xsd" xmlns:mstns="http://tempuri.org/DSAddressBook.xsd" xmlns="http://tempuri.org/DSAddressBook.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+        </Connections>
+        <Tables>
+        </Tables>
+        <Sources>
+        </Sources>
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DSAddressBook" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="DSAddressBook" msprop:Generator_DataSetName="DSAddressBook">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Table" msprop:Generator_UserTableName="Table" msprop:Generator_RowDeletedName="TableRowDeleted" msprop:Generator_TableClassName="TableDataTable" msprop:Generator_RowChangedName="TableRowChanged" msprop:Generator_RowClassName="TableRow" msprop:Generator_RowChangingName="TableRowChanging" msprop:Generator_RowEvArgName="TableRowChangeEvent" msprop:Generator_RowEvHandlerName="TableRowChangeEventHandler" msprop:Generator_TablePropName="Table" msprop:Generator_TableVarName="tableTable" msprop:Generator_RowDeletingName="TableRowDeleting">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ci_vc36_name" type="xs:string" minOccurs="0" />
+              <xs:element name="ci_vc8_status" type="xs:string" minOccurs="0" />
+              <xs:element name="ci_vc36_address_line_1" type="xs:string" minOccurs="0" />
+              <xs:element name="ci_vc8_city" type="xs:string" minOccurs="0" />
+              <xs:element name="ci_vc8_province" type="xs:string" minOccurs="0" />
+              <xs:element name="ci_vc8_country" type="xs:string" minOccurs="0" />
+              <xs:element name="ci_vc8_email_type_1" type="xs:string" minOccurs="0" />
+              <xs:element name="ci_vc28_email_1" type="xs:string" minOccurs="0" />
+              <xs:element name="ci_vc8_phone_type_1" type="xs:string" minOccurs="0" />
+              <xs:element name="ci_vc8_country_code_1" type="xs:string" minOccurs="0" />
+              <xs:element name="ci_vc8_area_code_1" type="xs:string" minOccurs="0" />
+              <xs:element name="ci_nu16_phone_number_1" type="xs:double" minOccurs="0" />
+              <xs:element name="CI_vc8_level" type="xs:string" minOccurs="0" />
+              <xs:element name="PI_VC36_First_Name" type="xs:string" minOccurs="0" />
+              <xs:element name="PI_VC36_Middle_Name" type="xs:string" minOccurs="0" />
+              <xs:element name="PI_VC36_Last_Name" type="xs:string" minOccurs="0" />
+              <xs:element name="PI_VC8_WHr_To" type="xs:string" minOccurs="0" />
+              <xs:element name="PI_VC8_WHr_From" type="xs:string" minOccurs="0" />
+              <xs:element name="pi_vc8_sex" type="xs:string" minOccurs="0" />
+              <xs:element name="PI_VC30_Role" type="xs:string" minOccurs="0" />
+              <xs:element name="DOJ" type="xs:string" minOccurs="0" />
+              <xs:element name="PI_VC4_TimeZone" type="xs:string" minOccurs="0" />
+              <xs:element name="CI_IN4_Business_Relation" type="xs:integer" minOccurs="0" />
+              <xs:element name="ci_nu8_address_number" type="xs:integer" minOccurs="0" />
+              <xs:element name="pi_vc4_picture" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Table1" msprop:Generator_UserTableName="Table1" msprop:Generator_RowDeletedName="Table1RowDeleted" msprop:Generator_TableClassName="Table1DataTable" msprop:Generator_RowChangedName="Table1RowChanged" msprop:Generator_RowClassName="Table1Row" msprop:Generator_RowChangingName="Table1RowChanging" msprop:Generator_RowEvArgName="Table1RowChangeEvent" msprop:Generator_RowEvHandlerName="Table1RowChangeEventHandler" msprop:Generator_TablePropName="Table1" msprop:Generator_TableVarName="tableTable1" msprop:Generator_RowDeletingName="Table1RowDeleting">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ci_vc36_name" type="xs:string" minOccurs="0" />
+              <xs:element name="ci_vc8_address_book_type" type="xs:string" minOccurs="0" />
+              <xs:element name="ci_nu8_address_number" type="xs:integer" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

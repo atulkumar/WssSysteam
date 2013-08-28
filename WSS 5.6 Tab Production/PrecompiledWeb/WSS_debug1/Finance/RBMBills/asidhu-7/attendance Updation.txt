@@ -1,0 +1,26 @@
+-----------------------------------
+1. FrmItemPermission ---  new form
+2. Chenages in FrmItemISSue 
+3. FrmFrmClientTour
+----------------------------
+Related store procedures
+------------------------------
+1. uspFillItemGrid
+2. uspCancelItembyadmin
+-------------------------------
+Tables
+---------------------------------
+1. Changes in table -- tblItemMaster
+2. New Table        -- tblClientTourDetail
+------------------------------------------
+
+genset detail
+
+modification in SP
+1. uspGetGensetReading
+2. uspEnterGensetReading
+3. uspEnterMeterReading
+4. 
+modification In table : 
+1. tblGensetReading
+2. tblElectricMeterReading

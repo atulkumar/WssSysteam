@@ -1,0 +1,11 @@
+1) Split SP's into small SP's to track the execution time
+2) Create Phy Tables and insert/update records on different thread rather than creating temp tables
+3) Change count(*) to count(1)
+4) Change sub queries with Joins
+5) Delete un-necessary code lines from SP
+6) Try to replace the cursor with CTE or While loop
+7) Use SQL profiler to track the duration for query execution
+8) On seperate thread place the calculations like Amount * discount * vat percentage etc.
+9) Creation of PDF documents in consuming 15-20 seconds, we can change it to filestream
+10) Change left outer joins to NOT EXIST 
+11) A job should be created in SQL server that will rebuild the index on the master tables will improve the performance to a great amount.

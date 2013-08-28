@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DSCallDetail" targetNamespace="http://tempuri.org/DSCallDetail.xsd" xmlns:mstns="http://tempuri.org/DSCallDetail.xsd" xmlns="http://tempuri.org/DSCallDetail.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+        </Connections>
+        <Tables>
+        </Tables>
+        <Sources>
+        </Sources>
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DSCallDetail" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Call">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CallNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="RequestDate" type="xs:string" minOccurs="0" />
+              <xs:element name="CallType" type="xs:string" minOccurs="0" />
+              <xs:element name="Description" type="xs:string" minOccurs="0" />
+              <xs:element name="CallOwner" type="xs:string" minOccurs="0" />
+              <xs:element name="CallStatus" type="xs:string" minOccurs="0" />
+              <xs:element name="EstCallCloseDate" type="xs:string" minOccurs="0" />
+              <xs:element name="CompanyId" type="xs:integer" minOccurs="0" />
+              <xs:element name="Company" type="xs:string" minOccurs="0" />
+              <xs:element name="Reference" type="xs:string" minOccurs="0" />
+              <xs:element name="CallCloseDate" type="xs:string" minOccurs="0" />
+              <xs:element name="CM_NU9_Project_ID" type="xs:integer" minOccurs="0" />
+              <xs:element name="Project" type="xs:string" minOccurs="0" />
+              <xs:element name="EstHRS" type="xs:double" minOccurs="0" />
+              <xs:element name="UsedHrs" type="xs:double" minOccurs="0" />
+            </xs:sequence>
+            
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Call1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CallNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="CompanyId" type="xs:integer" minOccurs="0" />
+              <xs:element name="TaskNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="TaskStatus" type="xs:string" minOccurs="0" />
+              <xs:element name="TaskType" type="xs:string" minOccurs="0" />
+              <xs:element name="SuppOwner" type="xs:string" minOccurs="0" />
+              <xs:element name="TaskAssignedTo" type="xs:string" minOccurs="0" />
+              <xs:element name="Description" type="xs:string" minOccurs="0" />
+              <xs:element name="TaskDate" type="xs:string" minOccurs="0" />
+              <xs:element name="TaskEstHRS" type="xs:double" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Call2">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ActionNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="TaskNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="CallNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="CompId" type="xs:integer" minOccurs="0" />
+              <xs:element name="ActionType" type="xs:string" minOccurs="0" />
+              <xs:element name="ActionOwner" type="xs:string" minOccurs="0" />
+              <xs:element name="Description" type="xs:string" minOccurs="0" />
+              <xs:element name="ActionDate" type="xs:string" minOccurs="0" />
+              <xs:element name="UsedHRS" type="xs:double" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Call3">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CallComments" type="xs:string" minOccurs="0" />
+              <xs:element name="CommentsBy" type="xs:string" minOccurs="0" />
+              <xs:element name="CompId" type="xs:integer" minOccurs="0" />
+              <xs:element name="CallNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="TaskNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="ActionNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="AddressNo" type="xs:integer" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Call4">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CompanyId" type="xs:integer" minOccurs="0" />
+              <xs:element name="CallNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="TaskNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="ActionNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="Level" type="xs:string" minOccurs="0" />
+              <xs:element name="Owner" type="xs:string" minOccurs="0" />
+              <xs:element name="FileName" type="xs:string" minOccurs="0" />
+              <xs:element name="FilePath" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Call5">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="TaskComments" type="xs:string" minOccurs="0" />
+              <xs:element name="CommentsBy" type="xs:string" minOccurs="0" />
+              <xs:element name="CompId" type="xs:integer" minOccurs="0" />
+              <xs:element name="CallNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="TaskNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="ActionNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="AddressNo" type="xs:integer" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Call6">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CompanyId" type="xs:integer" minOccurs="0" />
+              <xs:element name="CallNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="TaskNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="ActionNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="Level" type="xs:string" minOccurs="0" />
+              <xs:element name="Owner" type="xs:string" minOccurs="0" />
+              <xs:element name="FileName" type="xs:string" minOccurs="0" />
+              <xs:element name="FilePath" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Call7">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ActionComments" type="xs:string" minOccurs="0" />
+              <xs:element name="CommentsBy" type="xs:string" minOccurs="0" />
+              <xs:element name="CompId" type="xs:integer" minOccurs="0" />
+              <xs:element name="CallNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="TaskNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="ActionNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="AddressNo" type="xs:integer" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Call8">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CompanyId" type="xs:integer" minOccurs="0" />
+              <xs:element name="CallNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="TaskNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="ActionNo" type="xs:integer" minOccurs="0" />
+              <xs:element name="Level" type="xs:string" minOccurs="0" />
+              <xs:element name="Owner" type="xs:string" minOccurs="0" />
+              <xs:element name="FileName" type="xs:string" minOccurs="0" />
+              <xs:element name="FilePath" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

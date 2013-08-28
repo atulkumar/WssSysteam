@@ -1,0 +1,593 @@
+﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="itemdetailsview.aspx.vb" Inherits="Inventory_ItemLedger_itemdetailsview" %>
+<%@ Register TagPrefix="cc1" Namespace="CustomControls.Web" Assembly="CustomControls.Web" %>
+<%@ Register TagPrefix="iewc" Namespace="Microsoft.Web.UI.WebControls" Assembly="Microsoft.Web.UI.WebControls" %>
+<%@ Register TagPrefix="uc1" TagName="DateSelector" Src="../../SupportCenter/calendar/DateSelector.ascx" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+		<title>ItemDetailsView</title>
+		<meta content="Microsoft Visual Studio .NET 7.1" name="GENERATOR">
+		<meta content="Visual Basic .NET 7.1" name="CODE_LANGUAGE">
+		<meta content="JavaScript" name="vs_defaultClientScript">
+		<meta content="http://schemas.microsoft.com/intellisense/ie5" name="vs_targetSchema">
+		<LINK href="../../Images/Js/StyleSheet1.css" type="text/css" rel="stylesheet">
+		<script language="javascript" src="../../Images/Js/JSValidation.js"></script>
+		<script language="javascript">
+		
+				function OpenItemInfo(ID)
+				{
+				
+						wopen('SingleItemView.aspx?ID=' + ID,'ItemInfo',700,530);
+				
+				}
+		
+				function SaveEdit(varImgValue)
+				{
+
+						if (varImgValue=='Delete')
+						{
+							if (document.Form1.HIDAccID.value=='')
+							{
+								alert('Please select Accessory to Delete');
+							}
+							else
+							{
+								if ( window.confirm('Are you sure you want to delete the selected Accessory?') )
+								{
+									document.Form1.txthiddenImage.value=varImgValue;
+									Form1.submit(); 
+								}
+							}
+						}									
+						
+						if (varImgValue=='ShowAll')
+						{
+									document.Form1.txthiddenImage.value=varImgValue;
+									Form1.submit(); 
+						}									
+						
+						if (varImgValue=='Logout')
+						{
+									document.Form1.txthiddenImage.value=varImgValue;
+									Form1.submit(); 
+						}
+						
+						if (varImgValue=='Close')
+						{
+									document.Form1.txthiddenImage.value=varImgValue;
+									Form1.submit(); 
+						}			
+						
+						if (varImgValue=='Reset')
+						{
+							if ( window.confirm('Do you want to Reset the page?') )
+							{
+									document.Form1.reset(); 
+							}
+						}						
+						
+						
+						return false			
+				}
+
+			function KeyCheck(INDEX, ID, IONCode)
+			{
+					document.Form1.HIDILID.value=ID;
+					document.Form1.HIDIONCode.value=IONCode;
+					/*tableID='cpnlItemView_GrdItemsView';
+						var table;
+							if (document.all) table=document.all[tableID];
+								if (document.getElementById) table=document.getElementById(tableID);
+								if (table)
+								{
+										
+										for ( var i = 1 ;  i < table.rows.length ;  i++)
+											{	
+												if(i % 2 == 0)
+													{
+														table.rows [ i ] . style . backgroundColor = "#f5f5f5";
+													}
+													else
+													{
+													
+														table.rows [ i ] . style . backgroundColor = "#ffffff";
+													}
+											}
+									table.rows [ INDEX  ] . style . backgroundColor = "#d4d4d4";
+								}
+								
+
+							//setTimeout('document.Form1.submit();',500);*/
+					}			
+		
+			function KeyCheckAcc(INDEX, ID)
+			{
+					document.Form1.HIDAccID.value=ID;
+					tableID='cpnlAccessoryView_GrdItemAccessory';
+						var table;
+							if (document.all) table=document.all[tableID];
+								if (document.getElementById) table=document.getElementById(tableID);
+								if (table)
+								{
+										
+										for ( var i = 1 ;  i < table.rows.length ;  i++)
+											{	
+												if(i % 2 == 0)
+													{
+														table.rows [ i ] . style . backgroundColor = "#f5f5f5";
+													}
+													else
+													{
+													
+														table.rows [ i ] . style . backgroundColor = "#ffffff";
+													}
+											}
+									table.rows [ INDEX  ] . style . backgroundColor = "#d4d4d4";
+								}
+					}			
+		
+		
+				function wopen(url, name, w, h)
+			{
+				// Fudge factors for window decoration space.
+				// In my tests these work well on all platforms & browsers.
+				w += 32;
+				h += 96;
+				wleft = (screen.width - w) / 2;
+				wtop = (screen.height - h) / 2;
+				var win = window.open(url,
+					name,
+					'width=' + w + ', height=' + h + ', ' +
+					'left=' + wleft + ', top=' + wtop + ', ' +
+					'location=no, menubar=no, ' +
+					'status=no, toolbar=no, scrollbars=no, resizable=no');
+				// Just in case width and height are ignored
+				win.resizeTo(w, h);
+				// Just in case left and top are ignored
+				win.moveTo(wleft, wtop);
+				win.focus();
+			}
+			
+		</script>
+	</HEAD>
+	<body bottomMargin="0" leftMargin="0" topMargin="0" onload="Hideshow();" rightMargin="0">
+		<form id="Form1" method="post" runat="server">
+			<table height="100%" cellSpacing="0" cellPadding="0" width="100%" border="0">
+				<tr>
+					<td vAlign="top">
+						<table cellSpacing="0" cellPadding="0" width="100%" border="0">
+							<tr>
+								<td>
+									<div align="right"><IMG height="2" src="../../Images/top_right_line.gif" width="96"></div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<table cellSpacing="0" cellPadding="0" width="100%" border="0">
+										<tr>
+											<td background="../../Images/top_left_back.gif">&nbsp;</td>
+											<td width="50"><IMG height="20" src="../../Images/top_right.gif" width="50"></td>
+											<td width="21"><A href="#"><IMG height="20" src="../../Images/bt_min.gif" width="21" border="0"></A></td>
+											<td width="21"><A href="#"><IMG height="20" src="../../Images/bt_max.gif" width="21" border="0"></A></td>
+											<td width="19"><A href="#"><IMG onclick="CloseWSS();" height="20" src="../../Images/bt_clo.gif" width="19" border="0"></A></td>
+											<td width="6"><IMG height="20" src="../../Images/bt_space.gif" width="6"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<table cellSpacing="0" cellPadding="0" width="100%" border="0">
+										<tr width="100%">
+											<td background="../../Images/top_nav_back.gif" height="67">
+												<table cellSpacing="0" cellPadding="0" width="100%" align="center" border="0">
+													<TR>
+														<TD><asp:button id="BtnGrdSearch" runat="server" Width="0px" Height="0"></asp:button><asp:imagebutton id="imgbtnSearch" tabIndex="1" runat="server" Width="1px" Height="1px" ImageUrl="white.GIF"
+																CommandName="submit" AlternateText="."></asp:imagebutton><IMG class="PlusImageCSS" onclick="HideContents();" alt="Hide" src="../../Images/left005.gif"
+																name="imgHide"> <IMG class="PlusImageCSS" onclick="ShowContents();" alt="Show" src="../../Images/Right005.gif"
+																name="ingShow">
+															<asp:label id="lblTitleLabelUserSearch" runat="server" Width="160px" Height="12px" BorderStyle="None"
+																BorderWidth="2px" CssClass="TitleLabel">Item Detail View</asp:label></TD>
+														<TD vAlign="middle" align="center" background="../../Images/top_nav_back.gif" bgColor="lightgrey"
+															height="67"><IMG title="Seperator" alt="R" src="../../Images/00Seperator.gif" border="0">
+															<asp:imagebutton id="imgAdd" accessKey="A" runat="server" ImageUrl="../../Images/s2Add01.gif" ToolTip="Enter New Item"></asp:imagebutton>
+															<asp:imagebutton id="imgAssign" runat="server" ImageUrl="../../Images/IssueReturn.jpg" ToolTip="Assign Items"></asp:imagebutton>
+															<asp:imagebutton id="imgShowAll" accessKey="E" runat="server" ImageUrl="../../Images/MyCall.jpg"
+																ToolTip="Show All"></asp:imagebutton>
+															<asp:imagebutton id="imgDelete" runat="server" ImageUrl="../../Images/s2delete01.gif" ToolTip="Select a Task to Delete Action"></asp:imagebutton>
+															<asp:imagebutton id="imgSearch" accessKey="H" runat="server" ImageUrl="../../Images/s1search02.gif"
+																ToolTip="Search"></asp:imagebutton>
+															<asp:imagebutton id="imgReset" accessKey="R" runat="server" ImageUrl="../../Images/reset_20.gif"
+																ToolTip="Reset"></asp:imagebutton>
+															<asp:imagebutton id="ImgClose" accessKey="L" runat="server" ImageUrl="../../Images/s2close01.gif"
+																ToolTip="Close"></asp:imagebutton>
+															<IMG title="Seperator" alt="R" src="../../Images/00Seperator.gif" border="0">&nbsp;
+														</TD>
+													</TR>
+												</table>
+											</td>
+											<td align="right" width="152" background="../../Images/top_nav_back01.gif" height="67"><IMG class="PlusImageCSS" id="Help" title="Help" onclick="ShowHelp('972','../');" alt="E"
+													src="../../Images/s1question02.gif" border="0" name="tbrbtnEdit">&nbsp;<IMG class="PlusImageCSS" id="Logout" title="Logout" onclick="LogoutWSS();" alt="E" src="../../icons/logoff.gif"
+													border="0" name="tbrbtnEdit">&nbsp;&nbsp;&nbsp;</td>
+										</tr>
+									</table>
+							<tr>
+								<td height="10">
+									<table cellSpacing="0" cellPadding="0" width="100%" border="0">
+										<tr>
+											<td background="../../Images/main_line.gif" height="10"><IMG height="10" src="../../Images/main_line.gif" width="6"></td>
+											<td width="7" height="10"><IMG height="10" src="../../Images/main_line01.gif" width="7"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td height="2">
+									<table cellSpacing="0" cellPadding="0" width="100%" border="0">
+										<tr>
+											<td background="../../Images/main_line02.gif" height="2"><IMG height="2" src="../../Images/main_line02.gif" width="2"></td>
+											<td width="12" height="2"><IMG height="2" src="../../Images/main_line03.gif" width="12"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<DIV style="OVERFLOW: auto; WIDTH: 100%; HEIGHT: 581px">
+										<TABLE id="Table16" borderColor="activeborder" cellSpacing="0" cellPadding="0" width="100%"
+											border="0">
+											<TR>
+												<TD vAlign="top" colSpan="1">
+													<!--  **********************************************************************-->
+													<DIV style="OVERFLOW: auto; WIDTH: 100%; HEIGHT: 581px">
+														<table cellSpacing="0" cellPadding="0" width="100%" border="0">
+															<tr>
+																<td colSpan="2"><cc1:collapsiblepanel id="cpnlErrorPanel" runat="server" Width="100%" Height="47px" BorderStyle="Solid"
+																		BorderWidth="0px" BorderColor="Indigo" Visible="False" TitleCSS="test" PanelCSS="panel" TitleForeColor="black"
+																		TitleClickable="True" TitleBackColor="Transparent" Text="Error Message" ExpandImage="../../Images/ToggleDown.gif"
+																		CollapseImage="../../Images/ToggleUp.gif" Draggable="False">
+																		<TABLE id="Table2" borderColor="lightgrey" cellSpacing="0" cellPadding="0" border="0">
+																			<TR>
+																				<TD colSpan="0" rowSpan="0">
+																					<asp:Image id="ImgError" runat="server" Height="16px" Width="16px" ImageUrl="../../Images/warning.gif"></asp:Image></TD>
+																				<TD colSpan="0" rowSpan="0">
+																					<asp:ListBox id="lstError" runat="server" Width="702px" BorderWidth="0" BorderStyle="Groove"
+																						ForeColor="Red" Font-Names="Verdana" Font-Size="XX-Small"></asp:ListBox></TD>
+																			</TR>
+																		</TABLE>
+																	</cc1:collapsiblepanel></td>
+															</tr>
+															<TR>
+																<td>
+																	<DIV>
+																		<TABLE id="Table1261" borderColor="activeborder" cellSpacing="0" cellPadding="0" width="100%"
+																			align="left" border="0">
+																			<tr>
+																				<td><cc1:collapsiblepanel id="cpnlItem" runat="server" Width="100%" BorderStyle="Solid" BorderWidth="0px"
+																						BorderColor="Indigo" Visible="False" TitleCSS="test" PanelCSS="panel" TitleForeColor="black" TitleClickable="True"
+																						TitleBackColor="Transparent" Text="Item" ExpandImage="../../Images/ToggleDown.gif" CollapseImage="../../Images/ToggleUp.gif"
+																						Draggable="False">
+																						<TABLE cellSpacing="0" cellPadding="0" width="100%" align="left" border="0">
+																							<TR>
+																								<TD>
+																									<asp:label id="lblItem" Width="80px" Font-Names="Verdana" Font-Size="XX-Small" Runat="server"
+																										Font-Bold="True">Item Name :</asp:label>
+																									<asp:DropDownList id="ddlItems" runat="server" Width="137px" Font-Names="Verdana" Font-Size="XX-Small"
+																										AutoPostBack="True"></asp:DropDownList></TD>
+																							</TR>
+																							<TR>
+																							</TR>
+																						</TABLE>
+																					</cc1:collapsiblepanel></td>
+																			</tr>
+																			<TR>
+																				<TD vAlign="top" align="left"><cc1:collapsiblepanel id="cpnlItemView" runat="server" Width="100%" BorderStyle="Solid" BorderWidth="0px"
+																						BorderColor="Indigo" Visible="true" TitleCSS="test" PanelCSS="panel" TitleForeColor="black" TitleClickable="True" TitleBackColor="Transparent"
+																						Text="Item View" ExpandImage="../../Images/ToggleDown.gif" CollapseImage="../../Images/ToggleUp.gif" Draggable="False">
+																						<DIV style="OVERFLOW: auto; WIDTH: 100%; HEIGHT: 230px">
+																							<TABLE cellSpacing="0" cellPadding="0" width="180%" align="left" border="0">
+																								<TR>
+																									<TD>
+																										<asp:DataGrid id="GrdItemsView" runat="server" CssClass="Grid" DataKeyField="ItemLID" AutoGenerateColumns="False"
+																											cellSpacing="0" cellPadding="0" PagerStyle-Visible="False" AllowPaging="True">
+																											<SelectedItemStyle CssClass="GridSelectedItem"></SelectedItemStyle>
+																											<AlternatingItemStyle CssClass="GridAlternateItem"></AlternatingItemStyle>
+																											<ItemStyle CssClass="GridItem"></ItemStyle>
+																											<HeaderStyle Font-Bold="True" ForeColor="Blue" CssClass="GridHeader"></HeaderStyle>
+																											<PagerStyle Visible="False" Position="TopAndBottom" Mode="NumericPages"></PagerStyle>
+																											<Columns>
+																												<asp:ButtonColumn Visible="False" Text="SSSS" CommandName="Select"></asp:ButtonColumn>
+																												<asp:TemplateColumn>
+																													<HeaderTemplate>
+																														<asp:TextBox ID="txtIONCode_H" Runat="server" CssClass="SearchTxtbox" Width="220px"></asp:TextBox><br>
+																														ION Code
+																													</HeaderTemplate>
+																													<ItemTemplate>
+																														<asp:Label ForeColor="blue" id="lblIONCode" runat="server" Width="150px" Text='<%#container.dataitem("IONCode")%>'>
+																														</asp:Label>
+																													</ItemTemplate>
+																												</asp:TemplateColumn>
+																												<asp:TemplateColumn>
+																													<HeaderTemplate>
+																														<asp:TextBox ID="txtItemName_H" Runat="server" CssClass="SearchTxtbox" Width="150px"></asp:TextBox><br>
+																														ItemName
+																													</HeaderTemplate>
+																													<ItemTemplate>
+																														<asp:Label id="lblItemNameV" runat="server" Width="150px">
+																															<%#container.dataitem("ItemName")%>
+																														</asp:Label>
+																													</ItemTemplate>
+																												</asp:TemplateColumn>
+
+																												<asp:TemplateColumn>
+																													<HeaderTemplate>
+																														<asp:TextBox ID="txtAssignType_H" Runat="server" CssClass="SearchTxtbox" Width="120px"></asp:TextBox><br>
+																														AssignType
+																													</HeaderTemplate>
+																													<ItemTemplate>
+																														<asp:Label id="Label3" runat="server" Width="120px">
+																															<%#container.dataitem("AssignType")%>
+																														</asp:Label>
+																													</ItemTemplate>
+																												</asp:TemplateColumn>
+																												
+																												<asp:TemplateColumn>
+																													<HeaderTemplate>
+																														<asp:TextBox ID="txtEmployee_H" Runat="server" CssClass="SearchTxtbox" Width="120px"></asp:TextBox><br>
+																														Employee
+																													</HeaderTemplate>
+																													<ItemTemplate>
+																														<asp:Label id="Label4" runat="server" Width="120px">
+																															<%#container.dataitem("Employee")%>
+																														</asp:Label>
+																													</ItemTemplate>
+																												</asp:TemplateColumn>																												
+																												
+																												<asp:TemplateColumn>
+																													<HeaderTemplate>
+																														<asp:TextBox ID="txtLocation_H" Runat="server" CssClass="SearchTxtbox" Width="120px"></asp:TextBox><br>
+																														Location
+																													</HeaderTemplate>
+																													<ItemTemplate>
+																														<asp:Label id="lblLocationV" runat="server" Width="120px">
+																															<%#container.dataitem("Location")%>
+																														</asp:Label>
+																													</ItemTemplate>
+																												</asp:TemplateColumn>
+																												
+																												<asp:TemplateColumn>
+																													<HeaderTemplate>
+																														<asp:TextBox ID="txtStatus_H" Runat="server" CssClass="SearchTxtbox" Width="80px"></asp:TextBox><br>
+																														Status
+																													</HeaderTemplate>
+																													<ItemTemplate>
+																														<asp:Label id="lblStatusV" runat="server" Width="80px">
+																															<%#container.dataitem("Status")%>
+																														</asp:Label>
+																													</ItemTemplate>
+																												</asp:TemplateColumn>
+																												<asp:TemplateColumn>
+																													<HeaderTemplate>
+																														<asp:TextBox ID="txtTxnType_H" Runat="server" CssClass="SearchTxtbox" Width="90px"></asp:TextBox><br>
+																														Txn Type
+																													</HeaderTemplate>
+																													<ItemTemplate>
+																														<asp:Label id="lblTxnType" runat="server" Width="90px">
+																															<%#container.dataitem("TxnType")%>
+																														</asp:Label>
+																													</ItemTemplate>
+																												</asp:TemplateColumn>
+																												<asp:TemplateColumn>
+																													<HeaderTemplate>
+																														<asp:TextBox ID="txtPartNo_H" Runat="server" CssClass="SearchTxtbox" Width="160px"></asp:TextBox><br>
+																														PartNo
+																													</HeaderTemplate>
+																													<ItemTemplate>
+																														<asp:Label id="lblPartNoV" runat="server" Width="160px">
+																															<%#container.dataitem("PartNo")%>
+																														</asp:Label>
+																													</ItemTemplate>
+																												</asp:TemplateColumn>
+																												<asp:TemplateColumn>
+																													<HeaderTemplate>
+																														<asp:TextBox ID="txtSerialNo_H" Runat="server" CssClass="SearchTxtbox" Width="230px"></asp:TextBox><br>
+																														SerialNo
+																													</HeaderTemplate>
+																													<ItemTemplate>
+																														<asp:Label id="lblSerialNoV" runat="server" Width="230px">
+																															<%#container.dataitem("SerialNo")%>
+																														</asp:Label>
+																													</ItemTemplate>
+																												</asp:TemplateColumn>
+																												<asp:TemplateColumn>
+																													<HeaderTemplate>
+																														<asp:TextBox ID="txtItemPrice_H" Runat="server" CssClass="SearchTxtbox" Width="100px"></asp:TextBox><br>
+																														ItemPrice
+																													</HeaderTemplate>
+																													<ItemTemplate>
+																														<asp:Label id="lblItemPriceV" runat="server" Width="100px">
+																															<%#container.dataitem("ItemPrice")%>
+																														</asp:Label>
+																													</ItemTemplate>
+																												</asp:TemplateColumn>
+																												<asp:TemplateColumn HeaderText="PriceCurrency">
+																													<HeaderTemplate>
+																														<asp:TextBox ID="txtPriceCurrency_H" Runat="server" CssClass="SearchTxtbox" Width="100px"></asp:TextBox><br>
+																														PriceCurrency
+																													</HeaderTemplate>
+																													<ItemTemplate>
+																														<asp:Label id="lblPriceCurrencyV" runat="server" Width="100px">
+																															<%#container.dataitem("PriceCurrency")%>
+																														</asp:Label>
+																													</ItemTemplate>
+																												</asp:TemplateColumn>
+																												<asp:TemplateColumn>
+																													<HeaderTemplate>
+																														<asp:TextBox ID="txtManufacturingDate_H" Runat="server" CssClass="SearchTxtbox" Width="100px"></asp:TextBox><br>
+																														PurchaseDate
+																													</HeaderTemplate>
+																													<ItemTemplate>
+																														<asp:Label id="lblMfgDate" runat="server" width="100px">
+																															<%#container.dataitem("ManufacturingDate")%>
+																														</asp:Label>
+																													</ItemTemplate>
+																												</asp:TemplateColumn>
+																											</Columns>
+																										</asp:DataGrid></TD>
+																								</TR>
+																							</TABLE>
+																						</DIV>
+																						<asp:panel id="Panel6" runat="server">
+																							<asp:panel id="Panel7" runat="server">
+																								<TABLE height="25">
+																									<TR>
+																										<TD>
+																											<asp:Label id="pg" Height="12pt" Width="40px" ForeColor="#0000C0" Font-Names="Verdana" Font-Size="8pt"
+																												Runat="server" Font-Bold="True">Page</asp:Label></TD>
+																										<TD>
+																											<asp:Label id="CurrentPg" runat="server" Height="12px" Width="10px" ForeColor="Crimson" Font-Size="X-Small"
+																												Font-Bold="True"></asp:Label></TD>
+																										<TD>
+																											<asp:Label id="of" ForeColor="#0000C0" Font-Names="Verdana" Font-Size="8pt" Runat="server"
+																												Font-Bold="True">of</asp:Label></TD>
+																										<TD>
+																											<asp:label id="TotalPages" runat="server" Height="12px" Width="10px" ForeColor="Crimson" Font-Size="X-Small"
+																												Font-Bold="True"></asp:label></TD>
+																										<TD>
+																											<asp:imagebutton id="Firstbutton" runat="server" AlternateText="First" ImageUrl="../../Images/next9.jpg"
+																												ToolTip="First"></asp:imagebutton></TD>
+																										<TD width="14">
+																											<asp:imagebutton id="Prevbutton" runat="server" ImageUrl="../../Images/next99.jpg" ToolTip="Previous"></asp:imagebutton></TD>
+																										<TD>
+																											<asp:imagebutton id="Nextbutton" runat="server" ImageUrl="../../Images/next9999.jpg" ToolTip="Next"></asp:imagebutton></TD>
+																										<TD>
+																											<asp:imagebutton id="Lastbutton" runat="server" ImageUrl="../../Images/next999.jpg" ToolTip="Last"></asp:imagebutton></TD>
+																										<TD>
+																											<asp:textbox id="txtPageSize" runat="server" Height="14px" Width="24px" Font-Size="7pt" MaxLength="3"></asp:textbox></TD>
+																										<TD>
+																											<asp:Button id="Button3" runat="server" Height="12pt" Width="16px" BorderStyle="None" ToolTip="Change Paging Size"
+																												Text=">" ForeColor="Navy" Font-Size="7pt" Font-Bold="True"></asp:Button></TD>
+																										<TD></TD>
+																										<TD>
+																											<asp:Label id="lblrecords" runat="server" Height="12pt" ForeColor="MediumBlue" Font-Names="Verdana"
+																												Font-Size="8pt" Font-Bold="True">Total Records</asp:Label></TD>
+																										<TD>
+																											<asp:Label id="TotalRecods" runat="server" Height="12pt" ForeColor="Crimson" Font-Names="Verdana"
+																												Font-Size="8pt" Font-Bold="True"></asp:Label></TD>
+																										<TD></TD>
+																										<TD></TD>
+																									</TR>
+																								</TABLE>
+																							</asp:panel>
+																						</asp:panel>
+																					</cc1:collapsiblepanel></TD>
+																			</TR>
+																			<TR>
+																				<TD vAlign="top" align="left"><cc1:collapsiblepanel id="cpnlAccessoryView" runat="server" Width="100%" BorderStyle="Solid" BorderWidth="0px"
+																						BorderColor="Indigo" Visible="true" TitleCSS="test" PanelCSS="panel" TitleForeColor="black" TitleClickable="True" TitleBackColor="Transparent"
+																						Text="Accessory View" ExpandImage="../../Images/ToggleDown.gif" CollapseImage="../../Images/ToggleUp.gif" Draggable="False">
+																						<TABLE width="100%" border="0" align="left">
+																							<TR>
+																								<TD>
+																									<asp:DataGrid id="GrdItemAccessory" runat="server" CssClass="Grid" DataKeyField="AccID" AutoGenerateColumns="False"
+																										cellSpacing="0" cellPadding="0">
+																										<AlternatingItemStyle CssClass="GridAlternateItem"></AlternatingItemStyle>
+																										<ItemStyle CssClass="GridItem"></ItemStyle>
+																										<HeaderStyle Font-Bold="True" ForeColor="Blue" CssClass="GridHeader"></HeaderStyle>
+																										<Columns>
+																											<asp:TemplateColumn Visible="False">
+																												<HeaderTemplate>
+																													<asp:TextBox ID="txtAccessory_H" Runat="server" CssClass="SearchTxtbox" Width="90px"></asp:TextBox><br>
+																													Accessory ID
+																												</HeaderTemplate>
+																												<ItemTemplate>
+																													<asp:Label id="Label2" runat="server" Width="90px">
+																														<%#container.dataitem("AccID")%>
+																													</asp:Label>
+																												</ItemTemplate>
+																											</asp:TemplateColumn>
+																											<asp:TemplateColumn>
+																												<HeaderTemplate>
+																													<asp:TextBox ID="txtAccName_H" Runat="server" CssClass="SearchTxtbox" Width="180px"></asp:TextBox><br>
+																													Accessory Name
+																												</HeaderTemplate>
+																												<ItemTemplate>
+																													<asp:Label id="Label6" runat="server" Width="180px">
+																														<%#container.dataitem("AccName")%>
+																													</asp:Label>
+																												</ItemTemplate>
+																											</asp:TemplateColumn>
+																											<asp:TemplateColumn>
+																												<HeaderTemplate>
+																													<asp:TextBox ID="txtAccDesc_H" Runat="server" CssClass="SearchTxtbox" Width="480px"></asp:TextBox><br>
+																													Accessory Description
+																												</HeaderTemplate>
+																												<ItemTemplate>
+																													<asp:Label id="Label1" runat="server" Width="480px">
+																														<%#container.dataitem("AccDesc")%>
+																													</asp:Label>
+																												</ItemTemplate>
+																											</asp:TemplateColumn>
+																											<asp:TemplateColumn>
+																												<HeaderTemplate>
+																													<asp:TextBox ID="txtAccManufacturingDate_H" Runat="server" CssClass="SearchTxtbox" Width="120px"></asp:TextBox><br>
+																													AccPurchase Date
+																												</HeaderTemplate>
+																												<ItemTemplate>
+																													<asp:Label id="Label9" runat="server" width="120px">
+																														<%#container.dataitem("AccMfgDate")%>
+																													</asp:Label>
+																												</ItemTemplate>
+																											</asp:TemplateColumn>
+																										</Columns>
+																									</asp:DataGrid></TD>
+																							</TR>
+																						</TABLE>
+																					</cc1:collapsiblepanel></TD>
+																			</TR>
+																		</TABLE>
+																	</DIV>
+																</td>
+															</TR>
+														</table>
+													</DIV>
+												</TD>
+												<td vAlign="top" width="12" background="../../Images/main_line04.gif"><IMG height="1" src="../../Images/main_line04.gif" width="12"></td>
+											</TR>
+										</TABLE>
+									</DIV>
+								</td>
+							</tr>
+							<tr>
+								<td height="2">
+									<table cellSpacing="0" cellPadding="0" width="100%" border="0">
+										<tr>
+											<td background="../../Images/main_line06.gif" height="2"><IMG height="2" src="../../Images/main_line06.gif" width="2"></td>
+											<td width="12" height="2"><IMG height="2" src="../../Images/main_line05.gif" width="12"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<table cellSpacing="0" cellPadding="0" width="100%" border="0">
+										<tr>
+											<td background="../../Images/bottom_back.gif">&nbsp;</td>
+											<td width="66"><IMG height="31" src="../../Images/bottom_right.gif" width="66"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			</TD></TR></TABLE>
+			<DIV></DIV>
+			<INPUT type="hidden" name="HIDAccID"> <INPUT type="hidden" name="HIDIONCode"> <INPUT type="hidden" name="HIDILID">
+			<INPUT type="hidden" name="txthiddenImage">
+		</form>
+	</body>
+</html>

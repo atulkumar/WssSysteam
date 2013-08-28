@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="dsRBMPaidDetail" targetNamespace="http://tempuri.org/dsRBMPaidDetail.xsd" xmlns:mstns="http://tempuri.org/dsRBMPaidDetail.xsd" xmlns="http://tempuri.org/dsRBMPaidDetail.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dsRBMPaidDetail" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="dsRBMPaidDetail" msprop:Generator_DataSetName="dsRBMPaidDetail">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="dtRBMPaid" msprop:Generator_UserTableName="dtRBMPaid" msprop:Generator_RowDeletedName="dtRBMPaidRowDeleted" msprop:Generator_RowChangedName="dtRBMPaidRowChanged" msprop:Generator_RowClassName="dtRBMPaidRow" msprop:Generator_RowChangingName="dtRBMPaidRowChanging" msprop:Generator_RowEvArgName="dtRBMPaidRowChangeEvent" msprop:Generator_RowEvHandlerName="dtRBMPaidRowChangeEventHandler" msprop:Generator_TableClassName="dtRBMPaidDataTable" msprop:Generator_TableVarName="tabledtRBMPaid" msprop:Generator_RowDeletingName="dtRBMPaidRowDeleting" msprop:Generator_TablePropName="dtRBMPaid">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="MName" msprop:Generator_UserColumnName="MName" msprop:Generator_ColumnVarNameInTable="columnMName" msprop:Generator_ColumnPropNameInRow="MName" msprop:Generator_ColumnPropNameInTable="MNameColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="EMPID" msprop:Generator_UserColumnName="EMPID" msprop:Generator_ColumnVarNameInTable="columnEMPID" msprop:Generator_ColumnPropNameInRow="EMPID" msprop:Generator_ColumnPropNameInTable="EMPIDColumn" type="xs:int" minOccurs="0" />
+              <xs:element name="BillSubmitted" msprop:Generator_UserColumnName="BillSubmitted" msprop:Generator_ColumnVarNameInTable="columnBillSubmitted" msprop:Generator_ColumnPropNameInRow="BillSubmitted" msprop:Generator_ColumnPropNameInTable="BillSubmittedColumn" type="xs:double" minOccurs="0" />
+              <xs:element name="ReimbursementPaid" msprop:Generator_UserColumnName="ReimbursementPaid" msprop:Generator_ColumnVarNameInTable="columnReimbursementPaid" msprop:Generator_ColumnPropNameInRow="ReimbursementPaid" msprop:Generator_ColumnPropNameInTable="ReimbursementPaidColumn" type="xs:double" minOccurs="0" />
+              <xs:element name="EMPName" msprop:Generator_UserColumnName="EMPName" msprop:Generator_ColumnPropNameInRow="EMPName" msprop:Generator_ColumnVarNameInTable="columnEMPName" msprop:Generator_ColumnPropNameInTable="EMPNameColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="ReimbursementAllowed" msprop:Generator_UserColumnName="ReimbursementAllowed" msprop:Generator_ColumnPropNameInRow="ReimbursementAllowed" msprop:Generator_ColumnVarNameInTable="columnReimbursementAllowed" msprop:Generator_ColumnPropNameInTable="ReimbursementAllowedColumn" type="xs:double" minOccurs="0" />
+              <xs:element name="Bill_InAdvance" msprop:Generator_UserColumnName="Bill_InAdvance" msprop:Generator_ColumnPropNameInRow="Bill_InAdvance" msprop:Generator_ColumnVarNameInTable="columnBill_InAdvance" msprop:Generator_ColumnPropNameInTable="Bill_InAdvanceColumn" type="xs:double" minOccurs="0" />
+              <xs:element name="Bill_Due" msprop:Generator_UserColumnName="Bill_Due" msprop:Generator_ColumnPropNameInRow="Bill_Due" msprop:Generator_ColumnVarNameInTable="columnBill_Due" msprop:Generator_ColumnPropNameInTable="Bill_DueColumn" type="xs:double" minOccurs="0" />
+              <xs:element name="Year" msprop:Generator_UserColumnName="Year" msprop:Generator_ColumnPropNameInRow="Year" msprop:Generator_ColumnVarNameInTable="columnYear" msprop:Generator_ColumnPropNameInTable="YearColumn" type="xs:int" minOccurs="0" />
+              <xs:element name="BillDetail_ID" msprop:Generator_UserColumnName="BillDetail_ID" msprop:Generator_ColumnPropNameInRow="BillDetail_ID" msprop:Generator_ColumnVarNameInTable="columnBillDetail_ID" msprop:Generator_ColumnPropNameInTable="BillDetail_IDColumn" type="xs:int" minOccurs="0" />
+              <xs:element name="Reimbursement" msprop:Generator_UserColumnName="Reimbursement" msprop:Generator_ColumnVarNameInTable="columnReimbursement" msprop:Generator_ColumnPropNameInRow="Reimbursement" msprop:Generator_ColumnPropNameInTable="ReimbursementColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="EmpCode" msprop:Generator_UserColumnName="EmpCode" msprop:Generator_ColumnPropNameInRow="EmpCode" msprop:Generator_ColumnVarNameInTable="columnEmpCode" msprop:Generator_ColumnPropNameInTable="EmpCodeColumn" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

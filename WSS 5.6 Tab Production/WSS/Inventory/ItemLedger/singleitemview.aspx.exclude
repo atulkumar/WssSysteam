@@ -1,0 +1,258 @@
+﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="singleitemview.aspx.vb" Inherits="Inventory_ItemLedger_singleitemview" %>
+<%@ Register TagPrefix="cc1" Namespace="CustomControls.Web" Assembly="CustomControls.Web" %>
+<%@ Register TagPrefix="iewc" Namespace="Microsoft.Web.UI.WebControls" Assembly="Microsoft.Web.UI.WebControls" %>
+<%@ Register TagPrefix="uc1" TagName="DateSelector" Src="../../SupportCenter/calendar/DateSelector.ascx" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <HEAD>
+		<title>SingleItemview</title>
+<meta content="Microsoft Visual Studio .NET 7.1" name=GENERATOR>
+<meta content="Visual Basic .NET 7.1" name=CODE_LANGUAGE>
+<meta content=JavaScript name=vs_defaultClientScript>
+<meta content=http://schemas.microsoft.com/intellisense/ie5 name=vs_targetSchema><LINK href="../../Images/Js/StyleSheet1.css" type=text/css rel=stylesheet >
+<script language=javascript src="../../Images/Js/JSValidation.js"></script>
+
+<script language=javascript>
+		
+				function SaveEdit(varImgValue)
+				{
+								
+						if (varImgValue=='Close')
+						{
+								window.close();
+								return false; 
+						}
+				}
+
+			function KeyCheck(INDEX, ID)
+			{
+					document.Form1.HIDILID.value=ID;
+					/*tableID='cpnlItemView_GrdItemsView';
+						var table;
+							if (document.all) table=document.all[tableID];
+								if (document.getElementById) table=document.getElementById(tableID);
+								if (table)
+								{
+										
+										for ( var i = 1 ;  i < table.rows.length ;  i++)
+											{	
+												if(i % 2 == 0)
+													{
+														table.rows [ i ] . style . backgroundColor = "#f5f5f5";
+													}
+													else
+													{
+													
+														table.rows [ i ] . style . backgroundColor = "#ffffff";
+													}
+											}
+									table.rows [ INDEX  ] . style . backgroundColor = "#d4d4d4";
+								}
+								
+
+							//setTimeout('document.Form1.submit();',500);*/
+					}			
+		
+		
+		</script>
+</HEAD>
+<body bottomMargin=0 leftMargin=0 topMargin=0 rightMargin=0>
+<form id=Form1 method=post runat="server">
+<TABLE id=Table1 borderColor=activeborder cellSpacing=0 cellPadding=0 
+width="100%" background=../../images/top_nav_back.gif border=0>
+  <TR>
+    <TD width=145><asp:label id=lblTitleLabelAlertFlowEdit runat="server" Font-Size="X-Small" Font-Names="Verdana" Font-Bold="True" ForeColor="Teal" BorderStyle="None" BorderWidth="2px" Width="160px">&nbsp;Item View</asp:label></TD>
+    <TD 
+      >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<IMG title=Seperator alt=R src="../../Images/00Seperator.gif" border=0 >&nbsp;&nbsp;&nbsp;&nbsp; <asp:imagebutton id=imgClose accessKey=L runat="server" ToolTip="Close" ImageUrl="../../Images/s2close01.gif"></asp:imagebutton>&nbsp; 
+      <IMG title=Seperator alt=R src="../../Images/00Seperator.gif" border=0 ></TD>
+    <td style="WIDTH: 10px" width=10 background=../../images/top_nav_back01.gif 
+    height=67>&nbsp;</TD></TR></TABLE>
+<TABLE id=Table12 borderColor=lightgrey cellSpacing=0 cellPadding=0 border=0>
+  <TR>
+    <TD colSpan=0 rowSpan=0><cc1:collapsiblepanel 
+      id=cpnlErrorPanel runat="server" BorderStyle="Solid" 
+      BorderWidth="0px" Width="100%" Draggable="False" 
+      CollapseImage="../../Images/ToggleUp.gif" 
+      ExpandImage="../../Images/ToggleDown.gif" Text="Error Message" 
+      TitleBackColor="Transparent" TitleClickable="True" TitleForeColor="black" 
+      PanelCSS="panel" TitleCSS="test" Visible="False" BorderColor="Indigo" 
+      Height="47px">
+      <TABLE id=Table2 borderColor=lightgrey cellSpacing=0 cellPadding=0 
+      border=0>
+        <TR>
+          <TD colSpan=0 rowSpan=0>
+<asp:Image id=Image1 runat="server" Width="16px" ImageUrl="../../Images/warning.gif" Height="16px"></asp:Image></TD>
+          <TD colSpan=0 rowSpan=0>
+<asp:ListBox id=lstError runat="server" Font-Size="XX-Small" Font-Names="Verdana" ForeColor="Red" BorderStyle="Groove" BorderWidth="0" Width="752px"></asp:ListBox></TD></TR></TABLE></cc1:collapsiblepanel><cc1:collapsiblepanel 
+      id=cpnlItemView runat="server" BorderStyle="Solid" 
+      BorderWidth="0px" Width="100%" Draggable="False" 
+      CollapseImage="../../Images/ToggleUp.gif" 
+      ExpandImage="../../Images/ToggleDown.gif" Text="Item View" 
+      TitleBackColor="Transparent" TitleClickable="True" TitleForeColor="black" 
+      PanelCSS="panel" TitleCSS="test" Visible="true" BorderColor="Indigo">
+      <TABLE cellSpacing=0 cellPadding=0 width="100%" align=left border=0>
+        <TR>
+          <TD>
+<asp:panel id=pnlItem runat="server">
+            <FIELDSET style="FONT-WEIGHT: bold; FONT-FAMILY: Verdana"><LEGEND 
+            style="FONT-SIZE: 10px; FONT-FAMILY: Verdana"></LEGEND>
+            <TABLE borderColor=#5c5a5b width="100%" bgColor=#f5f5f5 border=0>
+              <TR>
+                <TD style="WIDTH: 138px" vAlign=top borderColor=#f5f5f5>
+<asp:label id=Label7 runat="server" Font-Bold="True" CssClass="FieldLabel">Item Name</asp:label><BR>
+<asp:textbox id=txtItemName runat="server" CssClass="txtNoFocus" ReadOnly="True" MaxLength="100"></asp:textbox></TD>
+                <TD style="WIDTH: 134px" vAlign=top borderColor=#f5f5f5>
+<asp:label id=Label13 runat="server" CssClass="FieldLabel">Location</asp:label><BR>
+<asp:textbox id=txtLocation runat="server" CssClass="txtNoFocus" ReadOnly="True" MaxLength="100"></asp:textbox></TD>
+                <TD style="WIDTH: 135px" vAlign=top borderColor=#f5f5f5>
+<asp:label id=Label8 runat="server" CssClass="FieldLabel">SerialNo</asp:label><BR>
+<asp:textbox id=txtSerialNo runat="server" CssClass="txtNoFocus" ReadOnly="True" MaxLength="100"></asp:textbox></TD>
+                <TD style="WIDTH: 136px" vAlign=top borderColor=#f5f5f5>
+<asp:label id=Label5 runat="server" CssClass="FieldLabel"> PartNo</asp:label><BR>
+<asp:textbox id=txtPartNo runat="server" CssClass="txtNoFocus" ReadOnly="True" MaxLength="100"></asp:textbox></TD>
+                <TD borderColor=#f5f5f5 align=center rowSpan=7>
+<asp:image id=imgDesign runat="server" Width="150Px" Height="140px"></asp:image>
+<asp:textbox id=txtpath runat="server" width="0px"></asp:textbox></TD></TR>
+              <TR>
+                <TD style="WIDTH: 138px" vAlign=top borderColor=#f5f5f5>
+<asp:label id=Label10 runat="server" CssClass="FieldLabel">ItemPrice</asp:label><BR>
+<asp:textbox id=txtItemPrice runat="server" CssClass="txtNoFocus" ReadOnly="True" MaxLength="100"></asp:textbox></TD>
+                <TD style="WIDTH: 134px" vAlign=top borderColor=#f5f5f5>
+<asp:label id=Label1 runat="server" CssClass="FieldLabel">OrderNo</asp:label><BR>
+<asp:textbox id=txtIONcode runat="server" Width="114px" CssClass="txtNoFocus" ReadOnly="True" MaxLength="100"></asp:textbox></TD>
+                <TD style="WIDTH: 135px">
+<asp:label id=Label11 runat="server" CssClass="FieldLabel">Status</asp:label><BR>
+<asp:textbox id=txtStatus runat="server" CssClass="txtNoFocus" ReadOnly="True" MaxLength="100"></asp:textbox></TD>
+                <TD style="WIDTH: 136px" vAlign=top borderColor=#f5f5f5>
+<asp:label id=Label14 runat="server" CssClass="FieldLabel">Responsible Person</asp:label><BR>
+<asp:textbox id=txtResponsiblePerson runat="server" CssClass="txtNoFocus" ReadOnly="True" MaxLength="100"></asp:textbox></TD></TR>
+              <TR>
+                <TD style="WIDTH: 138px" vAlign=top borderColor=#f5f5f5>
+<asp:label id=Label25 runat="server" CssClass="FieldLabel">Purchasing Date</asp:label><BR>
+<asp:textbox id=txtManufacturingdate runat="server" CssClass="txtNoFocus" ReadOnly="True" MaxLength="100"></asp:textbox></TD>
+                <TD style="WIDTH: 134px" vAlign=top borderColor=#f5f5f5>
+<asp:label id=Label22 runat="server" CssClass="FieldLabel">Manufactured By</asp:label><BR>
+<asp:textbox id=txtmangBy runat="server" CssClass="txtNoFocus" ReadOnly="True" MaxLength="100"></asp:textbox></TD>
+                <TD style="WIDTH: 221px" vAlign=top borderColor=#f5f5f5 
+                colSpan=2 rowSpan=2>
+<asp:label id=Label33 runat="server" CssClass="FieldLabel">Description</asp:label><BR>
+<asp:textbox id=txtDescription runat="server" Width="248px" Height="50px" CssClass="txtNoFocus" ReadOnly="True" MaxLength="100" TextMode="MultiLine"></asp:textbox></TD></TR>
+              <TR>
+                <TD style="WIDTH: 138px" vAlign=top borderColor=#f5f5f5>
+<asp:label id=Label16 runat="server" CssClass="FieldLabel">Warranty Period</asp:label><BR>
+<asp:textbox id=txtWarrenty runat="server" CssClass="txtNoFocus" ReadOnly="True" MaxLength="100"></asp:textbox></TD>
+                <TD style="WIDTH: 134px" vAlign=top borderColor=#f5f5f5>
+<asp:label id=Label15 runat="server" CssClass="FieldLabel">Warranty In</asp:label><BR>
+<asp:textbox id=txtWarrantyIn runat="server" CssClass="txtNoFocus" ReadOnly="True" MaxLength="100"></asp:textbox></TD></TR>
+              <TR>
+                <TD style="WIDTH: 138px" vAlign=top borderColor=#f5f5f5>
+<asp:label id=Label27 runat="server" CssClass="FieldLabel">AMC With</asp:label><BR>
+<asp:textbox id=txtAmcWith runat="server" CssClass="txtNoFocus" ReadOnly="True" MaxLength="100"></asp:textbox></TD>
+                <TD style="WIDTH: 134px" vAlign=top borderColor=#f5f5f5>
+<asp:label id=Label28 runat="server" CssClass="FieldLabel">AMC Expires On</asp:label><BR>
+<asp:textbox id=txtAmcexpireon runat="server" CssClass="txtNoFocus" ReadOnly="True" MaxLength="100"></asp:textbox></TD>
+                <TD style="WIDTH: 221px" vAlign=top borderColor=#f5f5f5 
+                colSpan=2 rowSpan=2>
+<asp:label id=Label29 runat="server" CssClass="FieldLabel">AMC Comments</asp:label><BR>
+<asp:textbox id=txtAMCComments runat="server" Width="248px" Height="50px" CssClass="txtNoFocus" ReadOnly="True" MaxLength="100" TextMode="MultiLine"></asp:textbox></TD></TR>
+              <TR>
+                <TD style="WIDTH: 138px" vAlign=top borderColor=#f5f5f5>
+<asp:label id=Label17 runat="server" CssClass="FieldLabel">AMC Adv. Alert Days</asp:label><BR>
+<asp:textbox id=txtAMCalertDays runat="server" CssClass="txtNoFocus" ReadOnly="True" MaxLength="100"></asp:textbox></TD>
+                <TD style="WIDTH: 134px" vAlign=top borderColor=#f5f5f5>
+<asp:label id=Label12 runat="server" CssClass="FieldLabel">Vendor</asp:label><BR>
+<asp:textbox id=txtvendor runat="server" CssClass="txtNoFocus" ReadOnly="True" MaxLength="100"></asp:textbox></TD></TR></TABLE></FIELDSET> 
+            </asp:panel></TD></TR></TABLE></cc1:collapsiblepanel><cc1:collapsiblepanel 
+      id=cpnlAccessoryView runat="server" 
+      BorderStyle="Solid" BorderWidth="0px" Width="100%" Draggable="False" 
+      CollapseImage="../../Images/ToggleUp.gif" 
+      ExpandImage="../../Images/ToggleDown.gif" Text="Transaction View" 
+      TitleBackColor="Transparent" TitleClickable="True" TitleForeColor="black" 
+      PanelCSS="panel" TitleCSS="test" Visible="true" BorderColor="Indigo">
+      <DIV style="OVERFLOW: auto; WIDTH: 100%; HEIGHT: 200px">
+      <TABLE cellSpacing=0 cellPadding=0 width="100%" align=left border=0>
+        <TR>
+          <TD>
+<asp:DataGrid id=dGrdItemtransaction runat="server" CssClass="Grid" AutoGenerateColumns="False" cellSpacing="0" cellPadding="0" DataKeyField="ITL_NU9_Item_Transaction_Log_PK">
+												<AlternatingItemStyle CssClass="GridAlternateItem"></AlternatingItemStyle>
+												<ItemStyle CssClass="GridItem"></ItemStyle>
+												<HeaderStyle Font-Bold="True" ForeColor="Blue" CssClass="GridHeader"></HeaderStyle>
+												<Columns>
+													<asp:TemplateColumn>
+														<HeaderTemplate>
+															<asp:TextBox ID="txtTransactionDate_H" Runat="server" CssClass="SearchTxtbox" Width="100%"></asp:TextBox>
+															Transaction&nbsp;Date
+														</HeaderTemplate>
+														<ItemTemplate>
+															<asp:Label id="Label2" runat="server">
+																<%#container.dataitem("ITL_DT8_Transaction_Date")%>
+															</asp:Label>
+														</ItemTemplate>
+													</asp:TemplateColumn>
+													<asp:TemplateColumn>
+														<HeaderStyle Wrap="False"></HeaderStyle>
+														<HeaderTemplate>
+															<asp:TextBox ID="txtType_H" Runat="server" CssClass="SearchTxtbox" Width="100%"></asp:TextBox>
+															Transaction&nbsp;Type
+														</HeaderTemplate>
+														<ItemTemplate>
+															<asp:Label id="Label3" runat="server">
+																<%#container.dataitem("ITL_VC16_Transaction_Type")%>
+															</asp:Label>
+														</ItemTemplate>
+													</asp:TemplateColumn>
+													<asp:TemplateColumn>
+														<HeaderStyle Wrap="False"></HeaderStyle>
+														<HeaderTemplate>
+															<asp:TextBox ID="txtIssueTo_H" Runat="server" CssClass="SearchTxtbox" Width="100%"></asp:TextBox>
+															IssueTo
+														</HeaderTemplate>
+														<ItemTemplate>
+															<asp:Label id="Label4" runat="server">
+																<%#container.dataitem("IssueTo")%>
+															</asp:Label>
+														</ItemTemplate>
+													</asp:TemplateColumn>
+													<asp:TemplateColumn>
+														<HeaderStyle Wrap="False"></HeaderStyle>
+														<HeaderTemplate>
+															<asp:TextBox ID="txtLocationName_H" Runat="server" CssClass="SearchTxtbox" Width="100%"></asp:TextBox>
+															Location&nbsp;Name
+														</HeaderTemplate>
+														<ItemTemplate>
+															<asp:Label id="Label6" runat="server">
+																<%#container.dataitem("LM_VC32_Location_Name")%>
+															</asp:Label>
+														</ItemTemplate>
+													</asp:TemplateColumn>
+													<asp:TemplateColumn>
+														<HeaderStyle Wrap="False"></HeaderStyle>
+														<HeaderTemplate>
+															<asp:TextBox ID="txtItemStatus_H" Runat="server" CssClass="SearchTxtbox" Width="100%"></asp:TextBox>
+															Item&nbsp;Status
+														</HeaderTemplate>
+														<ItemTemplate>
+															<asp:Label id="Label9" runat="server">
+																<%#container.dataitem("ITL_VC16_Item_Status")%>
+															</asp:Label>
+														</ItemTemplate>
+													</asp:TemplateColumn>
+													<asp:TemplateColumn>
+														<HeaderTemplate>
+															<asp:TextBox ID="txtComments" Runat="server" CssClass="SearchTxtbox" Width="100%"></asp:TextBox>
+															Comments
+														</HeaderTemplate>
+														<ItemTemplate>
+															<asp:Label id="Label18" runat="server">
+																<%#container.dataitem("ITL_VC1024_Return_Comments")%>
+															</asp:Label>
+														</ItemTemplate>
+													</asp:TemplateColumn>
+												</Columns>
+											</asp:DataGrid></TD></TR></TABLE></DIV></cc1:collapsiblepanel><INPUT 
+      type=hidden name=HIDILID> <INPUT type=hidden 
+      name=txthiddenImage> 
+</TD></TR></TABLE></FORM>
+	</body></html>

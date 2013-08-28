@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DSSpocCallDetailReport" targetNamespace="http://tempuri.org/DSSpocCallDetailReport.xsd" xmlns:mstns="http://tempuri.org/DSSpocCallDetailReport.xsd" xmlns="http://tempuri.org/DSSpocCallDetailReport.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="Web.config" AppSettingsPropertyName="ConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="ConnectionString (Web.config)" ParameterPrefix="@" PropertyReference="AppConfig.System.Configuration.ConfigurationManager.0.ConnectionStrings.ConnectionString.ConnectionString" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DSSpocCallDetailReport" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="DSSpocCallDetailReport" msprop:Generator_DataSetName="DSSpocCallDetailReport">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Table" msprop:Generator_UserTableName="Table" msprop:Generator_RowDeletedName="TableRowDeleted" msprop:Generator_RowChangedName="TableRowChanged" msprop:Generator_RowClassName="TableRow" msprop:Generator_RowChangingName="TableRowChanging" msprop:Generator_RowEvArgName="TableRowChangeEvent" msprop:Generator_RowEvHandlerName="TableRowChangeEventHandler" msprop:Generator_TableClassName="TableDataTable" msprop:Generator_TableVarName="tableTable" msprop:Generator_RowDeletingName="TableRowDeleting" msprop:Generator_TablePropName="Table">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CallNo" msprop:Generator_UserColumnName="CallNo" msprop:Generator_ColumnVarNameInTable="columnCallNo" msprop:Generator_ColumnPropNameInRow="CallNo" msprop:Generator_ColumnPropNameInTable="CallNoColumn" type="xs:int" minOccurs="0" />
+              <xs:element name="RequestDate" msprop:Generator_UserColumnName="RequestDate" msprop:Generator_ColumnVarNameInTable="columnRequestDate" msprop:Generator_ColumnPropNameInRow="RequestDate" msprop:Generator_ColumnPropNameInTable="RequestDateColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="TaskOwner" msprop:Generator_UserColumnName="TaskOwner" msprop:Generator_ColumnVarNameInTable="columnTaskOwner" msprop:Generator_ColumnPropNameInRow="TaskOwner" msprop:Generator_ColumnPropNameInTable="TaskOwnerColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="CallType" msprop:Generator_UserColumnName="CallType" msprop:Generator_ColumnVarNameInTable="columnCallType" msprop:Generator_ColumnPropNameInRow="CallType" msprop:Generator_ColumnPropNameInTable="CallTypeColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="Description" msprop:Generator_UserColumnName="Description" msprop:Generator_ColumnVarNameInTable="columnDescription" msprop:Generator_ColumnPropNameInRow="Description" msprop:Generator_ColumnPropNameInTable="DescriptionColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="SolutionProvided" msprop:Generator_UserColumnName="SolutionProvided" msprop:Generator_ColumnVarNameInTable="columnSolutionProvided" msprop:Generator_ColumnPropNameInRow="SolutionProvided" msprop:Generator_ColumnPropNameInTable="SolutionProvidedColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="EstClosedDate" msprop:Generator_UserColumnName="EstClosedDate" msprop:Generator_ColumnVarNameInTable="columnEstClosedDate" msprop:Generator_ColumnPropNameInRow="EstClosedDate" msprop:Generator_ColumnPropNameInTable="EstClosedDateColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="ActualCloseDate" msprop:Generator_UserColumnName="ActualCloseDate" msprop:Generator_ColumnVarNameInTable="columnActualCloseDate" msprop:Generator_ColumnPropNameInRow="ActualCloseDate" msprop:Generator_ColumnPropNameInTable="ActualCloseDateColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="Priority" msprop:Generator_UserColumnName="Priority" msprop:Generator_ColumnVarNameInTable="columnPriority" msprop:Generator_ColumnPropNameInRow="Priority" msprop:Generator_ColumnPropNameInTable="PriorityColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="ProjectName" msprop:Generator_UserColumnName="ProjectName" msprop:Generator_ColumnVarNameInTable="columnProjectName" msprop:Generator_ColumnPropNameInRow="ProjectName" msprop:Generator_ColumnPropNameInTable="ProjectNameColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="CallOwner" msprop:Generator_UserColumnName="CallOwner" msprop:Generator_ColumnVarNameInTable="columnCallOwner" msprop:Generator_ColumnPropNameInRow="CallOwner" msprop:Generator_ColumnPropNameInTable="CallOwnerColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="DeptName" msprop:Generator_UserColumnName="DeptName" msprop:Generator_ColumnVarNameInTable="columnDeptName" msprop:Generator_ColumnPropNameInRow="DeptName" msprop:Generator_ColumnPropNameInTable="DeptNameColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="Status" msprop:Generator_UserColumnName="Status" msprop:Generator_ColumnVarNameInTable="columnStatus" msprop:Generator_ColumnPropNameInRow="Status" msprop:Generator_ColumnPropNameInTable="StatusColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="UsedHrs" msprop:Generator_UserColumnName="UsedHrs" msprop:Generator_ColumnVarNameInTable="columnUsedHrs" msprop:Generator_ColumnPropNameInRow="UsedHrs" msprop:Generator_ColumnPropNameInTable="UsedHrsColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="Percentage" msprop:Generator_UserColumnName="Percentage" msprop:Generator_ColumnPropNameInRow="Percentage" msprop:Generator_ColumnVarNameInTable="columnPercentage" msprop:Generator_ColumnPropNameInTable="PercentageColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="StatusCount" msprop:Generator_UserColumnName="StatusCount" msprop:Generator_ColumnPropNameInRow="StatusCount" msprop:Generator_ColumnVarNameInTable="columnStatusCount" msprop:Generator_ColumnPropNameInTable="StatusCountColumn" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

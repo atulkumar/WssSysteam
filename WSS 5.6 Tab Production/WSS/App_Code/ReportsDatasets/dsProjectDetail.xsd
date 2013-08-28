@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="dsProjectDetail" targetNamespace="http://tempuri.org/dsProjectDetail.xsd" xmlns:mstns="http://tempuri.org/dsProjectDetail.xsd" xmlns="http://tempuri.org/dsProjectDetail.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dsProjectDetail" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="dsProjectDetail" msprop:Generator_DataSetName="dsProjectDetail">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="dtProjectDetails" msprop:Generator_UserTableName="dtProjectDetails" msprop:Generator_RowDeletedName="dtProjectDetailsRowDeleted" msprop:Generator_RowChangedName="dtProjectDetailsRowChanged" msprop:Generator_RowClassName="dtProjectDetailsRow" msprop:Generator_RowChangingName="dtProjectDetailsRowChanging" msprop:Generator_RowEvArgName="dtProjectDetailsRowChangeEvent" msprop:Generator_RowEvHandlerName="dtProjectDetailsRowChangeEventHandler" msprop:Generator_TableClassName="dtProjectDetailsDataTable" msprop:Generator_TableVarName="tabledtProjectDetails" msprop:Generator_RowDeletingName="dtProjectDetailsRowDeleting" msprop:Generator_TablePropName="dtProjectDetails">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="TaskOwner" msprop:Generator_UserColumnName="TaskOwner" msprop:Generator_ColumnPropNameInRow="TaskOwner" msprop:Generator_ColumnVarNameInTable="columnTaskOwner" msprop:Generator_ColumnPropNameInTable="TaskOwnerColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="TaskDate" msprop:Generator_UserColumnName="TaskDate" msprop:Generator_ColumnPropNameInRow="TaskDate" msprop:Generator_ColumnVarNameInTable="columnTaskDate" msprop:Generator_ColumnPropNameInTable="TaskDateColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="EstHrs" msprop:Generator_UserColumnName="EstHrs" msprop:Generator_ColumnPropNameInRow="EstHrs" msprop:Generator_ColumnVarNameInTable="columnEstHrs" msprop:Generator_ColumnPropNameInTable="EstHrsColumn" type="xs:double" minOccurs="0" />
+              <xs:element name="UsedHrs" msprop:Generator_UserColumnName="UsedHrs" msprop:Generator_ColumnPropNameInRow="UsedHrs" msprop:Generator_ColumnVarNameInTable="columnUsedHrs" msprop:Generator_ColumnPropNameInTable="UsedHrsColumn" type="xs:double" minOccurs="0" />
+              <xs:element name="CompanyID" msprop:Generator_UserColumnName="CompanyID" msprop:Generator_ColumnPropNameInRow="CompanyID" msprop:Generator_ColumnVarNameInTable="columnCompanyID" msprop:Generator_ColumnPropNameInTable="CompanyIDColumn" type="xs:long" minOccurs="0" />
+              <xs:element name="Status" msprop:Generator_UserColumnName="Status" msprop:Generator_ColumnVarNameInTable="columnStatus" msprop:Generator_ColumnPropNameInRow="Status" msprop:Generator_ColumnPropNameInTable="StatusColumn" type="xs:int" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="dtProject" msprop:Generator_UserTableName="dtProject" msprop:Generator_RowDeletedName="dtProjectRowDeleted" msprop:Generator_RowChangedName="dtProjectRowChanged" msprop:Generator_RowClassName="dtProjectRow" msprop:Generator_RowChangingName="dtProjectRowChanging" msprop:Generator_RowEvArgName="dtProjectRowChangeEvent" msprop:Generator_RowEvHandlerName="dtProjectRowChangeEventHandler" msprop:Generator_TableClassName="dtProjectDataTable" msprop:Generator_TableVarName="tabledtProject" msprop:Generator_RowDeletingName="dtProjectRowDeleting" msprop:Generator_TablePropName="dtProject">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Call" msprop:Generator_UserColumnName="Call" msprop:Generator_ColumnPropNameInRow="_Call" msprop:Generator_ColumnVarNameInTable="columnCall" msprop:Generator_ColumnPropNameInTable="CallColumn" type="xs:int" minOccurs="0" />
+              <xs:element name="Total" msprop:Generator_UserColumnName="Total" msprop:Generator_ColumnPropNameInRow="Total" msprop:Generator_ColumnVarNameInTable="columnTotal" msprop:Generator_ColumnPropNameInTable="TotalColumn" type="xs:int" minOccurs="0" />
+              <xs:element name="ActiveUser" msprop:Generator_UserColumnName="ActiveUser" msprop:Generator_ColumnPropNameInRow="ActiveUser" msprop:Generator_ColumnVarNameInTable="columnActiveUser" msprop:Generator_ColumnPropNameInTable="ActiveUserColumn" type="xs:int" minOccurs="0" />
+              <xs:element name="EstHours" msprop:Generator_UserColumnName="EstHours" msprop:Generator_ColumnPropNameInRow="EstHours" msprop:Generator_ColumnVarNameInTable="columnEstHours" msprop:Generator_ColumnPropNameInTable="EstHoursColumn" type="xs:double" minOccurs="0" />
+              <xs:element name="TotalCall" msprop:Generator_UserColumnName="TotalCall" msprop:Generator_ColumnPropNameInRow="TotalCall" msprop:Generator_ColumnVarNameInTable="columnTotalCall" msprop:Generator_ColumnPropNameInTable="TotalCallColumn" type="xs:int" minOccurs="0" />
+              <xs:element name="ActualHrs" msprop:Generator_UserColumnName="ActualHrs" msprop:Generator_ColumnPropNameInRow="ActualHrs" msprop:Generator_ColumnVarNameInTable="columnActualHrs" msprop:Generator_ColumnPropNameInTable="ActualHrsColumn" type="xs:double" minOccurs="0" />
+              <xs:element name="CompID" msprop:Generator_UserColumnName="CompID" msprop:Generator_ColumnVarNameInTable="columnCompID" msprop:Generator_ColumnPropNameInRow="CompID" msprop:Generator_ColumnPropNameInTable="CompIDColumn" type="xs:long" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="dtCall" msprop:Generator_UserTableName="dtCall" msprop:Generator_RowDeletedName="dtCallRowDeleted" msprop:Generator_RowChangedName="dtCallRowChanged" msprop:Generator_RowClassName="dtCallRow" msprop:Generator_RowChangingName="dtCallRowChanging" msprop:Generator_RowEvArgName="dtCallRowChangeEvent" msprop:Generator_RowEvHandlerName="dtCallRowChangeEventHandler" msprop:Generator_TableClassName="dtCallDataTable" msprop:Generator_TableVarName="tabledtCall" msprop:Generator_RowDeletingName="dtCallRowDeleting" msprop:Generator_TablePropName="dtCall">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CallNo" msprop:Generator_UserColumnName="CallNo" msprop:Generator_ColumnPropNameInRow="CallNo" msprop:Generator_ColumnVarNameInTable="columnCallNo" msprop:Generator_ColumnPropNameInTable="CallNoColumn" type="xs:long" minOccurs="0" />
+              <xs:element name="CallDesc" msprop:Generator_UserColumnName="CallDesc" msprop:Generator_ColumnPropNameInRow="CallDesc" msprop:Generator_ColumnVarNameInTable="columnCallDesc" msprop:Generator_ColumnPropNameInTable="CallDescColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="CallRequsetedBy" msprop:Generator_UserColumnName="CallRequsetedBy" msprop:Generator_ColumnPropNameInRow="CallRequsetedBy" msprop:Generator_ColumnVarNameInTable="columnCallRequsetedBy" msprop:Generator_ColumnPropNameInTable="CallRequsetedByColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="RequestDate" msprop:Generator_UserColumnName="RequestDate" msprop:Generator_ColumnPropNameInRow="RequestDate" msprop:Generator_ColumnVarNameInTable="columnRequestDate" msprop:Generator_ColumnPropNameInTable="RequestDateColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="CallStatus" msprop:Generator_UserColumnName="CallStatus" msprop:Generator_ColumnPropNameInRow="CallStatus" msprop:Generator_ColumnVarNameInTable="columnCallStatus" msprop:Generator_ColumnPropNameInTable="CallStatusColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="CompID" msprop:Generator_UserColumnName="CompID" msprop:Generator_ColumnVarNameInTable="columnCompID" msprop:Generator_ColumnPropNameInRow="CompID" msprop:Generator_ColumnPropNameInTable="CompIDColumn" type="xs:long" minOccurs="0" />
+              <xs:element name="CloseDate" msprop:Generator_UserColumnName="CloseDate" msprop:Generator_ColumnPropNameInRow="CloseDate" msprop:Generator_ColumnVarNameInTable="columnCloseDate" msprop:Generator_ColumnPropNameInTable="CloseDateColumn" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
